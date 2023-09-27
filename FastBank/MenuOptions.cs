@@ -33,12 +33,7 @@ namespace FastBank
                     case 0:
                         {
                             inProgress = false;
-                            foreach (var custumer in repo.Set<Customer>())
-                            {
-                                Console.WriteLine(custumer.Name);
-                            }
                             break;
-
                         }
                 }
             }
@@ -63,7 +58,7 @@ namespace FastBank
             if (customer == null)
             {
                 Console.WriteLine("This user is not registered, pls try again!");
-                
+
                 MenuOptions.Login(true);
             }
             else
@@ -82,12 +77,12 @@ namespace FastBank
                         break;
                     };
                 }
-                if (passwordtries >= 3) 
+                if (passwordtries >= 3)
                 {
                     Console.WriteLine("You try to login with wrong password 3 times!");
                     MenuOptions.ShowMainMenu();
                 }
-               
+
             }
         }
         static public bool PasswordCheck(Customer customer)

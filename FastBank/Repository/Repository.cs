@@ -5,9 +5,8 @@ using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
-using System.Reflection;
 
-namespace FastBank.Infrastructure
+namespace FastBank
 {
     public class Repository : IRepository
     {

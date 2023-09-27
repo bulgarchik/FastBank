@@ -1,4 +1,4 @@
-﻿using FastBank;
+﻿using FastBank.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
