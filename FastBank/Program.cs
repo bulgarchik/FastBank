@@ -10,9 +10,8 @@ namespace FastBank
     {
         static void Main(string[] args)
         {
-            var serviceProvider = ConfigureServices();
-
-            var repo = serviceProvider.GetService<IRepository>();
+            FastBankDbContext db = new FastBankDbContext();
+            var repo = new Repository(db);
 
             Customer customer = new Customer { Name = "Bai Ivan" };
 
@@ -20,25 +19,12 @@ namespace FastBank
 
             MenuOptions.ShowMainMenu();
 
-            var custumers = repo.Set<Customer>();
+            var customers = repo.Set<Customer>();
 
-            foreach (var item in custumers)
+            foreach (var item in customers)
             {
                 Console.WriteLine(item.Name);
             }
-            
-        }
-
-        private static IServiceProvider ConfigureServices()
-        {
-            var services = new ServiceCollection();
-
-            // Register the repository and DbContext
-            services.AddScoped<IRepository, Repository>();
-            services.AddDbContext<FastBankDbContext>();
-
-            // Build the service provider
-            return services.BuildServiceProvider();
         }
     }
 }

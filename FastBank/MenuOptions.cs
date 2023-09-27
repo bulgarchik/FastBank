@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FastBank.Infrastructure;
+using Infrastructure.Context;
 
 namespace FastBank
 {
     public static class MenuOptions
     {
+
         static bool inProgress = true;
         static public void ShowMainMenu()
         {
+            FastBankDbContext db = new FastBankDbContext();
+            var repo = new Repository(db);
+
             while (inProgress)
             {
                 Console.WriteLine("Please choose your action:");
@@ -32,7 +33,7 @@ namespace FastBank
                     case 0:
                         {
                             inProgress = false;
-                            foreach (var custumer in Customer.Customers)
+                            foreach (var custumer in repo.Set<Customer>())
                             {
                                 Console.WriteLine(custumer.Name);
                             }
@@ -44,6 +45,9 @@ namespace FastBank
         }
         static public void Login(bool wrongEmail = false)
         {
+            FastBankDbContext db = new FastBankDbContext();
+            var repo = new Repository(db);
+
             Console.Clear();
             if (wrongEmail)
             {
@@ -55,7 +59,7 @@ namespace FastBank
             }
 
             var currentEmail = Console.ReadLine();
-            var customer = Customer.Customers.FirstOrDefault(a => a.Email == currentEmail);
+            var customer = repo.Set<Customer>().FirstOrDefault(a => a.Email == currentEmail);
             if (customer == null)
             {
                 Console.WriteLine("This user is not registered, pls try again!");
