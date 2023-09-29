@@ -27,7 +27,7 @@ namespace FastBank
                         };
                     case 2:
                         {
-                            Customer.CustomerRegistration();
+                            //Customer.CustomerRegistration();
                             break;
                         }
                     case 0:

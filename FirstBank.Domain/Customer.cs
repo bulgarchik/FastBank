@@ -8,30 +8,21 @@ namespace FastBank
 {
     public class Customer
     {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }
-        public string? Email { get; set; }
-        public DateTime? Birthday { get; set; }
-        public string? Password { get; set; }
-        public Roles Role { get; set; }
-
-        static public void CustomerRegistration()
+        public Customer(Guid id, string name, string email, DateTime birthday, string password, Roles role)
         {
-            Console.Clear();
-
-            Customer customer = new Customer();
-            customer.Id = new Guid(Guid.NewGuid().ToString());
-            customer.Role = Roles.Customer;
-
-            Console.WriteLine("Please input registration data about you:");
-            Console.WriteLine("Please input you name:");
-            customer.Name = Console.ReadLine();
-            Console.WriteLine("Please input you email:");
-            customer.Email = Console.ReadLine();
-            Console.WriteLine("Please input you Birthday:");
-            customer.Birthday = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Please input you password:");
-            customer.Password = Console.ReadLine();
+            Id = id;
+            Name = name;
+            Email = email;
+            Birthday = birthday;
+            Password = password;
+            Role = role;
         }
+
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public string Email { get; private set; }
+        public DateTime Birthday { get; private set; }
+        public string Password { get; private set; }
+        public Roles Role { get; private set; }
     }
 }

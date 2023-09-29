@@ -1,4 +1,4 @@
-﻿using FastBank.Infrastructure.Model;
+﻿using FastBank.Infrastructure.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,11 @@ namespace Infrastructure.Context
             optionsBuilder.UseInMemoryDatabase(databaseName: "MyInMemoryDatabase");
         }
 
-        public DbSet<Customer> Customers { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", FastBank.Roles.Customer)));
+        }
+
+        public virtual DbSet<CustomerDTO> Customers { get; set; }
     }
 }

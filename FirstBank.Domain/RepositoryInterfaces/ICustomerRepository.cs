@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FastBank.Infrastructure.Model
+namespace FastBank.Domain.RepositoryInterfaces
 {
-    public enum Roles
+    public interface ICustomerRepository
     {
-        None,
-        Accunter,
-        Manager,
-        Customer
+        public List<Customer> GetAll();
     }
 }
