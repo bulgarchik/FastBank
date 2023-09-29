@@ -11,7 +11,6 @@ namespace FastBank.Infrastructure.Repository
         public CustomerRepository()
         {
            _db = new FastBankDbContext();
-           _db.Database.EnsureCreated();
         }
 
         public List<Customer> GetAll()

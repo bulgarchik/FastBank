@@ -8,9 +8,11 @@ namespace FastBank
         {
             //MenuOptions.ShowMainMenu();
 
-            ICustomerService cs = new CustomerService();
+            ICustomerService customerService = new CustomerService();
 
-           foreach (var item in cs.GetAll())
+
+
+           foreach (var item in customerService.GetAll())
             {
                Console.WriteLine(item.Name);
             }
