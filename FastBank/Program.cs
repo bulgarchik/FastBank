@@ -6,7 +6,7 @@ namespace FastBank
     {
         static void Main(string[] args)
         {
-            //MenuOptions.ShowMainMenu();
+            MenuOptions.ShowMainMenu();
 
             ICustomerService customerService = new CustomerService();
 

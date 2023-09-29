@@ -21,5 +21,14 @@ namespace FastBank.Services
         {
             _customerRepo.Add(customer);
         }
+
+        public void Add(string name, string email, DateTime birthday, string password, Roles role)
+        {
+            var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role);
+
+           Add(customer);
+        }
+
+
     }
 }

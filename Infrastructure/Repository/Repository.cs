@@ -1,5 +1,5 @@
-﻿using Infrastructure.Context;
-using Infrastructure.Repository;
+﻿using FastBank.Domain.RepositoryInterfaces;
+using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;

@@ -1,4 +1,5 @@
 ﻿using FastBank.Infrastructure;
+using FastBank.Services;
 using Infrastructure.Context;
 
 namespace FastBank
@@ -27,7 +28,7 @@ namespace FastBank
                         };
                     case 2:
                         {
-                            //Customer.CustomerRegistration();
+                            CustomerRegistration();
                             break;
                         }
                     case 0:
@@ -91,5 +92,31 @@ namespace FastBank
             var inputPassword = Console.ReadLine();
             return inputPassword == customer.Password;
         }
+        
+        static public void CustomerRegistration()
+        {
+            ICustomerService customerService= new CustomerService();
+            Console.Clear();
+            var role = Roles.Customer;
+
+            Console.WriteLine("Please input registration data about you:");
+            
+            Console.WriteLine("Please input you name:");
+            var name = Console.ReadLine();
+            
+            Console.WriteLine("Please input you email:");
+            var email = Console.ReadLine();
+            
+            Console.WriteLine("Please input you Birthday:");
+            var birthday = DateTime.Parse(Console.ReadLine());
+            
+            Console.WriteLine("Please input you password:");
+            var password = Console.ReadLine();
+            
+            customerService.Add(name, email, birthday, password, role);
+
+            MenuOptions.ShowMainMenu();
+        }
+        
     }
 }
