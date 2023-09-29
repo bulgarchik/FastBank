@@ -5,11 +5,21 @@ namespace FastBank.Services
 {
     public class CustomerService : ICustomerService
     {
+        readonly private ICustomerRepository _customerRepo;
+
+        public CustomerService() 
+        {
+            _customerRepo = new CustomerRepository();
+        }
+
         public List<Customer> GetAll()
         {
-            ICustomerRepository rp = new CustomerRepository();
+            return _customerRepo.GetAll();
+        }
 
-            return rp.GetAll();
+        public void Add(Customer customer)
+        {
+            _customerRepo.Add(customer);
         }
     }
 }

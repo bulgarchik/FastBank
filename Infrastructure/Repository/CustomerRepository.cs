@@ -6,19 +6,24 @@ namespace FastBank.Infrastructure.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly FastBankDbContext _db;
+        private readonly FastBank.Repository _repo;
 
         public CustomerRepository()
         {
-           _db = new FastBankDbContext();
+            _repo = new FastBank.Repository(new FastBankDbContext());
         }
 
         public List<Customer> GetAll()
         {
-            var repo = new FastBank.Repository(_db);
-            var customers = repo.Set<CustomerDTO>().Select(a=> a.ToDomainObj()).ToList();
-            
+            var customers = _repo.Set<CustomerDTO>().Select(a => a.ToDomainObj()).ToList();
+
             return customers;
+        }
+
+        public void Add(Customer customer)
+        {
+            var customerDTO = new CustomerDTO(customer);
+            _repo.Add(customerDTO);
         }
     }
 }

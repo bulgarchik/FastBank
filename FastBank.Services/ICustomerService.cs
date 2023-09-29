@@ -9,5 +9,7 @@ namespace FastBank.Services
     public interface ICustomerService
     {
         public List<Customer> GetAll();
+
+        public void Add(Customer customer);
     }
 }

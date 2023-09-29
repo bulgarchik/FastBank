@@ -10,8 +10,7 @@ namespace Infrastructure.Context
 {
     public class FastBankDbContext : DbContext
     {
-
-        public FastBankDbContext() 
+        public FastBankDbContext()
         {
             Database.EnsureCreated();
         }
@@ -23,7 +22,7 @@ namespace Infrastructure.Context
         {
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", FastBank.Roles.Customer)));
         }
-        public virtual DbSet<CustomerDTO> Customers { get; set; }
 
+        public virtual DbSet<CustomerDTO> Customers { get; set; }
     }
 }
