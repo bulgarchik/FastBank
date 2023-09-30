@@ -11,6 +11,8 @@ namespace FastBank
         None,
         Accunter,
         Manager,
-        Customer
+        Customer,
+        Banker,
+        CustomerService
     }
 }
