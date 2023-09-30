@@ -79,6 +79,7 @@ namespace FastBank.Services
                 {
                     Console.WriteLine(error);
                 }
+                Console.WriteLine("Unauthorized");
                 Console.WriteLine("Please try again!");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();

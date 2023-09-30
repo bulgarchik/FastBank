@@ -58,7 +58,8 @@ namespace FastBank
                     Console.WriteLine("Please input password:");
                     var inputPassword = Console.ReadLine();
                     if (customerService.Login(currentEmail, inputPassword))
-                    {
+                    {   
+                        Console.WriteLine("Authorized");
                         Console.WriteLine("Welcom to the Fast Bank System"); //TODO Open User menu
                         Console.ReadKey();
                         break;
