@@ -65,7 +65,58 @@ namespace FastBank.Services
                 ValidationErrors.Add($"Customer with email: {customer.Email} already exist");
             }
         }
+        public bool CheckLoginUserName(string? username)
+        {
+            ValidationErrors.Clear();
+            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
+            if (customer == null)
+            {
+                ValidationErrors.Add($"Customer with username(email): {username} not exist");
+            }
+            if (ValidationErrors.Any())
+            {
+                foreach (var error in ValidationErrors)
+                {
+                    Console.WriteLine(error);
+                }
+                Console.WriteLine("Please try again!");
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
 
+                return false;
+            }
 
+            return true;
+        }
+
+        public bool Login(string username, string password)
+        {
+            ValidationErrors.Clear();
+            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
+            if (customer == null)
+            {
+                ValidationErrors.Add($"Customer with name: {username} not exist");
+            }
+            else
+            {
+                if (customer.Password != password)
+                {
+                    ValidationErrors.Add($"Wrong password! Try again!");
+                }
+            }
+
+            if (ValidationErrors.Any())
+            {
+                foreach (var error in ValidationErrors)
+                {
+                    Console.WriteLine(error);
+                }
+                Console.WriteLine("Please try again!");
+
+                return false;
+            }
+
+            return true;
+        }
     }
 }

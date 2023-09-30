@@ -13,5 +13,9 @@ namespace FastBank.Services
         public void Add(Customer customer);
 
         public void Add(string name, string email, DateTime birthday, string password, Roles role);
+
+        public bool CheckLoginUserName(string? username);
+
+        public bool Login(string username, string password);
     }
 }

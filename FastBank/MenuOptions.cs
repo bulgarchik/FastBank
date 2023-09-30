@@ -1,4 +1,5 @@
 ﻿using FastBank.Infrastructure;
+using FastBank.Infrastructure.DTOs;
 using FastBank.Services;
 using Infrastructure.Context;
 
@@ -15,6 +16,7 @@ namespace FastBank
 
             while (inProgress)
             {
+                Console.Clear();
                 Console.WriteLine("Please choose your action:");
                 Console.WriteLine("1: For login. 2: For registration. 0: for exit");
                 int action = Convert.ToInt32(Console.ReadLine());
@@ -39,84 +41,65 @@ namespace FastBank
                 }
             }
         }
-        static public void Login(bool wrongEmail = false)
+        static public void Login()
         {
-            FastBankDbContext db = new FastBankDbContext();
-            var repo = new Repository(db);
+            ICustomerService customerService = new CustomerService();
 
             Console.Clear();
-            if (wrongEmail)
-            {
-                Console.WriteLine("User is not exist. Please input login(email) again:");
-            }
-            else
-            {
-                Console.WriteLine("Please input login(email):");
-            }
 
+            Console.WriteLine("Please input login(email):");
             var currentEmail = Console.ReadLine();
-            var customer = repo.Set<Customer>().FirstOrDefault(a => a.Email == currentEmail);
-            if (customer == null)
-            {
-                Console.WriteLine("This user is not registered, pls try again!");
 
-                MenuOptions.Login(true);
-            }
-            else
+            if (customerService.CheckLoginUserName(currentEmail))
             {
                 var passwordtries = 0;
                 while (passwordtries < 3)
                 {
-                    if (PasswordCheck(customer) == false)
+                    Console.WriteLine("Please input password:");
+                    var inputPassword = Console.ReadLine();
+                    if (customerService.Login(currentEmail, inputPassword))
                     {
-                        Console.WriteLine("Your password is wrong, please try again");
-                        passwordtries++;
+                        Console.WriteLine("Welcom to the Fast Bank System"); //TODO Open User menu
+                        Console.ReadKey();
+                        break;
                     }
                     else
                     {
-                        Console.WriteLine("Welcom to the Fast Bank System"); //TODO Open User menu
-                        break;
-                    };
+                        passwordtries++;
+                    }
                 }
                 if (passwordtries >= 3)
                 {
-                    Console.WriteLine("You try to login with wrong password 3 times!");
+                    Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
+                    Console.ReadKey(true);
                     MenuOptions.ShowMainMenu();
                 }
-
             }
         }
-        static public bool PasswordCheck(Customer customer)
-        {
-            Console.WriteLine("Please input password:");
-            var inputPassword = Console.ReadLine();
-            return inputPassword == customer.Password;
-        }
-        
         static public void CustomerRegistration()
         {
-            ICustomerService customerService= new CustomerService();
+            ICustomerService customerService = new CustomerService();
             Console.Clear();
             var role = Roles.Customer;
 
             Console.WriteLine("Please input registration data about you:");
-            
+
             Console.WriteLine("Please input you name:");
             var name = Console.ReadLine();
-            
+
             Console.WriteLine("Please input you email:");
             var email = Console.ReadLine();
-            
+
             Console.WriteLine("Please input you Birthday:");
             var birthday = DateTime.Parse(Console.ReadLine());
-            
+
             Console.WriteLine("Please input you password:");
             var password = Console.ReadLine();
-            
+
             customerService.Add(name, email, birthday, password, role);
 
             MenuOptions.ShowMainMenu();
         }
-        
+
     }
 }
