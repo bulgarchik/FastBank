@@ -26,7 +26,7 @@ namespace Infrastructure.Context
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker ", FastBank.Roles.Banker)));
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", FastBank.Roles.CustomerService)));
 
-            modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000, this));
+            modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000));
         }
 
         public virtual DbSet<CustomerDTO> Customers { get; set; }

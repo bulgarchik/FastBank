@@ -16,6 +16,6 @@ namespace FastBank.Services
 
         public bool CheckLoginUserName(string? username);
 
-        public bool Login(string username, string password);
+        public Customer? Login(string username, string password);
     }
 }

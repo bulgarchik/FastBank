@@ -7,6 +7,7 @@ namespace FastBank
 {
     public static class MenuOptions
     {
+        static public Customer? ActiveCustumer = null;
 
         static bool inProgress = true;
         static public void ShowMainMenu()
@@ -17,27 +18,35 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                Console.WriteLine("Please choose your action:");
-                Console.WriteLine("1: For login. 2: For registration. 0: for exit");
-                int action = Convert.ToInt32(Console.ReadLine());
-                switch (action)
+                if (ActiveCustumer == null)
                 {
-                    case 1:
-                        {
-                            MenuOptions.Login();
+                    Console.WriteLine("Please choose your action:");
+                    Console.WriteLine("1: For login. 2: For registration. 0: for exit");
+                    int action = Convert.ToInt32(Console.ReadLine());
+                    switch (action)
+                    {
+                        case 1:
+                            {
+                                MenuOptions.Login();
 
-                            break;
-                        };
-                    case 2:
-                        {
-                            CustomerRegistration();
-                            break;
-                        }
-                    case 0:
-                        {
-                            inProgress = false;
-                            break;
-                        }
+                                break;
+                            };
+                        case 2:
+                            {
+                                CustomerRegistration();
+                                break;
+                            }
+                        case 0:
+                            {
+                                inProgress = false;
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    //In depend on customer role we will open different menu with options
+                    OpenCustomerMenu();
                 }
             }
         }
@@ -57,11 +66,11 @@ namespace FastBank
                 {
                     Console.WriteLine("Please input password:");
                     var inputPassword = Console.ReadLine();
-                    if (customerService.Login(currentEmail, inputPassword))
-                    {   
+                    var loginCustomer = customerService.Login(currentEmail, inputPassword);
+                    if (loginCustomer != null)
+                    {
                         Console.WriteLine("Authorized");
-                        Console.WriteLine("Welcom to the Fast Bank System"); //TODO Open User menu
-                        Console.ReadKey();
+                        ActiveCustumer = loginCustomer;
                         break;
                     }
                     else
@@ -102,5 +111,30 @@ namespace FastBank
             MenuOptions.ShowMainMenu();
         }
 
+        static public void OpenCustomerMenu()
+        {
+            if (ActiveCustumer == null)
+            {
+                return;
+            }
+            Console.Clear();
+            Console.WriteLine($"Welkom to FastBank as {ActiveCustumer.Role}");
+            Console.WriteLine("Please choose your action:");
+            Console.WriteLine(" 0: for exit");
+            int action = Convert.ToInt32(Console.ReadLine());
+            bool activeScreen = true;
+            while (activeScreen)
+            {
+                switch (action)
+                {
+                    case 0:
+                        {
+                            activeScreen = false;
+                            ActiveCustumer = null;
+                            break;
+                        }
+                }
+            }
+        }
     }
 }

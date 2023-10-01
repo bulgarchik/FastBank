@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Context;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace FastBank.Infrastructure.DTOs
             CapitalAmount = capitalAmount;
 
         }
+        [Key]
         public Guid BankId { get; private set; }
         public int CapitalAmount { get; private set; }
     }

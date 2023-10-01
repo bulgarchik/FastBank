@@ -90,7 +90,7 @@ namespace FastBank.Services
             return true;
         }
 
-        public bool Login(string username, string password)
+        public Customer? Login(string username, string password)
         {
             ValidationErrors.Clear();
             var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
@@ -113,11 +113,9 @@ namespace FastBank.Services
                     Console.WriteLine(error);
                 }
                 Console.WriteLine("Please try again!");
-
-                return false;
             }
 
-            return true;
+            return customer;
         }
     }
 }
