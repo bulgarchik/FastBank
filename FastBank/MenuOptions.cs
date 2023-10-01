@@ -46,7 +46,35 @@ namespace FastBank
                 else
                 {
                     //In depend on customer role we will open different menu with options
-                    OpenCustomerMenu();
+                    Console.Clear();
+                    Console.WriteLine($"Welkom to FastBank as {ActiveCustumer.Role}");
+                    switch (ActiveCustumer.Role)
+                    {
+                        case Roles.None:
+                            Console.WriteLine($"Welkom to FastBank! You have any right in the system, please speak with administration");
+                            Console.ReadKey();
+                            ActiveCustumer = null;
+                            break;
+                        case Roles.Accunter:
+                            OpenCustomerMenu();
+                            break;
+                        case Roles.Manager:
+                            OpenCustomerMenu();
+                            break;
+                        case Roles.Customer:
+                            OpenCustomerMenu();
+                            break;
+                        case Roles.Banker:
+                            OpenCustomerMenu();
+                            break;
+                        case Roles.CustomerService:
+                            OpenCustomerMenu();
+                            break;
+                        default:
+                            OpenCustomerMenu();
+                            break;
+                    }
+                   
                 }
             }
         }
@@ -117,8 +145,6 @@ namespace FastBank
             {
                 return;
             }
-            Console.Clear();
-            Console.WriteLine($"Welkom to FastBank as {ActiveCustumer.Role}");
             Console.WriteLine("Please choose your action:");
             Console.WriteLine(" 0: for exit");
             int action = Convert.ToInt32(Console.ReadLine());
