@@ -51,7 +51,7 @@ namespace FastBank
                     switch (ActiveCustumer.Role)
                     {
                         case Roles.None:
-                            Console.WriteLine($"Welkom to FastBank! You have any right in the system, please speak with administration");
+                            Console.WriteLine($"You have any right in the system, please speak with administration");
                             Console.ReadKey();
                             ActiveCustumer = null;
                             break;
