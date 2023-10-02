@@ -1,5 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FastBank.Domain;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
+using System.Xml.Linq;
 
 namespace FastBank.Infrastructure.DTOs
 {
@@ -12,10 +15,14 @@ namespace FastBank.Infrastructure.DTOs
         {
             BankId = Guid.NewGuid();
             CapitalAmount = capitalAmount;
-
         }
+
         [Key]
         public Guid BankId { get; private set; }
         public decimal CapitalAmount { get; private set; }
+        public Bank ToDomainObj()
+        {
+            return new Bank(BankId, CapitalAmount);
+        }
     }
 }

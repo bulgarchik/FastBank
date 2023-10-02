@@ -2,7 +2,7 @@
 {
     public enum Roles
     {
-        None,
+        None, //TODO Remove and add Active customer property
         Accountant,
         Manager,
         Customer,

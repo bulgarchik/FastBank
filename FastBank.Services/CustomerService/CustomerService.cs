@@ -1,12 +1,11 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
-using FastBank.Services;
 
 namespace FastBank.Services
 {
     public class CustomerService : ICustomerService
     {
-        readonly private ICustomerRepository _customerRepo;
+        private readonly ICustomerRepository _customerRepo;
 
         public CustomerService()
         {
@@ -35,6 +34,7 @@ namespace FastBank.Services
                     Console.WriteLine(error);
                 }
                 Console.WriteLine("Please try again!");
+                Console.ReadKey();
             }
             else
             {
@@ -56,26 +56,21 @@ namespace FastBank.Services
 
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
         {
-            if (_customerRepo.GetAll().Any(c => c.Name == customer.Name))
-            {
-                validationErrors.Add($"Customer with name: {customer.Name} already exist");
-            }
-            if (_customerRepo.GetAll().Any(c => c.Email == customer.Email))
+            var customers = _customerRepo.GetAll(); //TODO use IQueryable
+
+            if (customers.Any(c => c.Email == customer.Email))
             {
                 validationErrors.Add($"Customer with email: {customer.Email} already exist");
             }
             return validationErrors;
         }
-        public List<string> CheckLoginUserName(string? username)
+        public List<string> CheckLoginUserName(string? username) //TODO rename to email
         {
             var validationErrors = new List<string>();
-            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
+            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username); //TODO modify 
             if (customer == null)
             {
                 validationErrors.Add($"Customer with username(email): {username} not exist");
-            }
-            if (validationErrors.Any())
-            {
                 foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);

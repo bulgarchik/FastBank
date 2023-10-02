@@ -16,10 +16,12 @@ namespace FastBank.Infrastructure.Repository
 
         public List<Customer> GetAll()
         {
-            var customers = _repo.Set<CustomerDTO>().Select(a => a.ToDomainObj()).AsNoTracking().ToList();
+            var customers = _repo.SetNoTracking<CustomerDTO>().Select(a => a.ToDomainObj()).ToList();
 
             return customers;
         }
+
+        //TODO Add method to get customer by email
 
         public void Add(Customer customer)
         {

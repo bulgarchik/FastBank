@@ -21,7 +21,7 @@ namespace FastBank
                 {
                     Console.WriteLine("Please choose your action:");
                     Console.WriteLine("1: For login. 2: For registration. 0: for exit");
-                    int action = Convert.ToInt32(Console.ReadLine());
+                    int action = Convert.ToInt32(Console.ReadLine()); //TODO check for valid command input
                     switch (action)
                     {
                         case 1:
@@ -45,35 +45,7 @@ namespace FastBank
                 else
                 {
                     //In depend on customer role we will open different menu with options
-                    Console.Clear();
-                    Console.WriteLine($"Welcome to FastBank as {ActiveCustomer.Role}");
-                    switch (ActiveCustomer.Role)
-                    {
-                        case Roles.None:
-                            Console.WriteLine($"You don't have any right in the system, please speak with administration");
-                            Console.ReadKey();
-                            ActiveCustomer = null;
-                            break;
-                        case Roles.Accountant:
-                            OpenCustomerMenu();
-                            break;
-                        case Roles.Manager:
-                            OpenCustomerMenu();
-                            break;
-                        case Roles.Customer:
-                            OpenCustomerMenu();
-                            break;
-                        case Roles.Banker:
-                            OpenCustomerMenu();
-                            break;
-                        case Roles.CustomerService:
-                            OpenCustomerMenu();
-                            break;
-                        default:
-                            OpenCustomerMenu();
-                            break;
-                    }
-                   
+                    RenderMenuByRole();
                 }
             }
         }
@@ -86,31 +58,28 @@ namespace FastBank
             Console.WriteLine("Please input login(email):");
             var currentEmail = Console.ReadLine();
 
-            if (!customerService.CheckLoginUserName(currentEmail).Any())
+            var passwordtries = 0;
+            while (passwordtries < 3)
             {
-                var passwordtries = 0;
-                while (passwordtries < 3)
+                Console.WriteLine("Please input password:");
+                var inputPassword = Console.ReadLine();
+                var loginCustomer = customerService.Login(currentEmail, inputPassword);
+                if (loginCustomer != null)
                 {
-                    Console.WriteLine("Please input password:");
-                    var inputPassword = Console.ReadLine();
-                    var loginCustomer = customerService.Login(currentEmail, inputPassword);
-                    if (loginCustomer != null)
-                    {
-                        Console.WriteLine("Authorized");
-                        ActiveCustomer = loginCustomer;
-                        break;
-                    }
-                    else
-                    {
-                        passwordtries++;
-                    }
+                    Console.WriteLine("Authorized");
+                    ActiveCustomer = loginCustomer;
+                    break;
                 }
-                if (passwordtries >= 3)
+                else
                 {
-                    Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
-                    Console.ReadKey(true);
-                    MenuOptions.ShowMainMenu();
+                    passwordtries++;
                 }
+            }
+            if (passwordtries == 3)
+            {
+                Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
+                Console.ReadKey(true);
+                MenuOptions.ShowMainMenu();
             }
         }
         static public void CustomerRegistration()
@@ -137,6 +106,38 @@ namespace FastBank
 
             MenuOptions.ShowMainMenu();
         }
+
+        public static void RenderMenuByRole()
+        {
+            Console.Clear();
+            Console.WriteLine($"Welcome to FastBank as {ActiveCustomer.Role}");
+            switch (ActiveCustomer.Role)
+            {
+                case Roles.None:
+                    Console.WriteLine($"You don't have any right in the system, please speak with administration");
+                    Console.ReadKey();
+                    ActiveCustomer = null;
+                    break;
+                case Roles.Accountant:
+                    OpenCustomerMenu();
+                    break;
+                case Roles.Manager:
+                    OpenCustomerMenu();
+                    break;
+                case Roles.Customer:
+                    OpenCustomerMenu();
+                    break;
+                case Roles.Banker:
+                    OpenCustomerMenu();
+                    break;
+                case Roles.CustomerService:
+                    OpenCustomerMenu();
+                    break;
+                default:
+                    ShowMainMenu();
+                    break;
+            }
+        } 
 
         static public void OpenCustomerMenu()
         {
