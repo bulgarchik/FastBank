@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FastBank.Infrastructure.DTOs
 {
@@ -11,6 +6,7 @@ namespace FastBank.Infrastructure.DTOs
     public class CustomerDTO
     {
         private CustomerDTO() { }
+
         public CustomerDTO(Customer customer)
         {
             Id = customer.Id;
@@ -20,6 +16,7 @@ namespace FastBank.Infrastructure.DTOs
             Password = customer.Password;
             Role = customer.Role.ToString();
         }
+
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
@@ -32,8 +29,6 @@ namespace FastBank.Infrastructure.DTOs
             var role = Enum.Parse<Roles>(Role);
 
             return new Customer(Id, Name, Email, Birthday, Password, role);
-            
         }
-        
     }
 }

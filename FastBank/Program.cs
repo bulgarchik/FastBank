@@ -1,4 +1,5 @@
-﻿using FastBank.Services;
+﻿using FastBank.Domain;
+using FastBank.Services;
 
 namespace FastBank
 {

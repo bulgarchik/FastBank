@@ -1,27 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FastBank.Domain
+﻿namespace FastBank.Domain
 {
-    public sealed class Bank
+    public class Bank
     {
-        private Bank() { }
-        private static Bank? instance = null;
-        public static Bank Instance
+        public Bank(Guid id, decimal capitalAmount)
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new Bank();
-                }
-                return instance;
-            }
+            Id = id;
+            CapitalAmount = capitalAmount;
         }
+
         public Guid Id { get; private set; }
-        public int CapitalAmount { get; private set; }
+        public decimal CapitalAmount { get; private set; }
     }
 }

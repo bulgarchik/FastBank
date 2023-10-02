@@ -5,14 +5,12 @@ namespace FastBank.Services
 {
     public class CustomerService : ICustomerService
     {
-        readonly private ICustomerRepository _customerRepo;
+        private readonly ICustomerRepository _customerRepo;
 
         public CustomerService()
         {
             _customerRepo = new CustomerRepository();
         }
-
-        public List<string> ValidationErrors { get; private set; } = new List<string>();
 
         public List<Customer> GetAll()
         {
@@ -27,15 +25,16 @@ namespace FastBank.Services
         public void Add(string name, string email, DateTime birthday, string password, Roles role)
         {
             var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role);
-            ValidatCustomer(customer);
-            if (ValidationErrors.Any())
+            var validationErrors = ValidatеCustomer(customer);
+            if (validationErrors.Any())
             {
                 Console.WriteLine("Customer data is not valid:");
-                foreach (var error in ValidationErrors)
+                foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
                 }
                 Console.WriteLine("Please try again!");
+                Console.ReadKey();
             }
             else
             {
@@ -44,38 +43,35 @@ namespace FastBank.Services
 
         }
 
-        public void ValidatCustomer(Customer customer)
+        public List<string> ValidatеCustomer(Customer customer)
         {
-            ValidationErrors.Clear();
-            CustomerExist(customer);
+            var validationErrors = new List<string>();
+            CustomerExist(customer, validationErrors);
             //TODO validate password 
             //TODO validate email
             //TODO validate age to be more then 18 and less then 100
             //TODO validate role
+            return validationErrors;
         }
 
-        public void CustomerExist(Customer customer)
+        public List<string> CustomerExist(Customer customer, List<string> validationErrors)
         {
-            if (_customerRepo.GetAll().Any(c => c.Name == customer.Name))
+            var customers = _customerRepo.GetAll(); //TODO use IQueryable
+
+            if (customers.Any(c => c.Email == customer.Email))
             {
-                ValidationErrors.Add($"Customer with name: {customer.Name} already exist");
+                validationErrors.Add($"Customer with email: {customer.Email} already exist");
             }
-            if (_customerRepo.GetAll().Any(c => c.Email == customer.Email))
-            {
-                ValidationErrors.Add($"Customer with email: {customer.Email} already exist");
-            }
+            return validationErrors;
         }
-        public bool CheckLoginUserName(string? username)
+        public List<string> CheckLoginUserName(string? username) //TODO rename to email
         {
-            ValidationErrors.Clear();
-            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
+            var validationErrors = new List<string>();
+            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username); //TODO modify 
             if (customer == null)
             {
-                ValidationErrors.Add($"Customer with username(email): {username} not exist");
-            }
-            if (ValidationErrors.Any())
-            {
-                foreach (var error in ValidationErrors)
+                validationErrors.Add($"Customer with username(email): {username} not exist");
+                foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
                 }
@@ -83,32 +79,31 @@ namespace FastBank.Services
                 Console.WriteLine("Please try again!");
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
-
-                return false;
             }
 
-            return true;
+            return validationErrors;
         }
 
         public Customer? Login(string username, string password)
         {
-            ValidationErrors.Clear();
+            var validationErrors = new List<string>();
             var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
             if (customer == null)
             {
-                ValidationErrors.Add($"Customer with name: {username} not exist");
+                validationErrors.Add($"Customer with name: {username} not exist");
             }
             else
             {
                 if (customer.Password != password)
                 {
-                    ValidationErrors.Add($"Wrong password! Try again!");
+                    validationErrors.Add($"Wrong password! Try again!");
+                    customer = null;
                 }
             }
 
-            if (ValidationErrors.Any())
+            if (validationErrors.Any())
             {
-                foreach (var error in ValidationErrors)
+                foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
                 }

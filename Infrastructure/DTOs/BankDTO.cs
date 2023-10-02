@@ -1,11 +1,8 @@
-﻿using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
+﻿using FastBank.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
+using System.Xml.Linq;
 
 namespace FastBank.Infrastructure.DTOs
 {
@@ -14,14 +11,18 @@ namespace FastBank.Infrastructure.DTOs
     {
         private BankDTO() { }
 
-        public BankDTO(int capitalAmount)
+        public BankDTO(decimal capitalAmount)
         {
             BankId = Guid.NewGuid();
             CapitalAmount = capitalAmount;
-
         }
+
         [Key]
         public Guid BankId { get; private set; }
-        public int CapitalAmount { get; private set; }
+        public decimal CapitalAmount { get; private set; }
+        public Bank ToDomainObj()
+        {
+            return new Bank(BankId, CapitalAmount);
+        }
     }
 }

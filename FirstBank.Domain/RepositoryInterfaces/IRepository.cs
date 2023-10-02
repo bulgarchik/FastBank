@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace FastBank.Domain.RepositoryInterfaces
+﻿namespace FastBank.Domain.RepositoryInterfaces
 {
     public interface IRepository
     {
