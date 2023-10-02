@@ -3,7 +3,7 @@ using FastBank.Services;
 
 namespace FastBank
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
