@@ -1,12 +1,12 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
-using Infrastructure.Context;
+using FastBank.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
 
-namespace FastBank
+namespace FastBank.Infrastructure.Repository
 {
     public class Repository : IRepository
     {

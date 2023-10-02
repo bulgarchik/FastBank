@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FastBank.Services
+﻿namespace FastBank.Services
 {
     public interface ICustomerService
     {
@@ -14,7 +8,7 @@ namespace FastBank.Services
 
         public void Add(string name, string email, DateTime birthday, string password, Roles role);
 
-        public bool CheckLoginUserName(string? username);
+        public List<string> CheckLoginUserName(string? username);
 
         public Customer? Login(string username, string password);
     }

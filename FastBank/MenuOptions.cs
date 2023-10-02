@@ -1,13 +1,12 @@
-﻿using FastBank.Infrastructure;
-using FastBank.Infrastructure.DTOs;
-using FastBank.Services;
-using Infrastructure.Context;
+﻿using FastBank.Services;
+using FastBank.Infrastructure.Context;
+using FastBank.Infrastructure.Repository;
 
 namespace FastBank
 {
     public static class MenuOptions
     {
-        static public Customer? ActiveCustumer = null;
+        static public Customer? ActiveCustomer = null;
 
         static bool inProgress = true;
         static public void ShowMainMenu()
@@ -18,7 +17,7 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                if (ActiveCustumer == null)
+                if (ActiveCustomer == null)
                 {
                     Console.WriteLine("Please choose your action:");
                     Console.WriteLine("1: For login. 2: For registration. 0: for exit");
@@ -47,15 +46,15 @@ namespace FastBank
                 {
                     //In depend on customer role we will open different menu with options
                     Console.Clear();
-                    Console.WriteLine($"Welkom to FastBank as {ActiveCustumer.Role}");
-                    switch (ActiveCustumer.Role)
+                    Console.WriteLine($"Welcome to FastBank as {ActiveCustomer.Role}");
+                    switch (ActiveCustomer.Role)
                     {
                         case Roles.None:
-                            Console.WriteLine($"You have any right in the system, please speak with administration");
+                            Console.WriteLine($"You don't have any right in the system, please speak with administration");
                             Console.ReadKey();
-                            ActiveCustumer = null;
+                            ActiveCustomer = null;
                             break;
-                        case Roles.Accunter:
+                        case Roles.Accountant:
                             OpenCustomerMenu();
                             break;
                         case Roles.Manager:
@@ -87,7 +86,7 @@ namespace FastBank
             Console.WriteLine("Please input login(email):");
             var currentEmail = Console.ReadLine();
 
-            if (customerService.CheckLoginUserName(currentEmail))
+            if (!customerService.CheckLoginUserName(currentEmail).Any())
             {
                 var passwordtries = 0;
                 while (passwordtries < 3)
@@ -98,7 +97,7 @@ namespace FastBank
                     if (loginCustomer != null)
                     {
                         Console.WriteLine("Authorized");
-                        ActiveCustumer = loginCustomer;
+                        ActiveCustomer = loginCustomer;
                         break;
                     }
                     else
@@ -141,7 +140,7 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (ActiveCustumer == null)
+            if (ActiveCustomer == null)
             {
                 return;
             }
@@ -156,7 +155,7 @@ namespace FastBank
                     case 0:
                         {
                             activeScreen = false;
-                            ActiveCustumer = null;
+                            ActiveCustomer = null;
                             break;
                         }
                 }

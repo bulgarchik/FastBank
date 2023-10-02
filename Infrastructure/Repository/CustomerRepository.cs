@@ -1,21 +1,22 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
-using Infrastructure.Context;
+using FastBank.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastBank.Infrastructure.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly FastBank.Repository _repo;
+        private readonly Repository _repo;
 
         public CustomerRepository()
         {
-            _repo = new FastBank.Repository(new FastBankDbContext());
+            _repo = new Repository(new FastBankDbContext());
         }
 
         public List<Customer> GetAll()
         {
-            var customers = _repo.Set<CustomerDTO>().Select(a => a.ToDomainObj()).ToList();
+            var customers = _repo.Set<CustomerDTO>().Select(a => a.ToDomainObj()).AsNoTracking().ToList();
 
             return customers;
         }
