@@ -1,6 +1,7 @@
 ﻿using FastBank.Services;
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
+using System.Text.RegularExpressions;
 
 namespace FastBank
 {
@@ -9,6 +10,17 @@ namespace FastBank
         static public Customer? ActiveCustomer = null;
 
         static bool inProgress = true;
+
+        public static int CommandRead(Regex regPattern)
+        {
+           string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand??""))
+            {
+                Console.WriteLine("Plese input correct command from menu!");
+                inputCommand = Console.ReadLine();
+            }
+            return Convert.ToInt32(inputCommand);
+        }
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
@@ -21,7 +33,9 @@ namespace FastBank
                 {
                     Console.WriteLine("Please choose your action:");
                     Console.WriteLine("1: For login. 2: For registration. 0: for exit");
-                    int action = Convert.ToInt32(Console.ReadLine()); //TODO check for valid command input
+                                        
+                    int action = CommandRead(new Regex("[0-2]{1}")); //TODO check for valid command input
+
                     switch (action)
                     {
                         case 1:
@@ -63,6 +77,7 @@ namespace FastBank
             {
                 Console.WriteLine("Please input password:");
                 var inputPassword = Console.ReadLine();
+
                 var loginCustomer = customerService.Login(currentEmail, inputPassword);
                 if (loginCustomer != null)
                 {
@@ -70,7 +85,7 @@ namespace FastBank
                     ActiveCustomer = loginCustomer;
                     break;
                 }
-                else
+                else if(loginCustomer != null)
                 {
                     passwordtries++;
                 }
