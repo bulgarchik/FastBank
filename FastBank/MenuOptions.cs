@@ -76,7 +76,10 @@ namespace FastBank
             Console.WriteLine("Please input login(email):");
             var currentEmail = Console.ReadLine() ?? "";
             Console.WriteLine("Please input password:");
-            var inputPassword = Console.ReadLine() ?? "";
+            
+            var menuServie = new MenuService();
+            var inputPassword = menuServie.PasswordStaredInput();
+
             var loginCustomer = customerService.Login(currentEmail, inputPassword);
             if (loginCustomer != null)
             {
@@ -88,6 +91,7 @@ namespace FastBank
                 ShowMainMenu();
             }
         }
+
         static public void CustomerRegistration()
         {
             ICustomerService customerService = new CustomerService();
@@ -102,11 +106,12 @@ namespace FastBank
             Console.WriteLine("Please input you email:");
             var email = Console.ReadLine();
 
-            Console.WriteLine("Please input you Birthday:");
+            Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
             var birthday = DateTime.Parse(Console.ReadLine());
 
             Console.WriteLine("Please input you password:");
-            var password = Console.ReadLine();
+            
+            var password = new MenuService().PasswordStaredInput();
 
             customerService.Add(name, email, birthday, password, role, false);
 

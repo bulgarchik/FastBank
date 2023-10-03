@@ -120,12 +120,14 @@ namespace FastBank.Services
                     return customer;
                 }
                 var passwordtries = 0;
+                var menuServie = new MenuService();
                 while (passwordtries < 2)
                 {
                     if (customer.Password != password)
                     {
                         Console.WriteLine($"Wrong password! Press any key to try again!");
                         Console.ReadKey();
+                        
                         Console.SetCursorPosition(0, Console.CursorTop - 1);
                         Console.Write(new string(' ', Console.WindowWidth));
                         Console.SetCursorPosition(0, Console.CursorTop - 1);
@@ -133,6 +135,8 @@ namespace FastBank.Services
                         Console.SetCursorPosition(0, Console.CursorTop - 1);
                         passwordtries++;
                         Console.WriteLine("Please input password:");
+                        
+                        password = menuServie.PasswordStaredInput();
                         password = Console.ReadLine()??"";
                     }
                     else
