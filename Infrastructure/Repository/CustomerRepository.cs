@@ -21,7 +21,6 @@ namespace FastBank.Infrastructure.Repository
             return customers;
         }
 
-        //TODO Add method to get customer by email
         public Customer? GetByEmail(string email) 
         {
             var customer = _repo.SetNoTracking<CustomerDTO>().Where(c => c.Email == email).Select(a => a.ToDomainObj()).ToList().FirstOrDefault();

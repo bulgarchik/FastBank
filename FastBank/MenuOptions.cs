@@ -38,7 +38,7 @@ namespace FastBank
                 if (ActiveCustomer == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
-                    int action = CommandRead(new Regex("^[012]{1}$"), menuOptions); //TODO check for valid command input
+                    int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
 
                     switch (action)
                     {
@@ -108,7 +108,7 @@ namespace FastBank
             Console.WriteLine("Please input you password:");
             var password = Console.ReadLine();
 
-            customerService.Add(name, email, birthday, password, role);
+            customerService.Add(name, email, birthday, password, role, false);
 
             MenuOptions.ShowMainMenu();
         }
@@ -119,11 +119,6 @@ namespace FastBank
             Console.WriteLine($"Welcome to FastBank as {ActiveCustomer.Role}");
             switch (ActiveCustomer.Role)
             {
-                case Roles.None:
-                    Console.WriteLine($"You don't have any right in the system, please speak with administration");
-                    Console.ReadKey();
-                    ActiveCustomer = null;
-                    break;
                 case Roles.Accountant:
                     OpenCustomerMenu();
                     break;

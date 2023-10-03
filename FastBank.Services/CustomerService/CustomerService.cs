@@ -22,9 +22,9 @@ namespace FastBank.Services
             _customerRepo.Add(customer);
         }
 
-        public void Add(string name, string email, DateTime birthday, string password, Roles role)
+        public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inActive)
         {
-            var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role);
+            var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role, inActive);
             var validationErrors = ValidatеCustomer(customer);
             if (validationErrors.Any())
             {
@@ -40,34 +40,54 @@ namespace FastBank.Services
             {
                 Add(customer);
             }
-
         }
 
         public List<string> ValidatеCustomer(Customer customer)
         {
             var validationErrors = new List<string>();
             CustomerExist(customer, validationErrors);
+
             //TODO validate password 
             //TODO validate email
-            //TODO validate age to be more then 18 and less then 100
+            CustomerAgeIsValid(customer, validationErrors);
             //TODO validate role
             return validationErrors;
         }
 
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
         {
-            var customers = _customerRepo.GetAll(); //TODO use IQueryable
+            var customers = _customerRepo.GetByEmail(customer.Email);
 
-            if (customers.Any(c => c.Email == customer.Email))
+            if (customers != null)
             {
                 validationErrors.Add($"Customer with email: {customer.Email} already exist");
             }
             return validationErrors;
         }
-        public List<string> CheckLoginUserName(string email) //TODO rename to email
+
+        public List<string> CustomerAgeIsValid(Customer customer, List<string> validationErrors)
+        {
+            var age = DateTime.Now.Year - customer.Birthday.Year;
+            if (DateTime.Now.DayOfYear < customer.Birthday.DayOfYear)
+            {
+                age = age - 1;
+            }
+
+            if (age < 18)
+            {
+                validationErrors.Add($"The customer is underage (18)");
+            }
+            else if (age > 100)
+            {
+                validationErrors.Add($"The customer is over 100 years old");
+            }
+            return validationErrors;
+        }
+
+        public List<string> CheckLoginUserName(string email)
         {
             var validationErrors = new List<string>();
-            var customer = _customerRepo.GetByEmail(email); //TODO modify 
+            var customer = _customerRepo.GetByEmail(email);
             if (customer == null)
             {
                 validationErrors.Add($"Customer with username(email): {email} not exist");
@@ -93,6 +113,12 @@ namespace FastBank.Services
             }
             else
             {
+                if (customer.InActive)
+                {
+                    Console.WriteLine($"Customer with name: {email} deactivated. Please contatc Administration");
+                    customer = null;
+                    return customer;
+                }
                 var passwordtries = 0;
                 while (passwordtries < 2)
                 {
