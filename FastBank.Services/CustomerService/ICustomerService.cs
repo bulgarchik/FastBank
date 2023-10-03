@@ -8,7 +8,7 @@
 
         public void Add(string name, string email, DateTime birthday, string password, Roles role);
 
-        public List<string> CheckLoginUserName(string? username);
+        public List<string> CheckLoginUserName(string username);
 
         public Customer? Login(string username, string password);
     }

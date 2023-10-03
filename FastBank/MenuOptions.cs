@@ -11,16 +11,22 @@ namespace FastBank
 
         static bool inProgress = true;
 
-        public static int CommandRead(Regex regPattern)
+        public static int CommandRead(Regex regPattern, string menuOptions)
         {
-           string? inputCommand = Console.ReadLine();
-            while (!regPattern.IsMatch(inputCommand??""))
+            Console.WriteLine(menuOptions);
+            string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand ?? ""))
             {
-                Console.WriteLine("Plese input correct command from menu!");
+                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
+                Console.ReadKey();
+                Console.Clear();
+                Console.WriteLine(menuOptions);
                 inputCommand = Console.ReadLine();
+
             }
             return Convert.ToInt32(inputCommand);
         }
+
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
@@ -31,10 +37,8 @@ namespace FastBank
                 Console.Clear();
                 if (ActiveCustomer == null)
                 {
-                    Console.WriteLine("Please choose your action:");
-                    Console.WriteLine("1: For login. 2: For registration. 0: for exit");
-                                        
-                    int action = CommandRead(new Regex("[0-2]{1}")); //TODO check for valid command input
+                    var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
+                    int action = CommandRead(new Regex("^[012]{1}$"), menuOptions); //TODO check for valid command input
 
                     switch (action)
                     {
@@ -70,31 +74,18 @@ namespace FastBank
             Console.Clear();
 
             Console.WriteLine("Please input login(email):");
-            var currentEmail = Console.ReadLine();
-
-            var passwordtries = 0;
-            while (passwordtries < 3)
+            var currentEmail = Console.ReadLine() ?? "";
+            Console.WriteLine("Please input password:");
+            var inputPassword = Console.ReadLine() ?? "";
+            var loginCustomer = customerService.Login(currentEmail, inputPassword);
+            if (loginCustomer != null)
             {
-                Console.WriteLine("Please input password:");
-                var inputPassword = Console.ReadLine();
-
-                var loginCustomer = customerService.Login(currentEmail, inputPassword);
-                if (loginCustomer != null)
-                {
-                    Console.WriteLine("Authorized");
-                    ActiveCustomer = loginCustomer;
-                    break;
-                }
-                else if(loginCustomer != null)
-                {
-                    passwordtries++;
-                }
+                Console.WriteLine("Authorized");
+                ActiveCustomer = loginCustomer;
             }
-            if (passwordtries == 3)
+            else
             {
-                Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
-                Console.ReadKey(true);
-                MenuOptions.ShowMainMenu();
+                ShowMainMenu();
             }
         }
         static public void CustomerRegistration()
@@ -152,7 +143,7 @@ namespace FastBank
                     ShowMainMenu();
                     break;
             }
-        } 
+        }
 
         static public void OpenCustomerMenu()
         {
