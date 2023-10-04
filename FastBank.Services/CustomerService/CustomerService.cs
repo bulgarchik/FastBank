@@ -56,9 +56,7 @@ namespace FastBank.Services
 
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
         {
-            var customers = _customerRepo.GetByEmail(customer.Email);
-
-            if (customers != null)
+            if (_customerRepo.GetByEmail(customer.Email) != null)
             {
                 validationErrors.Add($"Customer with email: {customer.Email} already exist");
             }
@@ -115,7 +113,7 @@ namespace FastBank.Services
             {
                 if (customer.InActive)
                 {
-                    Console.WriteLine($"Customer with name: {email} deactivated. Please contatc Administration");
+                    Console.WriteLine($"Customer with name: {email} deactivated. Please contact Administration");
                     customer = null;
                     return customer;
                 }
