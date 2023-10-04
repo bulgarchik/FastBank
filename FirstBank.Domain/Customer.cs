@@ -10,7 +10,7 @@
             Birthday = birthday;
             Password = password;
             Role = role;
-            InActive = inActive;
+            Inactive = inActive;
         }
 
         public Guid Id { get; private set; }
@@ -19,6 +19,6 @@
         public DateTime Birthday { get; private set; }
         public string Password { get; private set; }
         public Roles Role { get; private set; }
-        public bool InActive { get; private set; }
+        public bool Inactive { get; private set; }
     }
 }

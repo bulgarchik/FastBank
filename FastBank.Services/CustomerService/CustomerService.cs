@@ -111,7 +111,7 @@ namespace FastBank.Services
             }
             else
             {
-                if (customer.InActive)
+                if (customer.Inactive)
                 {
                     Console.WriteLine($"Customer with name: {email} deactivated. Please contact Administration");
                     customer = null;
