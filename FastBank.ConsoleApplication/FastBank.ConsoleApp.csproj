@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FastBank.Infrastructure\FastBank.Infrastructure.csproj" />
     <ProjectReference Include="..\FastBank.Services\FastBank.Services.csproj" />
-    <ProjectReference Include="..\Infrastructure\FastBank.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

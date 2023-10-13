@@ -2,7 +2,7 @@
 {
     public class Customer
     {
-        public Customer(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inActive)
+        public Customer(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inactive)
         {
             Id = id;
             Name = name;
@@ -10,7 +10,7 @@
             Birthday = birthday;
             Password = password;
             Role = role;
-            Inactive = inActive;
+            Inactive = inactive;
         }
 
         public Guid Id { get; private set; }
