@@ -22,9 +22,9 @@ namespace FastBank.Services
             _customerRepo.Add(customer);
         }
 
-        public void Add(string name, string email, DateTime birthday, string password, Roles role)
+        public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive)
         {
-            var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role);
+            var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role, inactive);
             var validationErrors = ValidatеCustomer(customer);
             if (validationErrors.Any())
             {
@@ -40,37 +40,55 @@ namespace FastBank.Services
             {
                 Add(customer);
             }
-
         }
 
         public List<string> ValidatеCustomer(Customer customer)
         {
             var validationErrors = new List<string>();
             CustomerExist(customer, validationErrors);
+
             //TODO validate password 
             //TODO validate email
-            //TODO validate age to be more then 18 and less then 100
+            CustomerAgeIsValid(customer, validationErrors);
             //TODO validate role
             return validationErrors;
         }
 
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
         {
-            var customers = _customerRepo.GetAll(); //TODO use IQueryable
-
-            if (customers.Any(c => c.Email == customer.Email))
+            if (_customerRepo.GetByEmail(customer.Email) != null)
             {
                 validationErrors.Add($"Customer with email: {customer.Email} already exist");
             }
             return validationErrors;
         }
-        public List<string> CheckLoginUserName(string? username) //TODO rename to email
+
+        public List<string> CustomerAgeIsValid(Customer customer, List<string> validationErrors)
+        {
+            var age = DateTime.Now.Year - customer.Birthday.Year;
+            if (DateTime.Now.DayOfYear < customer.Birthday.DayOfYear)
+            {
+                age = age - 1;
+            }
+
+            if (age < 18)
+            {
+                validationErrors.Add($"The customer is underage (18)");
+            }
+            else if (age > 100)
+            {
+                validationErrors.Add($"The customer is over 100 years old");
+            }
+            return validationErrors;
+        }
+
+        public List<string> CheckLoginUserName(string email)
         {
             var validationErrors = new List<string>();
-            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username); //TODO modify 
+            var customer = _customerRepo.GetByEmail(email);
             if (customer == null)
             {
-                validationErrors.Add($"Customer with username(email): {username} not exist");
+                validationErrors.Add($"Customer with username(email): {email} not exist");
                 foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
@@ -84,32 +102,54 @@ namespace FastBank.Services
             return validationErrors;
         }
 
-        public Customer? Login(string username, string password)
+        public Customer? Login(string email, string password)
         {
-            var validationErrors = new List<string>();
-            var customer = _customerRepo.GetAll().FirstOrDefault(c => c.Email == username);
+            var customer = _customerRepo.GetByEmail(email);
             if (customer == null)
             {
-                validationErrors.Add($"Customer with name: {username} not exist");
+                Console.WriteLine($"Customer with name: {email} not exist");
             }
             else
             {
-                if (customer.Password != password)
+                if (customer.Inactive)
                 {
-                    validationErrors.Add($"Wrong password! Try again!");
+                    Console.WriteLine($"Customer with name: {email} deactivated. Please contact Administration");
+                    customer = null;
+                    return customer;
+                }
+                var passwordtries = 0;
+                var menuServie = new MenuService();
+                while (passwordtries < 2)
+                {
+                    if (customer.Password != password)
+                    {
+                        Console.WriteLine($"Wrong password! Press any key to try again!");
+                        Console.ReadKey();
+                        
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                        Console.Write(new string(' ', Console.WindowWidth));
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                        Console.Write(new string(' ', Console.WindowWidth));
+                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+                        passwordtries++;
+                        Console.WriteLine("Please input password:");
+                        
+                        password = menuServie.PasswordStaredInput();
+                        password = Console.ReadLine()??"";
+                    }
+                    else
+                    {
+                        return customer;
+                    }
+                }
+                if (passwordtries == 2)
+                {
+                    Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
+                    Console.ReadKey(true);
                     customer = null;
                 }
             }
-
-            if (validationErrors.Any())
-            {
-                foreach (var error in validationErrors)
-                {
-                    Console.WriteLine(error);
-                }
-                Console.WriteLine("Please try again!");
-            }
-
+                        
             return customer;
         }
     }

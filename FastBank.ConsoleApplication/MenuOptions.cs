@@ -1,6 +1,7 @@
 ﻿using FastBank.Services;
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
+using System.Text.RegularExpressions;
 
 namespace FastBank
 {
@@ -9,6 +10,23 @@ namespace FastBank
         static public Customer? ActiveCustomer = null;
 
         static bool inProgress = true;
+
+        public static int CommandRead(Regex regPattern, string menuOptions)
+        {
+            Console.WriteLine(menuOptions);
+            string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand ?? ""))
+            {
+                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
+                Console.ReadKey();
+                Console.Clear();
+                Console.WriteLine(menuOptions);
+                inputCommand = Console.ReadLine();
+
+            }
+            return Convert.ToInt32(inputCommand);
+        }
+
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
@@ -19,9 +37,9 @@ namespace FastBank
                 Console.Clear();
                 if (ActiveCustomer == null)
                 {
-                    Console.WriteLine("Please choose your action:");
-                    Console.WriteLine("1: For login. 2: For registration. 0: for exit");
-                    int action = Convert.ToInt32(Console.ReadLine()); //TODO check for valid command input
+                    var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
+                    int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
+
                     switch (action)
                     {
                         case 1:
@@ -56,32 +74,24 @@ namespace FastBank
             Console.Clear();
 
             Console.WriteLine("Please input login(email):");
-            var currentEmail = Console.ReadLine();
+            var currentEmail = Console.ReadLine() ?? "";
+            Console.WriteLine("Please input password:");
+            
+            var menuServie = new MenuService();
+            var inputPassword = menuServie.PasswordStaredInput();
 
-            var passwordtries = 0;
-            while (passwordtries < 3)
+            var loginCustomer = customerService.Login(currentEmail, inputPassword);
+            if (loginCustomer != null)
             {
-                Console.WriteLine("Please input password:");
-                var inputPassword = Console.ReadLine();
-                var loginCustomer = customerService.Login(currentEmail, inputPassword);
-                if (loginCustomer != null)
-                {
-                    Console.WriteLine("Authorized");
-                    ActiveCustomer = loginCustomer;
-                    break;
-                }
-                else
-                {
-                    passwordtries++;
-                }
+                Console.WriteLine("Authorized");
+                ActiveCustomer = loginCustomer;
             }
-            if (passwordtries == 3)
+            else
             {
-                Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
-                Console.ReadKey(true);
-                MenuOptions.ShowMainMenu();
+                ShowMainMenu();
             }
         }
+
         static public void CustomerRegistration()
         {
             ICustomerService customerService = new CustomerService();
@@ -96,13 +106,14 @@ namespace FastBank
             Console.WriteLine("Please input you email:");
             var email = Console.ReadLine();
 
-            Console.WriteLine("Please input you Birthday:");
+            Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
             var birthday = DateTime.Parse(Console.ReadLine());
 
             Console.WriteLine("Please input you password:");
-            var password = Console.ReadLine();
+            
+            var password = new MenuService().PasswordStaredInput();
 
-            customerService.Add(name, email, birthday, password, role);
+            customerService.Add(name, email, birthday, password, role, false);
 
             MenuOptions.ShowMainMenu();
         }
@@ -113,11 +124,6 @@ namespace FastBank
             Console.WriteLine($"Welcome to FastBank as {ActiveCustomer.Role}");
             switch (ActiveCustomer.Role)
             {
-                case Roles.None:
-                    Console.WriteLine($"You don't have any right in the system, please speak with administration");
-                    Console.ReadKey();
-                    ActiveCustomer = null;
-                    break;
                 case Roles.Accountant:
                     OpenCustomerMenu();
                     break;
@@ -137,7 +143,7 @@ namespace FastBank
                     ShowMainMenu();
                     break;
             }
-        } 
+        }
 
         static public void OpenCustomerMenu()
         {

@@ -15,6 +15,7 @@ namespace FastBank.Infrastructure.DTOs
             Birthday = customer.Birthday;
             Password = customer.Password;
             Role = customer.Role.ToString();
+            Inactive = customer.Inactive;
         }
 
         public Guid Id { get; private set; }
@@ -23,12 +24,13 @@ namespace FastBank.Infrastructure.DTOs
         public DateTime Birthday { get; private set; }
         public string Password { get; private set; }
         public string Role { get; private set; }
+        public bool Inactive {  get; private set; }
 
         public Customer ToDomainObj()
         {
             var role = Enum.Parse<Roles>(Role);
 
-            return new Customer(Id, Name, Email, Birthday, Password, role);
+            return new Customer(Id, Name, Email, Birthday, Password, role, Inactive);
         }
     }
 }

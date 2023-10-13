@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FirstBank.Domain\FastBank.Domain.csproj" />
+    <ProjectReference Include="..\FastBank.Domain\FastBank.Domain.csproj" />
   </ItemGroup>
 
 </Project>
