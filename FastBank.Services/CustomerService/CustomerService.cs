@@ -69,6 +69,12 @@ namespace FastBank.Services
             }
         }
 
+        public List<string> ValidateDate(string date, List<string> validationErrors)
+        {
+
+            return validationErrors;
+        }
+
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
         {
             if (_customerRepo.GetByEmail(customer.Email) != null)
