@@ -1,5 +1,6 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using System.Text.RegularExpressions;
 
 namespace FastBank.Services
 {
@@ -28,7 +29,7 @@ namespace FastBank.Services
             var validationErrors = ValidatеCustomer(customer);
             if (validationErrors.Any())
             {
-                Console.WriteLine("Customer data is not valid:");
+                Console.WriteLine("\nCustomer data is not valid:");
                 foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
@@ -48,10 +49,24 @@ namespace FastBank.Services
             CustomerExist(customer, validationErrors);
 
             //TODO validate password 
-            //TODO validate email
+            ValidateEmail(customer.Email, validationErrors);
             CustomerAgeIsValid(customer, validationErrors);
             //TODO validate role
             return validationErrors;
+        }
+
+        public List<string> ValidateEmail(string email, List<string> validationErrors)
+        {
+            var regEmailPattern = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+            if (regEmailPattern.IsMatch(email))
+            {
+                return validationErrors;
+            }
+            else
+            {
+                validationErrors.Add("You entered wrong email");
+                return validationErrors;
+            }
         }
 
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
