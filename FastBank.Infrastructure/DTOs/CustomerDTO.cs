@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace FastBank.Infrastructure.DTOs
 {
@@ -24,7 +25,7 @@ namespace FastBank.Infrastructure.DTOs
         public DateTime Birthday { get; private set; }
         public string Password { get; private set; }
         public string Role { get; private set; }
-        public bool Inactive {  get; private set; }
+        public bool Inactive { get; private set; }
 
         public Customer ToDomainObj()
         {
