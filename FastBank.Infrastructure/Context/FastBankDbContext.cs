@@ -26,6 +26,7 @@ namespace FastBank.Infrastructure.Context
 
         public virtual DbSet<CustomerDTO> Customers { get; set; }
         public virtual DbSet<BankDTO> Banks { get; set; }
+        public virtual DbSet<BankAccountDTO> BankAccounts { get; set; }
 
     }
 }

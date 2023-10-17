@@ -2,6 +2,7 @@
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
 using System.Text.RegularExpressions;
+using FastBank.Services.BankAccountService;
 
 namespace FastBank
 {
@@ -163,15 +164,34 @@ namespace FastBank
                 return;
             }
 
-            
+            var bankAccountService = new BankAccountService();
+            var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
+
+            if (customerBankAccount == null || customerBankAccount.Amount == 0)
+            {
+                Console.WriteLine("Please make a deposit at Fast Bank");
+                bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+            }
+            else
+            {
+                Console.WriteLine($"You bank amount: {customerBankAccount.Amount}");
+            }
+
+
             Console.WriteLine("Please choose your action:");
-            Console.WriteLine(" 0: for exit");
+            Console.WriteLine(" 1: for deposit  0: for exit");
             int action = Convert.ToInt32(Console.ReadLine());
             bool activeScreen = true;
             while (activeScreen)
             {
                 switch (action)
                 {
+                    case 1:
+                        {
+                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                            activeScreen = false;
+                            break;
+                        }
                     case 0:
                         {
                             activeScreen = false;
@@ -180,6 +200,8 @@ namespace FastBank
                         }
                 }
             }
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }

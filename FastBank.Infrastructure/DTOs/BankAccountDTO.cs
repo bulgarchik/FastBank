@@ -1,25 +1,22 @@
 ﻿using FastBank.Domain;
-using FastBank.Domain.RepositoryInterfaces;
-using FastBank.Infrastructure.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FastBank.Infrastructure.DTOs
 {
+    [Table("BankAccounts")]
     public class BankAccountDTO
     {
         private BankAccountDTO() { }
 
-        public BankAccountDTO(Guid bankAccountId, Customer customer, decimal amount)
+        public BankAccountDTO(BankAccount bankAccount)
         {
-            BankAccountId = bankAccountId;
-            CustomerDTO = new CustomerDTO(customer);
-            Amount = amount;
+            BankAccountId = bankAccount.BankAccountId;
+            CustomerDTO = new CustomerDTO(bankAccount.Customer);
+            Amount = bankAccount.Amount;
         }
 
+        [Key]
         public Guid BankAccountId { get; private set; }
 
         public CustomerDTO CustomerDTO { get; private set; }
@@ -28,7 +25,7 @@ namespace FastBank.Infrastructure.DTOs
 
         public BankAccount ToDomainObj()
         {
-            return new BankAccount(BankAccountId, CustomerDTO.ToDomainObj());
+            return new BankAccount(BankAccountId, CustomerDTO.ToDomainObj(), Amount);
         }
     }
 
