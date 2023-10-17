@@ -107,9 +107,9 @@ namespace FastBank
             var email = Console.ReadLine();
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
-            string sBirthday = Console.ReadLine()??"";
+            string birthdayInput = Console.ReadLine()??"";
             DateTime birthday;
-            while (!DateTime.TryParse(sBirthday, out birthday))
+            while (!DateTime.TryParse(birthdayInput, out birthday))
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 Console.ReadKey();
@@ -118,7 +118,7 @@ namespace FastBank
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
                 Console.Write(new string(' ', Console.WindowWidth));
                 Console.SetCursorPosition(0, Console.CursorTop);
-                sBirthday = Console.ReadLine() ?? "";
+                birthdayInput = Console.ReadLine() ?? "";
             }
             
             Console.WriteLine("Please input you password:");

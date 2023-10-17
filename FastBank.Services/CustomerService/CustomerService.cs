@@ -58,15 +58,11 @@ namespace FastBank.Services
         public List<string> ValidateEmail(string email, List<string> validationErrors)
         {
             var regEmailPattern = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-            if (regEmailPattern.IsMatch(email))
-            {
-                return validationErrors;
-            }
-            else
+            if (!regEmailPattern.IsMatch(email))
             {
                 validationErrors.Add("You entered wrong email");
-                return validationErrors;
             }
+            return validationErrors;
         }
 
         public List<string> CustomerExist(Customer customer, List<string> validationErrors)
