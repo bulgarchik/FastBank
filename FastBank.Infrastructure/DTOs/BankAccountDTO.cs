@@ -1,4 +1,5 @@
-﻿using FastBank.Domain.RepositoryInterfaces;
+﻿using FastBank.Domain;
+using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,14 @@ namespace FastBank.Infrastructure.DTOs
 
         public Guid BankAccountId { get; private set; }
 
-        public CustomerDTO? CustomerDTO { get; private set; }
+        public CustomerDTO CustomerDTO { get; private set; }
 
         public decimal Amount { get; private set; }
+
+        public BankAccount ToDomainObj()
+        {
+            return new BankAccount(BankAccountId, CustomerDTO.ToDomainObj());
+        }
     }
 
 }

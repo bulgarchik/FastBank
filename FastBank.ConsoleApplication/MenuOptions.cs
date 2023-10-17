@@ -162,6 +162,8 @@ namespace FastBank
             {
                 return;
             }
+
+            
             Console.WriteLine("Please choose your action:");
             Console.WriteLine(" 0: for exit");
             int action = Convert.ToInt32(Console.ReadLine());
