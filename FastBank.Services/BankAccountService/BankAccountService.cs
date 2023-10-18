@@ -73,5 +73,49 @@ namespace FastBank.Services.BankAccountService
         {
             bankAccountRepository.Update(bankAccount);
         }
+
+        public void WithdrawAmount(Customer customer, BankAccount customerBankAccount)
+        {
+            Console.Write("Please write the withdraw amount:");
+            var inputDepositAmount = Console.ReadLine();
+            decimal withdrawAmount;
+            while (!decimal.TryParse(inputDepositAmount, out withdrawAmount) && withdrawAmount < 0)
+            {
+                if (withdrawAmount < 0)
+                {
+                    Console.WriteLine("Please input an amount to withdraw more than 0");
+                }
+                else if (withdrawAmount == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Plese input correct ammount to withdraw");
+                }
+                Console.ReadKey();
+
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(0, Console.CursorTop);
+                inputDepositAmount = Console.ReadLine();
+            }
+
+            if (withdrawAmount > 0)
+            {
+                if (customerBankAccount == null || (customerBankAccount.Amount - withdrawAmount)<0 )
+                {
+                    Console.WriteLine("You do not have enough funds to withdraw");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    customerBankAccount.WithdrawAmount(withdrawAmount);
+                    Update(customerBankAccount);
+                }
+            }
+        }
     }
 }

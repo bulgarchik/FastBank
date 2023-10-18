@@ -77,7 +77,7 @@ namespace FastBank
             Console.WriteLine("Please input login(email):");
             var currentEmail = Console.ReadLine() ?? "";
             Console.WriteLine("Please input password:");
-            
+
             var menuServie = new MenuService();
             var inputPassword = menuServie.PasswordStaredInput();
 
@@ -108,7 +108,7 @@ namespace FastBank
             var email = Console.ReadLine();
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
-            string birthdayInput = Console.ReadLine()??"";
+            string birthdayInput = Console.ReadLine() ?? "";
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
             {
@@ -121,7 +121,7 @@ namespace FastBank
                 Console.SetCursorPosition(0, Console.CursorTop);
                 birthdayInput = Console.ReadLine() ?? "";
             }
-            
+
             Console.WriteLine("Please input you password:");
             var password = new MenuService().PasswordStaredInput();
 
@@ -172,31 +172,32 @@ namespace FastBank
                 Console.WriteLine("Please make a deposit at Fast Bank");
                 bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
                 Console.Clear();
-                OpenCustomerMenu();
             }
             else
             {
                 Console.WriteLine($"You bank amount: {customerBankAccount.Amount}");
-            }
-
-            Console.WriteLine("Please choose your action:");
-            Console.WriteLine(" 1: for deposit  0: for exit");
-            int action = Convert.ToInt32(Console.ReadLine());
-            switch (action)
-            {
-                case 1:
-                    {
-                        bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
-                        break;
-                    }
-                case 0:
-                    {
-                        ActiveCustomer = null;
-                        break;
-                    }
+                var menuOptions = "Please choose your action: \n 1: For deposit. 2: For withdraw. 0: for exit";
+                int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                switch (action)
+                {
+                    case 1:
+                        {
+                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                            break;
+                        }
+                    case 2:
+                        {
+                            bankAccountService.WithdrawAmount(ActiveCustomer, customerBankAccount);
+                            break;
+                        }
+                    case 0:
+                        {
+                            ActiveCustomer = null;
+                            break;
+                        }
+                }
             }
             Console.Clear();
-            OpenCustomerMenu();
         }
     }
 }
