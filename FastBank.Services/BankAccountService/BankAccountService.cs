@@ -19,7 +19,9 @@ namespace FastBank.Services.BankAccountService
 
         public void Add(Customer customer, decimal amount)
         {
-            if (GetBankAccount(customer) == null)
+            var existBankAccount = GetBankAccount(customer);
+
+            if (existBankAccount == null)
             {
                 BankAccount bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
                 bankAccountRepository.Add(bankAccount);
