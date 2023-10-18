@@ -2,6 +2,7 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastBank.Infrastructure.Repository
 {
@@ -20,12 +21,21 @@ namespace FastBank.Infrastructure.Repository
 
         public BankAccount? GetBankAccountByCustomer(Customer customer)
         {
-            return _repo.SetNoTracking<BankAccountDTO>().Where(a => a.CustomerDTO == new CustomerDTO(customer)).Select(a => a.ToDomainObj()).FirstOrDefault();
+            return _repo.Set<BankAccountDTO>()
+                .Where(a => a.CustomerId == customer.Id)
+                .Include(a => a.Customer)
+                .Select(a => a.ToDomainObj())
+                .FirstOrDefault();
         }
 
         public void Update(BankAccount bankAccount)
         {
-            _repo.Update<BankAccountDTO>(new BankAccountDTO(bankAccount));
+            var bankAccountDto = _repo.Set<BankAccountDTO>().Where(a => a.BankAccountId == bankAccount.BankAccountId).FirstOrDefault();
+            if (bankAccountDto != null) 
+            {
+                bankAccountDto.Amount = bankAccount.Amount;
+                _repo.Update<BankAccountDTO>(bankAccountDto);
+            }
         }
     }
 }

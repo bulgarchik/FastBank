@@ -171,37 +171,32 @@ namespace FastBank
             {
                 Console.WriteLine("Please make a deposit at Fast Bank");
                 bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                Console.Clear();
+                OpenCustomerMenu();
             }
             else
             {
                 Console.WriteLine($"You bank amount: {customerBankAccount.Amount}");
             }
 
-
             Console.WriteLine("Please choose your action:");
             Console.WriteLine(" 1: for deposit  0: for exit");
             int action = Convert.ToInt32(Console.ReadLine());
-            bool activeScreen = true;
-            while (activeScreen)
+            switch (action)
             {
-                switch (action)
-                {
-                    case 1:
-                        {
-                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
-                            activeScreen = false;
-                            break;
-                        }
-                    case 0:
-                        {
-                            activeScreen = false;
-                            ActiveCustomer = null;
-                            break;
-                        }
-                }
+                case 1:
+                    {
+                        bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                        break;
+                    }
+                case 0:
+                    {
+                        ActiveCustomer = null;
+                        break;
+                    }
             }
-            Console.ReadKey();
             Console.Clear();
+            OpenCustomerMenu();
         }
     }
 }

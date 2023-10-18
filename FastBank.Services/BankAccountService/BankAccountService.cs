@@ -1,11 +1,6 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FastBank.Services.BankAccountService
 {
@@ -71,7 +66,6 @@ namespace FastBank.Services.BankAccountService
                     customerBankAccount.DepositAmount(depositAmount);
                     Update(customerBankAccount);
                 }
-
             }
         }
 

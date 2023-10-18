@@ -12,20 +12,23 @@ namespace FastBank.Infrastructure.DTOs
         public BankAccountDTO(BankAccount bankAccount)
         {
             BankAccountId = bankAccount.BankAccountId;
-            CustomerDTO = new CustomerDTO(bankAccount.Customer);
+            CustomerId = bankAccount.Customer.Id;
             Amount = bankAccount.Amount;
         }
 
         [Key]
         public Guid BankAccountId { get; private set; }
+        
+        public Guid CustomerId { get; private set; }
 
-        public CustomerDTO CustomerDTO { get; private set; }
+        [ForeignKey(nameof(CustomerId))]
+        public CustomerDTO Customer { get; private set; }
 
-        public decimal Amount { get; private set; }
+        public decimal Amount { get; internal set; }
 
         public BankAccount ToDomainObj()
         {
-            return new BankAccount(BankAccountId, CustomerDTO.ToDomainObj(), Amount);
+            return new BankAccount(BankAccountId, Customer.ToDomainObj(), Amount);
         }
     }
 
