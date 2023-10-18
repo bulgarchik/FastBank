@@ -1,7 +1,6 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace FastBank.Infrastructure.Repository
 {

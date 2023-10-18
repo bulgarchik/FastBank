@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FastBank.Domain
+﻿namespace FastBank.Domain
 {
     public class Message
     {
+       
         public Message(Guid messageId, Customer sender, Customer? receiver, Roles receiverRole, string text, string subject, Message? basedOnMessage)
         {
             MessageId = messageId;
