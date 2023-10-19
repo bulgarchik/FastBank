@@ -19,7 +19,9 @@ namespace FastBank.Services.BankAccountService
 
         public void Add(Customer customer, decimal amount)
         {
-            if (GetBankAccount(customer) == null)
+            var existBankAccount = GetBankAccount(customer);
+
+            if (existBankAccount == null)
             {
                 BankAccount bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
                 bankAccountRepository.Add(bankAccount);
@@ -28,32 +30,30 @@ namespace FastBank.Services.BankAccountService
 
         public void DepositAmount(Customer customer, BankAccount customerBankAccount)
         {
-            Console.Write("Please write the deposit amount:");
-            var inputDepositAmount = Console.ReadLine();
             decimal depositAmount;
-            while (!decimal.TryParse(inputDepositAmount, out depositAmount) && depositAmount < 0)
+            do
             {
-                if (depositAmount < 0)
+                Console.Write("Please write the deposit amount (type 'q' for exit):");
+                var inputDepositAmount = Console.ReadLine();
+                if (inputDepositAmount == "q")
+                    return;
+
+                if (!decimal.TryParse(inputDepositAmount, out depositAmount))
                 {
-                    Console.WriteLine("Please input an amount to deposit more than 0");
+                    Console.WriteLine("Plese input correct ammount to deposit (press any key to continue...)");
                 }
-                else if (depositAmount == 0)
+                else if (depositAmount < 0)
                 {
-                    break;
+                    Console.WriteLine("Please input an amount to deposit more than 0 (press any key to continue...)");
                 }
                 else
                 {
-                    Console.WriteLine("Plese input correct ammount to deposit");
+                    continue;
                 }
                 Console.ReadKey();
+                new MenuService().MoveToPreviosLine(2);
 
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop);
-                inputDepositAmount = Console.ReadLine();
-            }
+            } while (depositAmount <= 0);
 
             if (depositAmount > 0)
             {
