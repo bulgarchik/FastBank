@@ -12,6 +12,7 @@ namespace FastBank.Services.BankAccountService
         {
             bankAccountRepository = new BankAccountRepository();
         }
+
         public BankAccount? GetBankAccount(Customer customer)
         {
             return bankAccountRepository.GetBankAccountByCustomer(customer);
