@@ -173,7 +173,7 @@ namespace FastBank
             else
             {
                 var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
-                                  $"\nYou bank amount: {customerBankAccount.Amount} " +
+                                  $"\nYou bank amount: {customerBankAccount.Amount:0,00} " +
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 0: for exit";
                 int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
