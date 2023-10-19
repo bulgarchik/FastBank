@@ -114,7 +114,7 @@ namespace FastBank
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 Console.ReadKey();
-                new MenuService().MoveToPreviosLine(2);
+                new MenuService().MoveToPreviousLine(2);
                 birthdayInput = Console.ReadLine() ?? "";
             }
 

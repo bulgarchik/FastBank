@@ -17,7 +17,7 @@ namespace FastBank.Infrastructure.Context
         {
             modelBuilder.Entity<BankAccountDTO>()
                 .HasOne(c => c.Customer)
-                .WithMany(c => c.BankAccounts)
+                .WithMany()
                 .HasForeignKey(c => c.CustomerId)
                 .IsRequired();
 

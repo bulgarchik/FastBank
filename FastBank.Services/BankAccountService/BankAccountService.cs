@@ -38,20 +38,12 @@ namespace FastBank.Services.BankAccountService
                 if (inputDepositAmount == "q")
                     return;
 
-                if (!decimal.TryParse(inputDepositAmount, out depositAmount))
+                if (!decimal.TryParse(inputDepositAmount, out depositAmount) || depositAmount <= 0)
                 {
-                    Console.WriteLine("Plese input correct ammount to deposit (press any key to continue...)");
+                    Console.WriteLine("Please input correct amount to deposit (press any key to continue...)");
+                    Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(2);
                 }
-                else if (depositAmount < 0)
-                {
-                    Console.WriteLine("Please input an amount to deposit more than 0 (press any key to continue...)");
-                }
-                else
-                {
-                    continue;
-                }
-                Console.ReadKey();
-                new MenuService().MoveToPreviosLine(2);
 
             } while (depositAmount <= 0);
 
