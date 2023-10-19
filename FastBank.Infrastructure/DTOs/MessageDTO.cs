@@ -23,10 +23,12 @@ namespace FastBank.Infrastructure.DTOs
         public Guid? BasedOnMessageId { get; private set; }
         [ForeignKey(nameof(BasedOnMessageId))]
         public MessageDTO? BasedOnMessage { get; private set; }
+        public MessageStatuses Statuses { get; private set; }
+        public MessageType Type { get; private set; }
 
         public Message? ToDomainObj()
         {
-            return new Message(MessageId, Sender.ToDomainObj(), Receiver.ToDomainObj(), ReceiverRole, Text, Subject, BasedOnMessage.ToDomainObj());
+            return new Message(MessageId, Sender.ToDomainObj(), Receiver.ToDomainObj(), ReceiverRole, Text, Subject, BasedOnMessage.ToDomainObj(), Statuses, Type);
         }
     }
 }

@@ -3,7 +3,8 @@
     public class Message
     {
        
-        public Message(Guid messageId, Customer sender, Customer? receiver, Roles receiverRole, string text, string subject, Message? basedOnMessage)
+        public Message(Guid messageId, Customer sender, Customer? receiver, Roles receiverRole, string text, string subject, Message? basedOnMessage, MessageStatuses messageStatuses, MessageType messageType)
+            
         {
             MessageId = messageId;
             Sender = sender;
@@ -12,6 +13,8 @@
             Text = text;
             Subject = subject;
             BasedOnMessage = basedOnMessage;
+            Status = messageStatuses;
+            Type = messageType;
         }
 
         public Guid MessageId { get; private set; }
@@ -21,6 +24,8 @@
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;
         public Message? BasedOnMessage { get; private set; }
+        public MessageStatuses Status { get; private set; }
+        public MessageType Type { get; private set; }
 
     }
 }
