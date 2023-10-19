@@ -114,11 +114,7 @@ namespace FastBank
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 Console.ReadKey();
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop);
+                new MenuService().MoveToPreviosLine(2);
                 birthdayInput = Console.ReadLine() ?? "";
             }
             
@@ -172,7 +168,7 @@ namespace FastBank
                 Console.WriteLine("Please make a deposit at Fast Bank");
                 bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
                 Console.Clear();
-                OpenCustomerMenu();
+                return;
             }
             else
             {
@@ -196,7 +192,6 @@ namespace FastBank
                     }
             }
             Console.Clear();
-            OpenCustomerMenu();
         }
     }
 }

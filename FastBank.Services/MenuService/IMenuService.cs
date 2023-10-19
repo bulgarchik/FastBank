@@ -9,5 +9,7 @@ namespace FastBank.Services
     public interface IMenuService
     {
         public string PasswordStaredInput();
+
+        public void MoveToPreviosLine(int countOfLines = 1);
     }
 }
