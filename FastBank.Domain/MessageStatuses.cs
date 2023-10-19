@@ -4,7 +4,7 @@
     {
         Sent,
         Delivered,
-        Aaccepted,
+        Accepted,
         Replied
 
     }
