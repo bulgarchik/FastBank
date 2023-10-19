@@ -2,7 +2,7 @@
 {
     public class MenuService : IMenuService
     {
-        public void MoveToPreviosLine(int countOfLines = 1)
+        public void MoveToPreviousLine(int countOfLines = 1)
         {
             while (countOfLines > 0)
             {

@@ -42,7 +42,7 @@ namespace FastBank.Services.BankAccountService
                 {
                     Console.WriteLine("Please input correct amount to deposit (press any key to continue...)");
                     Console.ReadKey();
-                    new MenuService().MoveToPreviosLine(2);
+                    new MenuService().MoveToPreviousLine(2);
                 }
 
             } while (depositAmount <= 0);
