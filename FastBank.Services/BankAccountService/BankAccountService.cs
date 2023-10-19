@@ -44,8 +44,8 @@ namespace FastBank.Services.BankAccountService
                     Console.ReadKey();
                     new MenuService().MoveToPreviousLine(2);
                 }
-
-            } while (depositAmount <= 0);
+            }
+            while (depositAmount <= 0);
 
             if (depositAmount > 0)
             {
@@ -73,24 +73,18 @@ namespace FastBank.Services.BankAccountService
             {
                 Console.Write("Please write the withdraw amount:");
                 var inputWithdrawAmount = Console.ReadLine();
-                if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount))
+                if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount) || withdrawAmount < 0)
                 {
                     Console.WriteLine("Plese input correct ammount to withdraw (press any key to continue...)");
+                    Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(2);
                 }
-                else if (withdrawAmount < 0)
-                {
-                    Console.WriteLine("Please input an amount to withdraw more than 0");
-                }
-                else { continue; }
-
-                Console.ReadKey();
-                new MenuService().MoveToPreviosLine(2);
-
-            } while (withdrawAmount <= 0);
+            } 
+            while (withdrawAmount < 0);
             
             if (withdrawAmount > 0)
             {
-                bool hasEnoughFunds = ((customerBankAccount.Amount - withdrawAmount) < 0);
+                bool hasEnoughFunds = (customerBankAccount.Amount - withdrawAmount) < 0;
                 if (hasEnoughFunds)
                 {
                     Console.WriteLine("You do not have enough funds to withdraw (press any key to continue...)");
