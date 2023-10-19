@@ -76,38 +76,32 @@ namespace FastBank.Services.BankAccountService
 
         public void WithdrawAmount(Customer customer, BankAccount customerBankAccount)
         {
-            Console.Write("Please write the withdraw amount:");
-            var inputDepositAmount = Console.ReadLine();
             decimal withdrawAmount;
-            while (!decimal.TryParse(inputDepositAmount, out withdrawAmount) && withdrawAmount < 0)
+            do
             {
-                if (withdrawAmount < 0)
+                Console.Write("Please write the withdraw amount:");
+                var inputWithdrawAmount = Console.ReadLine();
+                if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount))
+                {
+                    Console.WriteLine("Plese input correct ammount to withdraw (press any key to continue...)");
+                }
+                else if (withdrawAmount < 0)
                 {
                     Console.WriteLine("Please input an amount to withdraw more than 0");
                 }
-                else if (withdrawAmount == 0)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Plese input correct ammount to withdraw");
-                }
+                else { continue; }
+
                 Console.ReadKey();
+                new MenuService().MoveToPreviosLine(2);
 
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop);
-                inputDepositAmount = Console.ReadLine();
-            }
-
+            } while (withdrawAmount <= 0);
+            
             if (withdrawAmount > 0)
             {
-                if (customerBankAccount == null || (customerBankAccount.Amount - withdrawAmount)<0 )
+                bool hasEnoughFunds = ((customerBankAccount.Amount - withdrawAmount) < 0);
+                if (hasEnoughFunds)
                 {
-                    Console.WriteLine("You do not have enough funds to withdraw");
+                    Console.WriteLine("You do not have enough funds to withdraw (press any key to continue...)");
                     Console.ReadKey();
                 }
                 else

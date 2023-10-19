@@ -129,7 +129,6 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
-            Console.WriteLine($"Welcome to FastBank as {ActiveCustomer.Role}");
             switch (ActiveCustomer.Role)
             {
                 case Roles.Accountant:
@@ -165,15 +164,18 @@ namespace FastBank
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine("Please make a deposit at Fast Bank");
+                Console.WriteLine($"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                                  "\nPlease make a deposit at Fast Bank");
                 bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
                 Console.Clear();
                 return;
             }
             else
             {
-                Console.WriteLine($"You bank amount: {customerBankAccount.Amount}");
-                var menuOptions = "Please choose your action: \n 1: For deposit. 2: For withdraw. 0: for exit";
+                var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                                  $"\nYou bank amount: {customerBankAccount.Amount} " +
+                                  $"\nPlease choose your action: " +
+                                  $"\n1: For deposit. 2: For withdraw. 0: for exit";
                 int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
                 switch (action)
                 {
