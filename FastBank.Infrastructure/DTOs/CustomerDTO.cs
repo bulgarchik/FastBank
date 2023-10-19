@@ -29,8 +29,6 @@ namespace FastBank.Infrastructure.DTOs
         public string Role { get; private set; }
         public bool Inactive { get; private set; }
 
-        public List<BankAccountDTO> BankAccounts { get; private set; }
-
         public Customer ToDomainObj()
         {
             var role = Enum.Parse<Roles>(Role);

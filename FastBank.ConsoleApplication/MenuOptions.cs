@@ -172,7 +172,7 @@ namespace FastBank
             }
             else
             {
-                Console.WriteLine($"You bank amount: {customerBankAccount.Amount}");
+                Console.WriteLine($"You bank amount: {customerBankAccount.Amount:0.00}");
             }
 
             Console.WriteLine("Please choose your action:");
