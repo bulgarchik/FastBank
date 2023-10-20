@@ -9,6 +9,19 @@ namespace FastBank.Infrastructure.DTOs
     [Table("Messages")]
     public class MessageDTO
     {
+        public MessageDTO(Message message)
+        {
+            MessageId = message.MessageId;
+            SenderId = message.Sender.Id;
+            ReceiverId = message.Receiver?.Id;
+            ReceiverRole = message.ReceiverRole;
+            Text = message.Text;
+            Subject = message.Subject;
+            BasedOnMessageId = message.BasedOnMessage?.MessageId;
+            Statuses = message.Status;
+            Type = message.Type;
+        }
+
         [Key]
         public Guid MessageId { get; private set; }
         public Guid SenderId { get; private set; }

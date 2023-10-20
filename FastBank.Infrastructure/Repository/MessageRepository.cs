@@ -1,6 +1,7 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Context;
+using FastBank.Infrastructure.DTOs;
 
 namespace FastBank.Infrastructure.Repository
 {
@@ -15,7 +16,7 @@ namespace FastBank.Infrastructure.Repository
 
         public void Add(Message message)
         {
-            throw new NotImplementedException();
+            _repo.Add<MessageDTO>(new MessageDTO(message));
         }
     }
 }
