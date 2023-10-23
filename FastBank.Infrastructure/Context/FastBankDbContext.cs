@@ -15,6 +15,12 @@ namespace FastBank.Infrastructure.Context
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BankAccountDTO>()
+                .HasOne(c => c.Customer)
+                .WithMany()
+                .HasForeignKey(c => c.CustomerId)
+                .IsRequired();
+
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Roles.Customer, false)));
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Roles.Manager, false)));
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Roles.Accountant, false)));
@@ -26,6 +32,7 @@ namespace FastBank.Infrastructure.Context
 
         public virtual DbSet<CustomerDTO> Customers { get; set; }
         public virtual DbSet<BankDTO> Banks { get; set; }
+        public virtual DbSet<BankAccountDTO> BankAccounts { get; set; }
 
     }
 }

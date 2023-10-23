@@ -2,6 +2,7 @@
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
 using System.Text.RegularExpressions;
+using FastBank.Services.BankAccountService;
 
 namespace FastBank
 {
@@ -113,11 +114,7 @@ namespace FastBank
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 Console.ReadKey();
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop - 1);
-                Console.Write(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(0, Console.CursorTop);
+                new MenuService().MoveToPreviousLine(2);
                 birthdayInput = Console.ReadLine() ?? "";
             }
             
@@ -162,22 +159,39 @@ namespace FastBank
             {
                 return;
             }
-            Console.WriteLine("Please choose your action:");
-            Console.WriteLine(" 0: for exit");
-            int action = Convert.ToInt32(Console.ReadLine());
-            bool activeScreen = true;
-            while (activeScreen)
+
+            var bankAccountService = new BankAccountService();
+            var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
+
+            if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                switch (action)
-                {
-                    case 0:
-                        {
-                            activeScreen = false;
-                            ActiveCustomer = null;
-                            break;
-                        }
-                }
+                Console.WriteLine("Please make a deposit at Fast Bank");
+                bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                Console.Clear();
+                return;
             }
+            else
+            {
+                Console.WriteLine($"You bank amount: {customerBankAccount.Amount:0.00}");
+            }
+
+            Console.WriteLine("Please choose your action:");
+            Console.WriteLine(" 1: for deposit  0: for exit");
+            int action = Convert.ToInt32(Console.ReadLine());
+            switch (action)
+            {
+                case 1:
+                    {
+                        bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                        break;
+                    }
+                case 0:
+                    {
+                        ActiveCustomer = null;
+                        break;
+                    }
+            }
+            Console.Clear();
         }
     }
 }

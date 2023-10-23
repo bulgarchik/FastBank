@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FastBank.Services
+﻿namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
+        public void MoveToPreviousLine(int countOfLines = 1)
+        {
+            while (countOfLines > 0)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop - 1);
+                Console.Write(new string(' ', Console.WindowWidth));
+                countOfLines--;
+            }
+
+            Console.SetCursorPosition(0, Console.CursorTop);
+        }
+
         public string PasswordStaredInput()
         {
             var pass = string.Empty;

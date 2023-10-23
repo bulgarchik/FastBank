@@ -136,12 +136,8 @@ namespace FastBank.Services
                     {
                         Console.WriteLine($"Wrong password! Press any key to try again!");
                         Console.ReadKey();
-                        
-                        Console.SetCursorPosition(0, Console.CursorTop - 1);
-                        Console.Write(new string(' ', Console.WindowWidth));
-                        Console.SetCursorPosition(0, Console.CursorTop - 1);
-                        Console.Write(new string(' ', Console.WindowWidth));
-                        Console.SetCursorPosition(0, Console.CursorTop - 1);
+
+                        new MenuService().MoveToPreviousLine(2);
                         passwordtries++;
                         Console.WriteLine("Please input password:");
                         
