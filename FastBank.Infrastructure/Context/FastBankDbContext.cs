@@ -34,8 +34,8 @@ namespace FastBank.Infrastructure.Context
                 
             modelBuilder.Entity<MessageDTO>()
                 .HasOne(m => m.BasedOnMessage)
-                .WithMany().
-                HasForeignKey(m => m.BasedOnMessageId);
+                .WithMany()
+                .HasForeignKey(m => m.BasedOnMessageId);
 
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Roles.Customer, false)));
             modelBuilder.Entity<CustomerDTO>().HasData(new CustomerDTO(new FastBank.Customer(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Roles.Manager, false)));

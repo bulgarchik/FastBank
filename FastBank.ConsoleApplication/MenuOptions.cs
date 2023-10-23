@@ -3,15 +3,17 @@ using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
 using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
+using FastBank.Services.MessageService;
 
 namespace FastBank
 {
     public static class MenuOptions
     {
-        static public Customer? ActiveCustomer = null;
+        static public Customer? activeCustomer = null;
 
         static bool inProgress = true;
 
+        //TODO Move to MenuService
         public static int CommandRead(Regex regPattern, string menuOptions)
         {
             Console.WriteLine(menuOptions);
@@ -36,7 +38,7 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                if (ActiveCustomer == null)
+                if (activeCustomer == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
                     int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
@@ -68,6 +70,7 @@ namespace FastBank
                 }
             }
         }
+        
         static public void Login()
         {
             ICustomerService customerService = new CustomerService();
@@ -85,7 +88,7 @@ namespace FastBank
             if (loginCustomer != null)
             {
                 Console.WriteLine("Authorized");
-                ActiveCustomer = loginCustomer;
+                activeCustomer = loginCustomer;
             }
             else
             {
@@ -129,7 +132,7 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
-            switch (ActiveCustomer.Role)
+            switch (activeCustomer.Role)
             {
                 case Roles.Accountant:
                     OpenCustomerMenu();
@@ -154,48 +157,55 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (ActiveCustomer == null)
+            if (activeCustomer == null)
             {
                 return;
             }
 
             var bankAccountService = new BankAccountService();
-            var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
+            var customerBankAccount = bankAccountService.GetBankAccount(activeCustomer);
+            IMessageService MessageService = new MessageService();
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine($"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                Console.WriteLine($"Welcome {activeCustomer.Name} as {activeCustomer.Role} of FastBank" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                bankAccountService.DepositAmount(activeCustomer, customerBankAccount);
                 Console.Clear();
                 return;
             }
             else
             {
-                var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                var menuOptions = $"Welcome {activeCustomer.Name} as {activeCustomer.Role} of FastBank" +
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 3: For inquery. 0: for exit";
-                int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                                  $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
+                int action = CommandRead(new Regex("^[01234]{1}$"), menuOptions);
                 switch (action)
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                            bankAccountService.DepositAmount(activeCustomer, customerBankAccount);
                             break;
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount(ActiveCustomer, customerBankAccount);
+                            bankAccountService.WithdrawAmount(activeCustomer, customerBankAccount);
                             break;
                         }
                     case 3:
                         {
-
+                            MessageService.InputMessage(activeCustomer);
+                            break;
+                        }
+                    case 4:
+                        {
+                            MessageService.GetMessages(activeCustomer);
+                            break;
                         }
                     case 0:
                         {
-                            ActiveCustomer = null;
+                            activeCustomer = null;
                             break;
                         }
                 }

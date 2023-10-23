@@ -9,6 +9,8 @@ namespace FastBank.Infrastructure.DTOs
     [Table("Messages")]
     public class MessageDTO
     {
+        private MessageDTO() { }
+
         public MessageDTO(Message message)
         {
             MessageId = message.MessageId;
@@ -41,7 +43,7 @@ namespace FastBank.Infrastructure.DTOs
 
         public Message? ToDomainObj()
         {
-            return new Message(MessageId, Sender.ToDomainObj(), Receiver.ToDomainObj(), ReceiverRole, Text, Subject, BasedOnMessage.ToDomainObj(), Statuses, Type);
+            return new Message(MessageId, Sender.ToDomainObj(), Receiver?.ToDomainObj(), ReceiverRole, Text, Subject, BasedOnMessage?.ToDomainObj(), Statuses, Type);
         }
     }
 }
