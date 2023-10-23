@@ -9,5 +9,9 @@ namespace FastBank.Services.BankAccountService
         public void Add(Customer customer, decimal amount);
 
         public void Update(BankAccount bankAccount);
+
+        public void DepositAmount(Customer customer, BankAccount customerBankAccount);
+
+        public void WithdrawAmount(Customer customer, BankAccount customerBankAccount);
     }
 }

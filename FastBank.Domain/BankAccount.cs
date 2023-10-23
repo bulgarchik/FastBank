@@ -25,5 +25,10 @@ namespace FastBank.Domain
         {
             Amount += depositAmount;
         }
+
+        public void WithdrawAmount(decimal withdrawAmount)
+        {
+            Amount -= withdrawAmount;
+        }
     }
 }
