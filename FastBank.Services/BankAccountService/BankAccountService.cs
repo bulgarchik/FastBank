@@ -98,5 +98,10 @@ namespace FastBank.Services.BankAccountService
                 }
             }
         }
+
+        public void TransferAmountToFriend(Customer customer, BankAccount customerBankAccount, Customer friend, decimal amount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
