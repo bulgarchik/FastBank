@@ -43,7 +43,15 @@ namespace FastBank.Infrastructure.DTOs
 
         public Message? ToDomainObj()
         {
-            return new Message(MessageId, Sender.ToDomainObj(), Receiver?.ToDomainObj(), ReceiverRole, Text, Subject, BasedOnMessage?.ToDomainObj(), Statuses, Type);
+            return new Message(MessageId,
+                               Sender.ToDomainObj(),
+                               Receiver?.ToDomainObj(),
+                               ReceiverRole,
+                               Text,
+                               Subject,
+                               BasedOnMessage?.ToDomainObj(),
+                               Statuses,
+                               Type);
         }
     }
 }

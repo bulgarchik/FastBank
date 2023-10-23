@@ -6,6 +6,5 @@
         Delivered,
         Accepted,
         Replied
-
     }
 }

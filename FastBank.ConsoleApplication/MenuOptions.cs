@@ -9,7 +9,7 @@ namespace FastBank
 {
     public static class MenuOptions
     {
-        static public Customer? activeCustomer = null;
+        static public Customer? ActiveCustomer = null;
 
         static bool inProgress = true;
 
@@ -38,7 +38,7 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                if (activeCustomer == null)
+                if (ActiveCustomer == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
                     int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
@@ -88,7 +88,7 @@ namespace FastBank
             if (loginCustomer != null)
             {
                 Console.WriteLine("Authorized");
-                activeCustomer = loginCustomer;
+                ActiveCustomer = loginCustomer;
             }
             else
             {
@@ -132,7 +132,7 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
-            switch (activeCustomer.Role)
+            switch (ActiveCustomer.Role)
             {
                 case Roles.Accountant:
                     OpenCustomerMenu();
@@ -157,26 +157,26 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (activeCustomer == null)
+            if (ActiveCustomer == null)
             {
                 return;
             }
 
             var bankAccountService = new BankAccountService();
-            var customerBankAccount = bankAccountService.GetBankAccount(activeCustomer);
+            var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
             IMessageService MessageService = new MessageService();
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine($"Welcome {activeCustomer.Name} as {activeCustomer.Role} of FastBank" +
+                Console.WriteLine($"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount(activeCustomer, customerBankAccount);
+                bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
                 Console.Clear();
                 return;
             }
             else
             {
-                var menuOptions = $"Welcome {activeCustomer.Name} as {activeCustomer.Role} of FastBank" +
+                var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
@@ -185,27 +185,27 @@ namespace FastBank
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount(activeCustomer, customerBankAccount);
+                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
                             break;
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount(activeCustomer, customerBankAccount);
+                            bankAccountService.WithdrawAmount(ActiveCustomer, customerBankAccount);
                             break;
                         }
                     case 3:
                         {
-                            MessageService.InputMessage(activeCustomer);
+                            MessageService.InputMessage(ActiveCustomer);
                             break;
                         }
                     case 4:
                         {
-                            MessageService.GetMessages(activeCustomer);
+                            MessageService.GetMessages(ActiveCustomer);
                             break;
                         }
                     case 0:
                         {
-                            activeCustomer = null;
+                            ActiveCustomer = null;
                             break;
                         }
                 }

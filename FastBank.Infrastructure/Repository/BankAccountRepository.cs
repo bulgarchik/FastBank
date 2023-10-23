@@ -30,7 +30,9 @@ namespace FastBank.Infrastructure.Repository
 
         public void Update(BankAccount bankAccount)
         {
-            var bankAccountDto = _repo.Set<BankAccountDTO>().Where(a => a.BankAccountId == bankAccount.BankAccountId).FirstOrDefault();
+            var bankAccountDto = _repo.Set<BankAccountDTO>()
+                                      .Where(a => a.BankAccountId == bankAccount.BankAccountId)
+                                      .FirstOrDefault();
             if (bankAccountDto != null) 
             {
                 bankAccountDto.Amount = bankAccount.Amount;
