@@ -1,8 +1,6 @@
 ﻿using FastBank.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Xml.Linq;
 
 namespace FastBank.Infrastructure.DTOs
 {

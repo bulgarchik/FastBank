@@ -118,7 +118,8 @@ namespace FastBank.Services
             var customer = _customerRepo.GetByEmail(email);
             if (customer == null)
             {
-                Console.WriteLine($"Customer with name: {email} not exist");
+                Console.WriteLine($"\nCustomer with name: {email} not exist. Press any key to continue...");
+                Console.ReadKey();
             }
             else
             {

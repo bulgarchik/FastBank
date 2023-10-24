@@ -113,7 +113,8 @@ namespace FastBank.Infrastructure.Repository
                 }
 
 
-                if (prop.PropertyType.IsConstructedGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (prop.PropertyType.IsConstructedGenericType
+                    && prop.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 {
                     var baseType = prop.PropertyType.GetGenericArguments()[0];
                     var baseValue = Convert.ChangeType(dbValue, baseType);

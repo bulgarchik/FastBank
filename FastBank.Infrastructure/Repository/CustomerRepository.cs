@@ -1,7 +1,6 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace FastBank.Infrastructure.Repository
 {
@@ -16,14 +15,20 @@ namespace FastBank.Infrastructure.Repository
 
         public List<Customer> GetAll()
         {
-            var customers = _repo.SetNoTracking<CustomerDTO>().Select(a => a.ToDomainObj()).ToList();
+            var customers = _repo.SetNoTracking<CustomerDTO>()
+                                 .Select(a => a.ToDomainObj())
+                                 .ToList();
 
             return customers;
         }
 
         public Customer? GetByEmail(string email) 
         {
-            var customer = _repo.SetNoTracking<CustomerDTO>().Where(c => c.Email == email).Select(a => a.ToDomainObj()).ToList().FirstOrDefault();
+            var customer = _repo.SetNoTracking<CustomerDTO>()
+                                .Where(c => c.Email == email)
+                                .Select(a => a.ToDomainObj())
+                                .ToList()
+                                .FirstOrDefault();
 
             return customer;
         }

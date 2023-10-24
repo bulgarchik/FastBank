@@ -3,6 +3,7 @@ using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
 using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
+using FastBank.Services.MessageService;
 
 namespace FastBank
 {
@@ -12,6 +13,7 @@ namespace FastBank
 
         static bool inProgress = true;
 
+        //TODO Move to MenuService
         public static int CommandRead(Regex regPattern, string menuOptions)
         {
             Console.WriteLine(menuOptions);
@@ -68,6 +70,7 @@ namespace FastBank
                 }
             }
         }
+        
         static public void Login()
         {
             ICustomerService customerService = new CustomerService();
@@ -161,6 +164,7 @@ namespace FastBank
 
             var bankAccountService = new BankAccountService();
             var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
+            IMessageService MessageService = new MessageService();
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
@@ -175,8 +179,8 @@ namespace FastBank
                 var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 0: for exit";
-                int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                                  $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
+                int action = CommandRead(new Regex("^[01234]{1}$"), menuOptions);
                 switch (action)
                 {
                     case 1:
@@ -187,6 +191,16 @@ namespace FastBank
                     case 2:
                         {
                             bankAccountService.WithdrawAmount(ActiveCustomer, customerBankAccount);
+                            break;
+                        }
+                    case 3:
+                        {
+                            MessageService.InputMessage(ActiveCustomer);
+                            break;
+                        }
+                    case 4:
+                        {
+                            MessageService.GetMessages(ActiveCustomer);
                             break;
                         }
                     case 0:
