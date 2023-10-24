@@ -13,22 +13,7 @@ namespace FastBank
 
         static bool inProgress = true;
 
-        //TODO Move to MenuService
-        public static int CommandRead(Regex regPattern, string menuOptions)
-        {
-            Console.WriteLine(menuOptions);
-            string? inputCommand = Console.ReadLine();
-            while (!regPattern.IsMatch(inputCommand ?? ""))
-            {
-                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
-                Console.ReadKey();
-                Console.Clear();
-                Console.WriteLine(menuOptions);
-                inputCommand = Console.ReadLine();
-
-            }
-            return Convert.ToInt32(inputCommand);
-        }
+        static readonly MenuService _menuService = new MenuService();
 
         static public void ShowMainMenu()
         {
@@ -41,7 +26,7 @@ namespace FastBank
                 if (ActiveCustomer == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
-                    int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                    int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
 
                     switch (action)
                     {
@@ -81,8 +66,7 @@ namespace FastBank
             var currentEmail = Console.ReadLine() ?? "";
             Console.WriteLine("Please input password:");
 
-            var menuServie = new MenuService();
-            var inputPassword = menuServie.PasswordStaredInput();
+            var inputPassword = _menuService.PasswordStaredInput();
 
             var loginCustomer = customerService.Login(currentEmail, inputPassword);
             if (loginCustomer != null)
@@ -122,7 +106,7 @@ namespace FastBank
             }
 
             Console.WriteLine("Please input you password:");
-            var password = new MenuService().PasswordStaredInput();
+            var password = _menuService.PasswordStaredInput();
 
             customerService.Add(name, email, birthday, password, role, false);
 
@@ -180,7 +164,7 @@ namespace FastBank
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
-                int action = CommandRead(new Regex("^[01234]{1}$"), menuOptions);
+                int action = _menuService.CommandRead(new Regex("^[01234]{1}$"), menuOptions);
                 switch (action)
                 {
                     case 1:
