@@ -2,15 +2,16 @@
 {
     public class Message
     {
-        public Message(Guid messageId,
-                       Customer sender,
-                       Customer? receiver,
-                       Roles receiverRole,
-                       string text,
-                       string subject,
-                       Message? basedOnMessage,
-                       MessageStatuses messageStatuses,
-                       MessageType messageType)
+        public Message(
+            Guid messageId,
+            Customer sender,
+            Customer? receiver,
+            Roles receiverRole,
+            string text,
+            string subject,
+            Message? basedOnMessage,
+            MessageStatuses messageStatuses,
+            MessageType messageType)
         {
             MessageId = messageId;
             Sender = sender;
@@ -31,5 +32,18 @@
         public Message? BasedOnMessage { get; private set; }
         public MessageStatuses Status { get; private set; }
         public MessageType Type { get; private set; }
+    }
+
+    public enum MessageStatuses
+    {
+        Sent,
+        Delivered,
+        Accepted,
+        Replied
+    }
+
+    public enum MessageType
+    {
+        Inquery,
     }
 }
