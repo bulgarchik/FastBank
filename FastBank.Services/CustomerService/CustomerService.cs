@@ -84,7 +84,7 @@ namespace FastBank.Services
 
             if (age < 18)
             {
-                validationErrors.Add($"The customer is underage (18)");
+                validationErrors.Add($"The customer is under 18 years old");
             }
             else if (age > 100)
             {
@@ -136,9 +136,9 @@ namespace FastBank.Services
                     if (customer.Password != password)
                     {
                         Console.WriteLine($"Wrong password! Press any key to try again!");
-                        Console.ReadKey();
+                        var keyIsEnter = Console.ReadKey();
 
-                        new MenuService().MoveToPreviousLine(2);
+                        new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                         passwordtries++;
                         Console.WriteLine("Please input password:");
                         

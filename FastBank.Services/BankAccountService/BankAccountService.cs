@@ -42,8 +42,8 @@ namespace FastBank.Services.BankAccountService
                 if (!decimal.TryParse(inputDepositAmount, out depositAmount) || depositAmount <= 0)
                 {
                     Console.WriteLine("Please input correct amount to deposit (press any key to continue...)");
-                    Console.ReadKey();
-                    new MenuService().MoveToPreviousLine(2);
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 }
             }
             while (depositAmount <= 0);
@@ -77,8 +77,8 @@ namespace FastBank.Services.BankAccountService
                 if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount) || withdrawAmount <= 0)
                 {
                     Console.WriteLine("Plese input correct ammount to withdraw (press any key to continue...)");
-                    Console.ReadKey();
-                    new MenuService().MoveToPreviousLine(2);
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 }
             } 
             while (withdrawAmount <=0);

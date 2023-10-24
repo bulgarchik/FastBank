@@ -4,8 +4,13 @@ namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
-        public void MoveToPreviousLine(int countOfLines = 1)
+        public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1)
         {
+            if (inputkey.Key != ConsoleKey.Enter)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
             while (countOfLines > 0)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - 1);

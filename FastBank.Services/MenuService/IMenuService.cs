@@ -6,7 +6,7 @@ namespace FastBank.Services
     {
         public string PasswordStaredInput();
 
-        public void MoveToPreviousLine(int countOfLines = 1);
+        public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1);
 
         public int CommandRead(Regex regPattern, string menuOptions);
     }

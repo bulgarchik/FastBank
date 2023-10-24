@@ -4,6 +4,7 @@ using FastBank.Infrastructure.Repository;
 using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
 using FastBank.Services.MessageService;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FastBank
 {
@@ -100,8 +101,8 @@ namespace FastBank
             while (!DateTime.TryParse(birthdayInput, out birthday))
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
-                Console.ReadKey();
-                new MenuService().MoveToPreviousLine(2);
+                var keyIsEnter = Console.ReadKey();
+                new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 birthdayInput = Console.ReadLine() ?? "";
             }
 
