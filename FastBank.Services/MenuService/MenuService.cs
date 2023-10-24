@@ -1,4 +1,6 @@
-﻿namespace FastBank.Services
+﻿using System.Text.RegularExpressions;
+
+namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
@@ -35,6 +37,23 @@
                 }
             } while (key != ConsoleKey.Enter);
             return pass;
+        }
+
+        //TODO Move to MenuService
+        public int CommandRead(Regex regPattern, string menuOptions)
+        {
+            Console.WriteLine(menuOptions);
+            string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand ?? ""))
+            {
+                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
+                Console.ReadKey();
+                Console.Clear();
+                Console.WriteLine(menuOptions);
+                inputCommand = Console.ReadLine();
+
+            }
+            return Convert.ToInt32(inputCommand);
         }
     }
 }

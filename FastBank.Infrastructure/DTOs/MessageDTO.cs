@@ -1,8 +1,6 @@
 ﻿using FastBank.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static System.Net.Mime.MediaTypeNames;
-using System.Reflection;
 
 namespace FastBank.Infrastructure.DTOs
 {
@@ -21,7 +19,7 @@ namespace FastBank.Infrastructure.DTOs
             Subject = message.Subject;
             BasedOnMessageId = message.BasedOnMessage?.MessageId;
             Statuses = message.Status;
-            Type = message.Type;
+            Type = message.Type;    
         }
 
         [Key]
