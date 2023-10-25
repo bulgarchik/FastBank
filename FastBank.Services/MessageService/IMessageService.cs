@@ -9,18 +9,18 @@ namespace FastBank.Services.MessageService
 {
     public interface IMessageService
     {
-        public void GetMessages(Customer customer);
+        public void GetMessages(User user);
 
         public void AddMessage(
             string Subject,
             string text,
             MessageStatuses status,
             MessageType type,
-            Customer sender,
-            Customer? receiver,
+            User sender,
+            User? receiver,
             Roles receiverRole,
             Message basedOnMessage);
 
-        public Message InputMessage(Customer customer);
+        public Message InputMessage(User user);
     }
 }

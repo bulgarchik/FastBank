@@ -2,7 +2,7 @@
 {
     public interface IBankAccountRepository
     {
-        public BankAccount? GetBankAccountByCustomer(Customer customer);
+        public BankAccount? GetBankAccountByCustomer(User customer);
 
         public void Add(BankAccount bankAccount);
 

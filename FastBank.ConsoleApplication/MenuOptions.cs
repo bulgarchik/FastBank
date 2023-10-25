@@ -10,7 +10,7 @@ namespace FastBank
 {
     public static class MenuOptions
     {
-        static public Customer? ActiveCustomer = null;
+        static private User? ActiveUser = null;
 
         static bool inProgress = true;
 
@@ -24,7 +24,7 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                if (ActiveCustomer == null)
+                if (ActiveUser == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
                     int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
@@ -39,7 +39,7 @@ namespace FastBank
                             };
                         case 2:
                             {
-                                CustomerRegistration();
+                                UserRegistration();
                                 break;
                             }
                         case 0:
@@ -59,7 +59,7 @@ namespace FastBank
         
         static public void Login()
         {
-            ICustomerService customerService = new CustomerService();
+            IUserService usersService = new UserService();
 
             Console.Clear();
 
@@ -69,11 +69,11 @@ namespace FastBank
 
             var inputPassword = _menuService.PasswordStaredInput();
 
-            var loginCustomer = customerService.Login(currentEmail, inputPassword);
-            if (loginCustomer != null)
+            var loginUser = usersService.Login(currentEmail, inputPassword);
+            if (loginUser != null)
             {
                 Console.WriteLine("Authorized");
-                ActiveCustomer = loginCustomer;
+                ActiveUser = loginUser;
             }
             else
             {
@@ -81,10 +81,11 @@ namespace FastBank
             }
         }
 
-        static public void CustomerRegistration()
+        static public void UserRegistration()
         {
-            ICustomerService customerService = new CustomerService();
+            IUserService userService = new UserService();
             Console.Clear();
+
             var role = Roles.Customer;
 
             Console.WriteLine("Please input registration data about you:");
@@ -109,7 +110,7 @@ namespace FastBank
             Console.WriteLine("Please input you password:");
             var password = _menuService.PasswordStaredInput();
 
-            customerService.Add(name, email, birthday, password, role, false);
+            userService.Add(name, email, birthday, password, role, false);
 
             MenuOptions.ShowMainMenu();
         }
@@ -117,7 +118,7 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
-            switch (ActiveCustomer.Role)
+            switch (ActiveUser.Role)
             {
                 case Roles.Accountant:
                     OpenCustomerMenu();
@@ -142,26 +143,26 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (ActiveCustomer == null)
+            if (ActiveUser == null)
             {
                 return;
             }
 
             var bankAccountService = new BankAccountService();
-            var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
+            var customerBankAccount = bankAccountService.GetBankAccount(ActiveUser);
             IMessageService MessageService = new MessageService();
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine($"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                Console.WriteLine($"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                bankAccountService.DepositAmount(ActiveUser, customerBankAccount);
                 Console.Clear();
                 return;
             }
             else
             {
-                var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                var menuOptions = $"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
@@ -170,27 +171,27 @@ namespace FastBank
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                            bankAccountService.DepositAmount(ActiveUser, customerBankAccount);
                             break;
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount(ActiveCustomer, customerBankAccount);
+                            bankAccountService.WithdrawAmount(ActiveUser, customerBankAccount);
                             break;
                         }
                     case 3:
                         {
-                            MessageService.InputMessage(ActiveCustomer);
+                            MessageService.InputMessage(ActiveUser);
                             break;
                         }
                     case 4:
                         {
-                            MessageService.GetMessages(ActiveCustomer);
+                            MessageService.GetMessages(ActiveUser);
                             break;
                         }
                     case 0:
                         {
-                            ActiveCustomer = null;
+                            ActiveUser = null;
                             break;
                         }
                 }

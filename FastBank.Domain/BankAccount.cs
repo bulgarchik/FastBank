@@ -2,7 +2,7 @@
 {
     public class BankAccount
     {
-       public BankAccount(Guid bankAccountId, Customer customer, decimal amount) 
+       public BankAccount(Guid bankAccountId, User customer, decimal amount) 
         {
             BankAccountId = bankAccountId;
             Customer = customer;
@@ -11,7 +11,7 @@
 
         public Guid BankAccountId { get; private set; }
 
-        public Customer Customer { get; private set; }
+        public User Customer { get; private set; }
 
         public decimal Amount { get; private set; }
 

@@ -4,6 +4,6 @@
     {
         public void Add(Message message);
 
-        public List<Message> GetCustomerMessages(Customer customer);
+        public List<Message?> GetCustomerMessages(User user);
     }
 }

@@ -20,10 +20,10 @@ namespace FastBank.Infrastructure.Repository
             _repo.Add<MessageDTO>(new MessageDTO(message));
         }
 
-        public List<Message> GetCustomerMessages(Customer customer)
+        public List<Message?> GetCustomerMessages(User user)
         {
             return _repo.SetNoTracking<MessageDTO>()
-                    .Where(m => m.SenderId == customer.Id || m.ReceiverId == customer.Id)
+                    .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id)
                     .Include(m => m.Sender)
                     .Include(m => m.Receiver)
                     .Include(m => m.BasedOnMessage)

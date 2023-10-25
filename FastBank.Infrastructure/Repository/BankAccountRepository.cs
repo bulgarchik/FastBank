@@ -19,10 +19,10 @@ namespace FastBank.Infrastructure.Repository
             _repo.Add<BankAccountDTO>(new BankAccountDTO(bankAccount));
         }
 
-        public BankAccount? GetBankAccountByCustomer(Customer customer)
+        public BankAccount? GetBankAccountByCustomer(User customer)
         {
             return _repo.Set<BankAccountDTO>()
-                .Where(a => a.CustomerId == customer.Id)
+                .Where(a => a.UserId == customer.Id)
                 .Include(a => a.Customer)
                 .Select(a => a.ToDomainObj())
                 .FirstOrDefault();
