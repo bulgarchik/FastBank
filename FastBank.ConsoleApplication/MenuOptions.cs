@@ -56,7 +56,7 @@ namespace FastBank
                 }
             }
         }
-        
+
         static public void Login()
         {
             IUserService usersService = new UserService();
@@ -73,7 +73,14 @@ namespace FastBank
             if (loginUser != null)
             {
                 Console.WriteLine("Authorized");
-                ActiveUser = loginUser;
+                if (loginUser.Role == Roles.Customer)
+                {
+                    ActiveUser = new Customer(loginUser);
+                }
+                else
+                {
+                    ActiveUser = loginUser;
+                }
             }
             else
             {
@@ -143,20 +150,20 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (ActiveUser == null)
+            if (ActiveUser == null || ActiveUser is not Customer)
             {
                 return;
             }
 
             var bankAccountService = new BankAccountService();
-            var customerBankAccount = bankAccountService.GetBankAccount(ActiveUser);
+            var customerBankAccount = bankAccountService.GetBankAccount((Customer)ActiveUser);
             IMessageService MessageService = new MessageService();
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
                 Console.WriteLine($"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount(ActiveUser, customerBankAccount);
+                bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
                 Console.Clear();
                 return;
             }
@@ -171,12 +178,12 @@ namespace FastBank
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount(ActiveUser, customerBankAccount);
+                            bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
                             break;
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount(ActiveUser, customerBankAccount);
+                            bankAccountService.WithdrawAmount((Customer)ActiveUser, customerBankAccount);
                             break;
                         }
                     case 3:

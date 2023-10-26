@@ -13,12 +13,12 @@ namespace FastBank.Services.BankAccountService
             bankAccountRepository = new BankAccountRepository();
         }
 
-        public BankAccount? GetBankAccount(User customer)
+        public BankAccount? GetBankAccount(Customer customer)
         {
             return bankAccountRepository.GetBankAccountByCustomer(customer);
         }
 
-        public void Add(User customer, decimal amount)
+        public void Add(Customer customer, decimal amount)
         {
             var existBankAccount = GetBankAccount(customer);
 
@@ -29,7 +29,7 @@ namespace FastBank.Services.BankAccountService
             }
         }
 
-        public void DepositAmount(User customer, BankAccount customerBankAccount)
+        public void DepositAmount(Customer customer, BankAccount? customerBankAccount)
         {
             decimal depositAmount;
             do
@@ -67,7 +67,7 @@ namespace FastBank.Services.BankAccountService
             bankAccountRepository.Update(bankAccount);
         }
 
-        public void WithdrawAmount(User customer, BankAccount customerBankAccount)
+        public void WithdrawAmount(Customer customer, BankAccount customerBankAccount)
         {
             decimal withdrawAmount;
             do
@@ -99,7 +99,7 @@ namespace FastBank.Services.BankAccountService
             }
         }
 
-        public void TransferAmountToFriend(User customer, BankAccount customerBankAccount, User friend, decimal amount)
+        public void TransferAmountToFriend(Customer customer, BankAccount customerBankAccount, Customer friend, decimal amount)
         {
             throw new NotImplementedException();
         }

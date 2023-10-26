@@ -4,16 +4,16 @@ namespace FastBank.Services.BankAccountService
 {
     public interface IBankAccountService
     {
-        public BankAccount? GetBankAccount(User customer);
+        public BankAccount? GetBankAccount(Customer customer);
 
-        public void Add(User customer, decimal amount);
+        public void Add(Customer customer, decimal amount);
 
         public void Update(BankAccount bankAccount);
 
-        public void DepositAmount(User customer, BankAccount customerBankAccount);
+        public void DepositAmount(Customer customer, BankAccount? customerBankAccount);
 
-        public void WithdrawAmount(User customer, BankAccount customerBankAccount);
+        public void WithdrawAmount(Customer customer, BankAccount customerBankAccount);
 
-        public void TransferAmountToFriend(User customer, BankAccount customerBankAccount, User friend, decimal amount);
+        public void TransferAmountToFriend(Customer customer, BankAccount customerBankAccount, Customer friend, decimal amount);
     }
 }

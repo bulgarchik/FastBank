@@ -15,10 +15,9 @@ namespace FastBank.Infrastructure.Repository
 
         public List<User> GetAll()
         {
-            var users = _repo.SetNoTracking<UserDTO>();
+            var users = _repo.SetNoTracking<UserDTO>().Select(u => u.ToDomainObj()).ToList();
 
-            
-            return new List<User>();
+            return users;
         }
 
         public User? GetByEmail(string email) 
@@ -34,7 +33,7 @@ namespace FastBank.Infrastructure.Repository
         public void Add(User user)
         {
             var userDTO = new UserDTO(user);
-            _repo.Add(userDTO);
+            _repo.Add(userDTO);           
         }
     }
 }

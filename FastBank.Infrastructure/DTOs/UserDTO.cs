@@ -6,21 +6,31 @@ namespace FastBank.Infrastructure.DTOs
     [Table("Users")]
     public class UserDTO
     {
-        private UserDTO() { }
+        public UserDTO() { }
 
-        public UserDTO(User customer)
+        public UserDTO(User user)
         {
-            CustomerId = customer.Id;
-            Name = customer.Name;
-            Email = customer.Email;
-            Birthday = customer.Birthday;
-            Password = customer.Password;
-            Role = customer.Role.ToString();
-            Inactive = customer.Inactive;
+            UserId = user.Id;
+            Name = user.Name;
+            Email = user.Email;
+            Birthday = user.Birthday;
+            Password = user.Password;
+            Role = user.Role.ToString();
+            Inactive = user.Inactive;
+        }
+        public UserDTO(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inactive)
+        {
+            UserId = id;
+            Name = name;
+            Email = email;
+            Birthday = birthday;
+            Password = password;
+            Role = role.ToString();
+            Inactive = inactive;
         }
 
         [Key]
-        public Guid CustomerId { get; private set; }
+        public Guid UserId { get; private set; }
         public string Name { get; private set; }
         public string Email { get; private set; }
         public DateTime Birthday { get; private set; }
@@ -32,7 +42,7 @@ namespace FastBank.Infrastructure.DTOs
         {
             var role = Enum.Parse<Roles>(Role);
 
-            return new User(CustomerId, Name, Email, Birthday, Password, role, Inactive);
+            return new User(UserId, Name, Email, Birthday, Password, role, Inactive);
         }
     }
 }

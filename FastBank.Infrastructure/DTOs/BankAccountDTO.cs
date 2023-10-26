@@ -22,13 +22,13 @@ namespace FastBank.Infrastructure.DTOs
         public Guid UserId { get; private set; }
 
         [ForeignKey(nameof(UserId))]
-        public UserDTO Customer { get; private set; }
+        public UserDTO User { get; private set; }
 
         public decimal Amount { get; internal set; }
 
         public BankAccount ToDomainObj()
         {
-            return new BankAccount(BankAccountId, Customer.ToDomainObj(), Amount);
+            return new BankAccount(BankAccountId, User.ToDomainObj(), Amount);
         }
     }
 

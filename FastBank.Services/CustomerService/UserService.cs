@@ -26,6 +26,12 @@ namespace FastBank.Services
         public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive)
         {
             var user = new User(Guid.NewGuid(), name, email, birthday, password, role, inactive);
+            
+            if (user.Role == Roles.Customer)
+            {
+                user = new Customer(user);
+            }
+
             var validationErrors = ValidatеUser(user);
             if (validationErrors.Any())
             {
