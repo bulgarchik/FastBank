@@ -55,7 +55,7 @@ namespace FastBank.Services
             UserExist(user, validationErrors);
 
             //TODO validate password 
-            ValidateEmail(user.Email, validationErrors);
+            //ValidateEmail(user.Email, validationErrors);
             UserAgeIsValid(user, validationErrors);
             //TODO validate role
             return validationErrors;

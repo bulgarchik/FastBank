@@ -11,5 +11,7 @@
         public List<string> CheckLoginUserName(string username);
 
         public User? Login(string username, string password);
+
+        public List<string> ValidateEmail(string email, List<string> validationErrors);
     }
 }

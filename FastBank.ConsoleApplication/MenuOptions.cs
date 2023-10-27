@@ -106,6 +106,17 @@ namespace FastBank
 
             Console.WriteLine("Please input you email:");
             var email = Console.ReadLine();
+            var validationError = new List<string>();
+            while (userService.ValidateEmail(email ?? "", validationError).Count > 0)
+            {
+                validationError.Clear();
+                Console.WriteLine("You've inputted wrong email. Press any key to try again or type \"quit\" for exit");
+                var keyIsEnter = Console.ReadKey();
+                new MenuService().MoveToPreviousLine(keyIsEnter, 2);
+                email = Console.ReadLine();
+                if (email == "quit") 
+                return;
+            }
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
             string birthdayInput = Console.ReadLine() ?? "";
