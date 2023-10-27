@@ -24,6 +24,8 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
+                _menuService.Logo();
+
                 if (ActiveUser == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For customer registration. 0: for exit";
@@ -62,6 +64,7 @@ namespace FastBank
             IUserService usersService = new UserService();
 
             Console.Clear();
+            _menuService.Logo();
 
             Console.WriteLine("\nLogin to FastBank\n");
 
@@ -94,6 +97,7 @@ namespace FastBank
         {
             IUserService userService = new UserService();
             Console.Clear();
+            _menuService.Logo();
 
             var role = Roles.Customer;
 
@@ -140,6 +144,8 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
+            _menuService.Logo();
+
             switch (ActiveUser.Role)
             {
                 case Roles.Accountant:
@@ -180,6 +186,7 @@ namespace FastBank
                                   "\nPlease make a deposit at Fast Bank");
                 bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
                 Console.Clear();
+                _menuService.Logo();
                 return;
             }
             else

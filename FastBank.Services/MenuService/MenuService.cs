@@ -60,5 +60,23 @@ namespace FastBank.Services
             }
             return Convert.ToInt32(inputCommand);
         }
+
+        public void Logo()
+        {
+            Console.WriteLine();
+            Console.WriteLine("-----------------------");
+            Console.WriteLine("| FFFFFFFFF BBBBBBBB  |");
+            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
+            Console.WriteLine("| FFF       BBB   BBB |");
+            Console.WriteLine("| FFF       BBB   BBB |");
+            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
+            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
+            Console.WriteLine("| FFF       BBB   BBB |");
+            Console.WriteLine("| FFF       BBB   BBB |");
+            Console.WriteLine("| FFF       BBBBBBBBB |");
+            Console.WriteLine("| FFF       BBBBBBBB  |");
+            Console.WriteLine("-----------------------");
+            Console.WriteLine();
+        }
     }
 }
