@@ -4,31 +4,17 @@ using FastBank.Infrastructure.Repository;
 using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
 using FastBank.Services.MessageService;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FastBank
 {
     public static class MenuOptions
     {
-        static public Customer? ActiveCustomer = null;
+        static private User? ActiveUser = null;
 
         static bool inProgress = true;
 
-        //TODO Move to MenuService
-        public static int CommandRead(Regex regPattern, string menuOptions)
-        {
-            Console.WriteLine(menuOptions);
-            string? inputCommand = Console.ReadLine();
-            while (!regPattern.IsMatch(inputCommand ?? ""))
-            {
-                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
-                Console.ReadKey();
-                Console.Clear();
-                Console.WriteLine(menuOptions);
-                inputCommand = Console.ReadLine();
-
-            }
-            return Convert.ToInt32(inputCommand);
-        }
+        static readonly MenuService _menuService = new MenuService();
 
         static public void ShowMainMenu()
         {
@@ -38,10 +24,10 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                if (ActiveCustomer == null)
+                if (ActiveUser == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
-                    int action = CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                    int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
 
                     switch (action)
                     {
@@ -53,7 +39,7 @@ namespace FastBank
                             };
                         case 2:
                             {
-                                CustomerRegistration();
+                                UserRegistration();
                                 break;
                             }
                         case 0:
@@ -70,10 +56,10 @@ namespace FastBank
                 }
             }
         }
-        
+
         static public void Login()
         {
-            ICustomerService customerService = new CustomerService();
+            IUserService usersService = new UserService();
 
             Console.Clear();
 
@@ -81,14 +67,20 @@ namespace FastBank
             var currentEmail = Console.ReadLine() ?? "";
             Console.WriteLine("Please input password:");
 
-            var menuServie = new MenuService();
-            var inputPassword = menuServie.PasswordStaredInput();
+            var inputPassword = _menuService.PasswordStaredInput();
 
-            var loginCustomer = customerService.Login(currentEmail, inputPassword);
-            if (loginCustomer != null)
+            var loginUser = usersService.Login(currentEmail, inputPassword);
+            if (loginUser != null)
             {
                 Console.WriteLine("Authorized");
-                ActiveCustomer = loginCustomer;
+                if (loginUser.Role == Roles.Customer)
+                {
+                    ActiveUser = new Customer(loginUser);
+                }
+                else
+                {
+                    ActiveUser = loginUser;
+                }
             }
             else
             {
@@ -96,10 +88,11 @@ namespace FastBank
             }
         }
 
-        static public void CustomerRegistration()
+        static public void UserRegistration()
         {
-            ICustomerService customerService = new CustomerService();
+            IUserService userService = new UserService();
             Console.Clear();
+
             var role = Roles.Customer;
 
             Console.WriteLine("Please input registration data about you:");
@@ -116,15 +109,15 @@ namespace FastBank
             while (!DateTime.TryParse(birthdayInput, out birthday))
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
-                Console.ReadKey();
-                new MenuService().MoveToPreviousLine(2);
+                var keyIsEnter = Console.ReadKey();
+                new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 birthdayInput = Console.ReadLine() ?? "";
             }
 
             Console.WriteLine("Please input you password:");
-            var password = new MenuService().PasswordStaredInput();
+            var password = _menuService.PasswordStaredInput();
 
-            customerService.Add(name, email, birthday, password, role, false);
+            userService.Add(name, email, birthday, password, role, false);
 
             MenuOptions.ShowMainMenu();
         }
@@ -132,7 +125,7 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
-            switch (ActiveCustomer.Role)
+            switch (ActiveUser.Role)
             {
                 case Roles.Accountant:
                     OpenCustomerMenu();
@@ -157,55 +150,55 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (ActiveCustomer == null)
+            if (ActiveUser == null || ActiveUser is not Customer)
             {
                 return;
             }
 
             var bankAccountService = new BankAccountService();
-            var customerBankAccount = bankAccountService.GetBankAccount(ActiveCustomer);
+            var customerBankAccount = bankAccountService.GetBankAccount((Customer)ActiveUser);
             IMessageService MessageService = new MessageService();
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine($"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                Console.WriteLine($"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
                 Console.Clear();
                 return;
             }
             else
             {
-                var menuOptions = $"Welcome {ActiveCustomer.Name} as {ActiveCustomer.Role} of FastBank" +
+                var menuOptions = $"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
-                int action = CommandRead(new Regex("^[01234]{1}$"), menuOptions);
+                int action = _menuService.CommandRead(new Regex("^[01234]{1}$"), menuOptions);
                 switch (action)
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount(ActiveCustomer, customerBankAccount);
+                            bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
                             break;
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount(ActiveCustomer, customerBankAccount);
+                            bankAccountService.WithdrawAmount((Customer)ActiveUser, customerBankAccount);
                             break;
                         }
                     case 3:
                         {
-                            MessageService.InputMessage(ActiveCustomer);
+                            MessageService.InputMessage(ActiveUser);
                             break;
                         }
                     case 4:
                         {
-                            MessageService.GetMessages(ActiveCustomer);
+                            MessageService.GetMessages(ActiveUser);
                             break;
                         }
                     case 0:
                         {
-                            ActiveCustomer = null;
+                            ActiveUser = null;
                             break;
                         }
                 }

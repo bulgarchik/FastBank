@@ -22,8 +22,8 @@ namespace FastBank.Infrastructure.Repository
         public BankAccount? GetBankAccountByCustomer(Customer customer)
         {
             return _repo.Set<BankAccountDTO>()
-                .Where(a => a.CustomerId == customer.Id)
-                .Include(a => a.Customer)
+                .Where(a => a.UserId == customer.Id)
+                .Include(a => a.User)
                 .Select(a => a.ToDomainObj())
                 .FirstOrDefault();
         }

@@ -19,9 +19,9 @@ namespace FastBank.Services.MessageService
             _messageRepo.Add(message);
         }
 
-        public void GetMessages(Customer customer)
+        public void GetMessages(User user)
         {
-            var messages = _messageRepo.GetCustomerMessages(customer);
+            var messages = _messageRepo.GetCustomerMessages(user);
 
             foreach (var message in messages)
             {
@@ -39,8 +39,8 @@ namespace FastBank.Services.MessageService
             string text,
             MessageStatuses status,
             MessageType type,
-            Customer sender,
-            Customer? receiver,
+            User sender,
+            User? receiver,
             Roles receiverRole,
             Message basedOnMessage)
         {
@@ -48,7 +48,7 @@ namespace FastBank.Services.MessageService
             _messageRepo.Add(message);
         }
 
-        public Message InputMessage(Customer customer)
+        public Message InputMessage(User user)
         {
             Console.WriteLine("Please input message subject:");
             var subject = Console.ReadLine();
@@ -56,7 +56,7 @@ namespace FastBank.Services.MessageService
             Console.WriteLine("Please text message");
             var text = Console.ReadLine();
 
-            var message = new Message(Guid.NewGuid(), customer, null, Roles.CustomerService,
+            var message = new Message(Guid.NewGuid(), user, null, Roles.CustomerService,
                                       text, subject, null, MessageStatuses.Sent, MessageType.Inquery);
 
             _messageRepo.Add(message);

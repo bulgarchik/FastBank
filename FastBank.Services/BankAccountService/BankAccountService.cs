@@ -22,14 +22,14 @@ namespace FastBank.Services.BankAccountService
         {
             var existBankAccount = GetBankAccount(customer);
 
-            if (existBankAccount == null)
+            if (existBankAccount == null && customer.Role == Roles.Customer)
             {
                 BankAccount bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
                 bankAccountRepository.Add(bankAccount);
             }
         }
 
-        public void DepositAmount(Customer customer, BankAccount customerBankAccount)
+        public void DepositAmount(Customer customer, BankAccount? customerBankAccount)
         {
             decimal depositAmount;
             do
@@ -42,8 +42,8 @@ namespace FastBank.Services.BankAccountService
                 if (!decimal.TryParse(inputDepositAmount, out depositAmount) || depositAmount <= 0)
                 {
                     Console.WriteLine("Please input correct amount to deposit (press any key to continue...)");
-                    Console.ReadKey();
-                    new MenuService().MoveToPreviousLine(2);
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 }
             }
             while (depositAmount <= 0);
@@ -77,8 +77,8 @@ namespace FastBank.Services.BankAccountService
                 if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount) || withdrawAmount <= 0)
                 {
                     Console.WriteLine("Plese input correct ammount to withdraw (press any key to continue...)");
-                    Console.ReadKey();
-                    new MenuService().MoveToPreviousLine(2);
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 }
             } 
             while (withdrawAmount <=0);
@@ -97,6 +97,11 @@ namespace FastBank.Services.BankAccountService
                     Update(customerBankAccount);
                 }
             }
+        }
+
+        public void TransferAmountToFriend(Customer customer, BankAccount customerBankAccount, Customer friend, decimal amount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

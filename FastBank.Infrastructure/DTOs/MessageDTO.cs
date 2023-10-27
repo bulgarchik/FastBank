@@ -1,8 +1,6 @@
 ﻿using FastBank.Domain;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static System.Net.Mime.MediaTypeNames;
-using System.Reflection;
 
 namespace FastBank.Infrastructure.DTOs
 {
@@ -21,17 +19,17 @@ namespace FastBank.Infrastructure.DTOs
             Subject = message.Subject;
             BasedOnMessageId = message.BasedOnMessage?.MessageId;
             Statuses = message.Status;
-            Type = message.Type;
+            Type = message.Type;    
         }
 
         [Key]
         public Guid MessageId { get; private set; }
         public Guid SenderId { get; private set; }
         [ForeignKey(nameof(SenderId))]
-        public CustomerDTO Sender { get; private set; }
+        public UserDTO Sender { get; private set; }
         public Guid? ReceiverId { get; private set; }
         [ForeignKey(nameof(ReceiverId))]
-        public CustomerDTO? Receiver { get; private set; }
+        public UserDTO? Receiver { get; private set; }
         public Roles ReceiverRole { get; private set; }
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;

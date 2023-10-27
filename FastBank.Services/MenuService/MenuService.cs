@@ -1,9 +1,16 @@
-﻿namespace FastBank.Services
+﻿using System.Text.RegularExpressions;
+
+namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
-        public void MoveToPreviousLine(int countOfLines = 1)
+        public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1)
         {
+            if (inputkey.Key != ConsoleKey.Enter)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
             while (countOfLines > 0)
             {
                 Console.SetCursorPosition(0, Console.CursorTop - 1);
@@ -35,6 +42,23 @@
                 }
             } while (key != ConsoleKey.Enter);
             return pass;
+        }
+
+        //TODO Move to MenuService
+        public int CommandRead(Regex regPattern, string menuOptions)
+        {
+            Console.WriteLine(menuOptions);
+            string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand ?? ""))
+            {
+                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
+                Console.ReadKey();
+                Console.Clear();
+                Console.WriteLine(menuOptions);
+                inputCommand = Console.ReadLine();
+
+            }
+            return Convert.ToInt32(inputCommand);
         }
     }
 }

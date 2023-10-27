@@ -1,24 +1,23 @@
-﻿namespace FastBank
+﻿using System.Data;
+using System.Xml.Linq;
+
+namespace FastBank
 {
-    public class Customer
+    public class Customer : User
     {
         public Customer(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inactive)
+                : base(id, name, email, birthday, password, role, inactive) { }
+        
+        public Customer(User user) : base(
+                                       user.Id,
+                                       user.Name,
+                                       user.Email,
+                                       user.Birthday,
+                                       user.Password,
+                                       user.Role,
+                                       user.Inactive)
         {
-            Id = id;
-            Name = name;
-            Email = email;
-            Birthday = birthday;
-            Password = password;
-            Role = role;
-            Inactive = inactive;
-        }
 
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public string Email { get; private set; }
-        public DateTime Birthday { get; private set; }
-        public string Password { get; private set; }
-        public Roles Role { get; private set; }
-        public bool Inactive { get; private set; }
+        }
     }
 }

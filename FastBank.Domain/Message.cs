@@ -4,8 +4,8 @@
     {
         public Message(
             Guid messageId,
-            Customer sender,
-            Customer? receiver,
+            User sender,
+            User? receiver,
             Roles receiverRole,
             string text,
             string subject,
@@ -24,8 +24,8 @@
             Type = messageType;
         }
         public Guid MessageId { get; private set; }
-        public Customer Sender { get; private set; }
-        public Customer? Receiver { get; private set; }
+        public User Sender { get; private set; }
+        public User? Receiver { get; private set; }
         public Roles ReceiverRole { get; private set; }
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;

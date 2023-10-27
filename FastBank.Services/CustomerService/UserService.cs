@@ -4,32 +4,38 @@ using System.Text.RegularExpressions;
 
 namespace FastBank.Services
 {
-    public class CustomerService : ICustomerService
+    public class UserService : IUserService
     {
-        private readonly ICustomerRepository _customerRepo;
+        private readonly IUserRepository _userRepo;
 
-        public CustomerService()
+        public UserService()
         {
-            _customerRepo = new CustomerRepository();
+            _userRepo = new UserRepository();
         }
 
-        public List<Customer> GetAll()
+        public List<User> GetAll()
         {
-            return _customerRepo.GetAll();
+            return _userRepo.GetAll();
         }
 
-        public void Add(Customer customer)
+        public void Add(User user)
         {
-            _customerRepo.Add(customer);
+            _userRepo.Add(user);
         }
 
         public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive)
         {
-            var customer = new Customer(Guid.NewGuid(), name, email, birthday, password, role, inactive);
-            var validationErrors = ValidatеCustomer(customer);
+            var user = new User(Guid.NewGuid(), name, email, birthday, password, role, inactive);
+            
+            if (user.Role == Roles.Customer)
+            {
+                user = new Customer(user);
+            }
+
+            var validationErrors = ValidatеUser(user);
             if (validationErrors.Any())
             {
-                Console.WriteLine("\nCustomer data is not valid:");
+                Console.WriteLine("\nUser data is not valid:");
                 foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
@@ -39,18 +45,18 @@ namespace FastBank.Services
             }
             else
             {
-                Add(customer);
+                Add(user);
             }
         }
 
-        public List<string> ValidatеCustomer(Customer customer)
+        public List<string> ValidatеUser(User user)
         {
             var validationErrors = new List<string>();
-            CustomerExist(customer, validationErrors);
+            UserExist(user, validationErrors);
 
             //TODO validate password 
-            ValidateEmail(customer.Email, validationErrors);
-            CustomerAgeIsValid(customer, validationErrors);
+            ValidateEmail(user.Email, validationErrors);
+            UserAgeIsValid(user, validationErrors);
             //TODO validate role
             return validationErrors;
         }
@@ -65,30 +71,30 @@ namespace FastBank.Services
             return validationErrors;
         }
 
-        public List<string> CustomerExist(Customer customer, List<string> validationErrors)
+        public List<string> UserExist(User user, List<string> validationErrors)
         {
-            if (_customerRepo.GetByEmail(customer.Email) != null)
+            if (_userRepo.GetByEmail(user.Email) != null)
             {
-                validationErrors.Add($"Customer with email: {customer.Email} already exist");
+                validationErrors.Add($"User with email: {user.Email} already exist");
             }
             return validationErrors;
         }
 
-        public List<string> CustomerAgeIsValid(Customer customer, List<string> validationErrors)
+        public List<string> UserAgeIsValid(User user, List<string> validationErrors)
         {
-            var age = DateTime.Now.Year - customer.Birthday.Year;
-            if (DateTime.Now.DayOfYear < customer.Birthday.DayOfYear)
+            var age = DateTime.Now.Year - user.Birthday.Year;
+            if (DateTime.Now.DayOfYear < user.Birthday.DayOfYear)
             {
                 age = age - 1;
             }
 
             if (age < 18)
             {
-                validationErrors.Add($"The customer is underage (18)");
+                validationErrors.Add($"The user is under 18 years old");
             }
             else if (age > 100)
             {
-                validationErrors.Add($"The customer is over 100 years old");
+                validationErrors.Add($"The user is over 100 years old");
             }
             return validationErrors;
         }
@@ -96,10 +102,10 @@ namespace FastBank.Services
         public List<string> CheckLoginUserName(string email)
         {
             var validationErrors = new List<string>();
-            var customer = _customerRepo.GetByEmail(email);
-            if (customer == null)
+            var user = _userRepo.GetByEmail(email);
+            if (user == null)
             {
-                validationErrors.Add($"Customer with username(email): {email} not exist");
+                validationErrors.Add($"User with username(email): {email} not exist");
                 foreach (var error in validationErrors)
                 {
                     Console.WriteLine(error);
@@ -113,32 +119,33 @@ namespace FastBank.Services
             return validationErrors;
         }
 
-        public Customer? Login(string email, string password)
+        public User? Login(string email, string password)
         {
-            var customer = _customerRepo.GetByEmail(email);
-            if (customer == null)
+            var user = _userRepo.GetByEmail(email);
+            
+            if (user == null)
             {
-                Console.WriteLine($"\nCustomer with name: {email} not exist. Press any key to continue...");
+                Console.WriteLine($"\nUser with name: {email} not exist. Press any key to continue...");
                 Console.ReadKey();
             }
             else
             {
-                if (customer.Inactive)
+                if (user.Inactive)
                 {
-                    Console.WriteLine($"Customer with name: {email} deactivated. Please contact Administration");
-                    customer = null;
-                    return customer;
+                    Console.WriteLine($"User with name: {email} deactivated. Please contact Administration");
+                    user = null;
+                    return user;
                 }
                 var passwordtries = 0;
                 var menuServie = new MenuService();
                 while (passwordtries < 2)
                 {
-                    if (customer.Password != password)
+                    if (user.Password != password)
                     {
                         Console.WriteLine($"Wrong password! Press any key to try again!");
-                        Console.ReadKey();
+                        var keyIsEnter = Console.ReadKey();
 
-                        new MenuService().MoveToPreviousLine(2);
+                        new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                         passwordtries++;
                         Console.WriteLine("Please input password:");
                         
@@ -147,18 +154,18 @@ namespace FastBank.Services
                     }
                     else
                     {
-                        return customer;
+                        return user;
                     }
                 }
                 if (passwordtries == 2)
                 {
                     Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
                     Console.ReadKey(true);
-                    customer = null;
+                    user = null;
                 }
             }
                         
-            return customer;
+            return user;
         }
     }
 }

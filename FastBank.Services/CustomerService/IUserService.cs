@@ -1,15 +1,15 @@
 ﻿namespace FastBank.Services
 {
-    public interface ICustomerService
+    public interface IUserService
     {
-        public List<Customer> GetAll();
+        public List<User> GetAll();
 
-        public void Add(Customer customer);
+        public void Add(User customer);
 
         public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive);
 
         public List<string> CheckLoginUserName(string username);
 
-        public Customer? Login(string username, string password);
+        public User? Login(string username, string password);
     }
 }
