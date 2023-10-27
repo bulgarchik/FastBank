@@ -26,7 +26,7 @@ namespace FastBank
                 Console.Clear();
                 if (ActiveUser == null)
                 {
-                    var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
+                    var menuOptions = "Please choose your action: \n 1: For login. 2: For customer registration. 0: for exit";
                     int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
 
                     switch (action)
@@ -63,6 +63,8 @@ namespace FastBank
 
             Console.Clear();
 
+            Console.WriteLine("\nLogin to FastBank\n");
+
             Console.WriteLine("Please input login(email):");
             var currentEmail = Console.ReadLine() ?? "";
             Console.WriteLine("Please input password:");
@@ -95,7 +97,9 @@ namespace FastBank
 
             var role = Roles.Customer;
 
-            Console.WriteLine("Please input registration data about you:");
+            Console.WriteLine("\nNew customer registration process is started.\n");
+
+            Console.WriteLine("Please input registration data about customer:");
 
             Console.WriteLine("Please input you name:");
             var name = Console.ReadLine();
