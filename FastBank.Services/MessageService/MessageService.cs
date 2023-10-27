@@ -51,9 +51,11 @@ namespace FastBank.Services.MessageService
         public Message InputMessage(User user)
         {
             Console.WriteLine("Please input message subject:");
+            Console.Write("Subject: ");
             var subject = Console.ReadLine();
 
             Console.WriteLine("Please text message");
+            Console.Write("Text: ");
             var text = Console.ReadLine();
 
             var message = new Message(Guid.NewGuid(), user, null, Roles.CustomerService,

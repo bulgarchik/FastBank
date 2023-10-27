@@ -34,7 +34,8 @@ namespace FastBank.Services.BankAccountService
             decimal depositAmount;
             do
             {
-                Console.Write("Please write the deposit amount (type 'q' for exit):");
+                Console.WriteLine("Please write the deposit amount (type 'q' for exit):");
+                Console.Write("Deposit amount: ");
                 var inputDepositAmount = Console.ReadLine();
                 if (inputDepositAmount == "q")
                     return;
@@ -72,7 +73,8 @@ namespace FastBank.Services.BankAccountService
             decimal withdrawAmount;
             do
             {
-                Console.Write("Please write the withdraw amount:");
+                Console.WriteLine("Please write the withdraw amount:");
+                Console.Write("Withdraw amount: ");
                 var inputWithdrawAmount = Console.ReadLine();
                 if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount) || withdrawAmount <= 0)
                 {

@@ -68,10 +68,12 @@ namespace FastBank
 
             Console.WriteLine("\nLogin to FastBank\n");
 
-            Console.WriteLine("Please input login(email):");
+            Console.WriteLine("Please input login:");
+            Console.Write("Email: ");
             var currentEmail = Console.ReadLine() ?? "";
             Console.WriteLine("Please input password:");
 
+            Console.Write("Password: ");
             var inputPassword = _menuService.PasswordStaredInput();
 
             var loginUser = usersService.Login(currentEmail, inputPassword);
@@ -103,12 +105,12 @@ namespace FastBank
 
             Console.WriteLine("\nNew customer registration process is started.\n");
 
-            Console.WriteLine("Please input registration data about customer:");
-
             Console.WriteLine("Please input you name:");
+            Console.Write("Name: ");
             var name = Console.ReadLine();
 
             Console.WriteLine("Please input you email:");
+            Console.Write("Email: ");
             var email = Console.ReadLine();
             var validationError = new List<string>();
             while (userService.ValidateEmail(email ?? "", validationError).Count > 0)
@@ -123,6 +125,7 @@ namespace FastBank
             }
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
+            Console.Write("Birthday:");
             string birthdayInput = Console.ReadLine() ?? "";
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
@@ -130,10 +133,12 @@ namespace FastBank
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
+                Console.Write("Birthday:");
                 birthdayInput = Console.ReadLine() ?? "";
             }
 
             Console.WriteLine("Please input you password:");
+            Console.Write("Password:");
             var password = _menuService.PasswordStaredInput();
 
             userService.Add(name, email, birthday, password, role, false);
