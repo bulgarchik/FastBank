@@ -8,16 +8,6 @@ namespace FastBank.Infrastructure.DTOs
     {
         public UserDTO() { }
 
-        public UserDTO(User user)
-        {
-            UserId = user.Id;
-            Name = user.Name;
-            Email = user.Email;
-            Birthday = user.Birthday;
-            Password = user.Password;
-            Role = user.Role.ToString();
-            Inactive = user.Inactive;
-        }
         public UserDTO(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inactive)
         {
             UserId = id;

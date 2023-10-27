@@ -32,7 +32,16 @@ namespace FastBank.Infrastructure.Repository
 
         public void Add(User user)
         {
-            var userDTO = new UserDTO(user);
+            var userDTO = 
+                new UserDTO(
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.Birthday,
+                    user.Password,
+                    user.Role,
+                    user.Inactive);
+
             _repo.Add(userDTO);           
         }
     }
