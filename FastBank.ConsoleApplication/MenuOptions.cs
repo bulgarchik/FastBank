@@ -178,7 +178,7 @@ namespace FastBank
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine($"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
+                Console.WriteLine($"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank\n" +
                                   "\nPlease make a deposit at Fast Bank");
                 bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
                 Console.Clear();
@@ -187,7 +187,7 @@ namespace FastBank
             }
             else
             {
-                var menuOptions = $"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
+                var menuOptions = $"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank\n" +
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
