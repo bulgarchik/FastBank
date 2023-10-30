@@ -2,16 +2,19 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
+using System.Text.RegularExpressions;
 
 namespace FastBank.Services.MessageService
 {
     public class MessageService : IMessageService
     {
         private readonly IMessageRepository _messageRepo;
+        private readonly IMenuService _menuService;
 
         public MessageService()
         {
             _messageRepo = new MessageRepository();
+            _menuService = new MenuService();
         }
 
         public void AddMessage(Message message)
@@ -23,6 +26,9 @@ namespace FastBank.Services.MessageService
         {
             var messages = _messageRepo.GetCustomerMessages(user);
 
+            if (messages.Count > 0)
+                Console.WriteLine($"Messages list:");
+
             foreach (var message in messages)
             {
                 Console.WriteLine($"Subject: {message.Subject}");
@@ -31,7 +37,6 @@ namespace FastBank.Services.MessageService
                 Console.WriteLine(new string('*', Console.WindowWidth));
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
-            Console.ReadKey();
         }
 
         public void AddMessage(
@@ -63,6 +68,20 @@ namespace FastBank.Services.MessageService
 
             _messageRepo.Add(message);
             return message;
+        }
+
+        public void ShowMessagesMenu(User user)
+        {
+            Console.Clear();
+            _menuService.Logo();
+            GetMessages(user);
+            var menuOptions = $"\nPlease choose your action: " +
+                              $"\n  0: for exit";
+            int action = _menuService.CommandRead(new Regex("^[0]{1}$"), menuOptions);
+            switch (action)
+            {
+                case 0: return;
+            }
         }
     }
 }

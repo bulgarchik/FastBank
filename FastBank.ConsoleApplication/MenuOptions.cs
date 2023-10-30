@@ -220,7 +220,7 @@ namespace FastBank
                         }
                     case 4:
                         {
-                            MessageService.GetMessages(ActiveUser);
+                            MessageService.ShowMessagesMenu(ActiveUser);//GetMessages(ActiveUser);
                             break;
                         }
                     case 0:
