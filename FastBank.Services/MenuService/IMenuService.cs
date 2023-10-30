@@ -11,5 +11,7 @@ namespace FastBank.Services
         public int CommandRead(Regex regPattern, string menuOptions);
 
         public void Logo();
+
+        public string InputEmail();
     }
 }

@@ -4,6 +4,13 @@ namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
+        private readonly IUserService _userService;
+
+        public MenuService() 
+        {
+            _userService = new UserService();
+        }
+
         public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1)
         {
             if (inputkey.Key != ConsoleKey.Enter)
@@ -77,6 +84,25 @@ namespace FastBank.Services
             Console.WriteLine("| FFF       BBBBBBBB  |");
             Console.WriteLine("-----------------------");
             Console.WriteLine();
+        }
+
+        public string InputEmail()
+        {
+            Console.WriteLine("Please input you email:");
+            Console.Write("Email: ");
+            var email = Console.ReadLine();
+            while (_userService.ValidateEmail(email ?? string.Empty, new List<string>()).Count > 0)
+            {
+                Console.WriteLine("You've inputted wrong email. Press any key to try again or type \"quit\" for exit");
+                var keyIsEnter = Console.ReadKey();
+                new MenuService().MoveToPreviousLine(keyIsEnter, 2);
+                Console.Write("Email: ");
+                email = Console.ReadLine()??string.Empty;
+                if (email == "quit")
+                return email;
+            }
+            return email ?? string.Empty;
+
         }
     }
 }
