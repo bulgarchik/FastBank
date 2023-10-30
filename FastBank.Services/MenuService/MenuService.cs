@@ -61,6 +61,7 @@ namespace FastBank.Services
                 Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
                 Console.ReadKey();
                 Console.Clear();
+                Logo();
                 Console.WriteLine(menuOptions);
                 inputCommand = Console.ReadLine();
 
