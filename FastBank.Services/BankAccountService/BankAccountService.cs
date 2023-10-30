@@ -75,14 +75,16 @@ namespace FastBank.Services.BankAccountService
             decimal withdrawAmount;
             do
             {
-                Console.WriteLine("Please write the withdraw amount:");
+                Console.WriteLine("Please write the withdraw amount (type 'q' for exit):");
                 Console.Write("Withdraw amount: ");
                 var inputWithdrawAmount = Console.ReadLine();
+                if (inputWithdrawAmount == "q")
+                    return;
                 if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount) || withdrawAmount <= 0)
                 {
                     Console.WriteLine("Plese input correct ammount to withdraw (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
-                    new MenuService().MoveToPreviousLine(keyIsEnter, 2);
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
             } 
             while (withdrawAmount <=0);
