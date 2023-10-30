@@ -117,7 +117,7 @@ namespace FastBank
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
             Console.Write("Birthday:");
-            string birthdayInput = Console.ReadLine() ?? "";
+            string birthdayInput = Console.ReadLine() ?? string.Empty;
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
             {
@@ -125,7 +125,7 @@ namespace FastBank
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 Console.Write("Birthday:");
-                birthdayInput = Console.ReadLine() ?? "";
+                birthdayInput = Console.ReadLine() ?? string.Empty;
             }
 
             Console.WriteLine("Please input you password:");

@@ -56,7 +56,7 @@ namespace FastBank.Services
         {
             Console.WriteLine(menuOptions);
             string? inputCommand = Console.ReadLine();
-            while (!regPattern.IsMatch(inputCommand ?? ""))
+            while (!regPattern.IsMatch(inputCommand ?? string.Empty))
             {
                 Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
                 var inputKey = Console.ReadKey();
