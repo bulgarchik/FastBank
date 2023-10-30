@@ -199,7 +199,7 @@ namespace FastBank
                 var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
+                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. 4. Check inquiries  0: for exit";
                 int action = _menuService.CommandRead(new Regex("^[01234]{1}$"), menuOptions);
                 switch (action)
                 {
