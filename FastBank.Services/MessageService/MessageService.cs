@@ -27,13 +27,19 @@ namespace FastBank.Services.MessageService
             var messages = _messageRepo.GetCustomerMessages(user);
 
             if (messages.Count > 0)
+            {
                 Console.WriteLine($"Messages list:");
-
+                Console.WriteLine(new string(' ', Console.WindowWidth));
+            }
+            int mesNumber = 0;
             foreach (var message in messages)
             {
-                Console.WriteLine($"Subject: {message.Subject}");
-                Console.WriteLine($"Text: {message.Text}");
-                Console.WriteLine($"Status: {message.Status}");
+                mesNumber++;
+                Console.WriteLine(new string('*', Console.WindowWidth));
+                Console.WriteLine($"Message number: {mesNumber}");
+                Console.WriteLine($"\nSubject: {message.Subject}");
+                Console.WriteLine($"\nText: {message.Text}");
+                Console.WriteLine($"\nStatus: {message.Status}");
                 Console.WriteLine(new string('*', Console.WindowWidth));
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
@@ -78,6 +84,7 @@ namespace FastBank.Services.MessageService
             var menuOptions = $"\nPlease choose your action: " +
                               $"\n  0: for exit";
             int action = _menuService.CommandRead(new Regex("^[0]{1}$"), menuOptions);
+            
             switch (action)
             {
                 case 0: return;
