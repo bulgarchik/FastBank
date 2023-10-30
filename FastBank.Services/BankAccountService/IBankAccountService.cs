@@ -6,11 +6,11 @@ namespace FastBank.Services.BankAccountService
     {
         public BankAccount? GetBankAccount(Customer customer);
 
-        public void Add(Customer customer, decimal amount);
+        public BankAccount? Add(Customer customer, decimal amount);
 
         public void Update(BankAccount bankAccount);
 
-        public void DepositAmount(Customer customer, BankAccount? customerBankAccount);
+        public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount);
 
         public void WithdrawAmount(Customer customer, BankAccount customerBankAccount);
 

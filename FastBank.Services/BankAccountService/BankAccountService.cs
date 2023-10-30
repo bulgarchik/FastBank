@@ -18,18 +18,20 @@ namespace FastBank.Services.BankAccountService
             return bankAccountRepository.GetBankAccountByCustomer(customer);
         }
 
-        public void Add(Customer customer, decimal amount)
+        public BankAccount? Add(Customer customer, decimal amount)
         {
-            var existBankAccount = GetBankAccount(customer);
+            var bankAccount = GetBankAccount(customer);
 
-            if (existBankAccount == null && customer.Role == Roles.Customer)
+            if (bankAccount == null && customer.Role == Roles.Customer)
             {
-                BankAccount bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
+                bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
                 bankAccountRepository.Add(bankAccount);
             }
+
+            return bankAccount;
         }
 
-        public void DepositAmount(Customer customer, BankAccount? customerBankAccount)
+        public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount)
         {
             decimal depositAmount;
             do
@@ -44,7 +46,7 @@ namespace FastBank.Services.BankAccountService
                 {
                     Console.WriteLine("Please input correct amount to deposit (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
-                    new MenuService().MoveToPreviousLine(keyIsEnter, 2);
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
             }
             while (depositAmount <= 0);
@@ -53,7 +55,7 @@ namespace FastBank.Services.BankAccountService
             {
                 if (customerBankAccount == null)
                 {
-                    Add(customer, depositAmount);
+                    customerBankAccount = Add(customer, depositAmount);
                 }
                 else
                 {
