@@ -31,15 +31,15 @@ namespace FastBank.Services.MessageService
                 Console.WriteLine($"Messages list:");
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
-            int mesNumber = 0;
+            int msgNumber = 0;
             foreach (var message in messages)
             {
-                mesNumber++;
+                msgNumber++;
                 Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine($"Message number: {mesNumber}");
-                Console.WriteLine($"\nSubject: {message.Subject}");
-                Console.WriteLine($"\nText: {message.Text}");
-                Console.WriteLine($"\nStatus: {message.Status}");
+                Console.WriteLine($"Message number: {msgNumber}");
+                Console.WriteLine($"\nSubject: {message?.Subject}");
+                Console.WriteLine($"\nText: {message?.Text}");
+                Console.WriteLine($"\nStatus: {message?.Status}");
                 Console.WriteLine(new string('*', Console.WindowWidth));
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
