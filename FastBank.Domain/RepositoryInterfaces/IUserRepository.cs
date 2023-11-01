@@ -9,5 +9,7 @@
         public void Add(User user);
 
         public List<User> GetUserFriends(User user);
+
+        public void AddFriend(User user, User Friend);
     }
 }

@@ -12,6 +12,8 @@ namespace FastBank.Services
 
         public void Logo();
 
-        public string InputEmail();
+        public List<string> ValidateEmail(string email, List<string> validationErrors);
+
+        public string InputEmail(string inquiryMsg, string emailTypeToInput);
     }
 }

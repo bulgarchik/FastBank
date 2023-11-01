@@ -7,10 +7,12 @@ namespace FastBank.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepo;
+        private readonly IMenuService _menuService;
 
         public UserService()
         {
             _userRepo = new UserRepository();
+            _menuService = new MenuService();
         }
 
         public List<User> GetAll()
@@ -58,16 +60,6 @@ namespace FastBank.Services
             //ValidateEmail(user.Email, validationErrors);
             UserAgeIsValid(user, validationErrors);
             //TODO validate role
-            return validationErrors;
-        }
-
-        public List<string> ValidateEmail(string email, List<string> validationErrors)
-        {
-            var regEmailPattern = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-            if (!regEmailPattern.IsMatch(email))
-            {
-                validationErrors.Add("You entered wrong email");
-            }
             return validationErrors;
         }
 
@@ -174,6 +166,40 @@ namespace FastBank.Services
         public List<User> GetUserFriends(User user)
         {
             return _userRepo.GetUserFriends(user);
+        }
+
+        public void AddFriend(User user, List<User> friendsList)
+        {
+            var inquiryMsg = "Please input user's email to add him as a friend (type \"quit\" for exit):";
+            var emailTypeToInput = "Friend email:";
+            var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
+
+            if (emailFriend == "quit")
+                return;
+
+            var friend = _userRepo.GetByEmail(emailFriend);
+
+            if (friend != null)
+            {
+                if (friendsList.Any(u => u.Id == friend.Id))
+                {
+                    Console.WriteLine("This user is your friend already... Press any key to continue!");
+                    Console.ReadKey(true);
+                    return;
+                }
+
+                _userRepo.AddFriend(user, friend);
+            }
+            else
+            {
+                Console.WriteLine("We have no user with such email... Press any key to continue!");
+                Console.ReadKey(true);
+            }
+        }
+
+        public void RemoveFriend(User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

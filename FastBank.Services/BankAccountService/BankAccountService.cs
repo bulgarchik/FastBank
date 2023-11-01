@@ -142,13 +142,21 @@ namespace FastBank.Services.BankAccountService
             }
 
             var menuOptions = $"\nPlease choose your action: " +
-                             $"\n  0: for exit";
-            int action = _menuService.CommandRead(new Regex("^[0]{1}$"), menuOptions);
+                             $"\n1: Add friend. 2. Remove friend. 3. Transfer money to friend  0: for exit";
+            int action = _menuService.CommandRead(new Regex("^[0123]{1}$"), menuOptions);
 
             switch (action)
             {
                 case 0: return;
+                case 1:
+                    {
+                        _userService.AddFriend(customer, friendsList ?? new List<User>());
+                        break;
+                    };
             }
+
+            TransferMoneyToFriendMenu(customer);
+
         }
     }
 }

@@ -56,5 +56,10 @@ namespace FastBank.Infrastructure.Repository
                                     .ToList();
             return friends;
         }
+
+        public void AddFriend(User user, User friend)
+        {
+            _repo.Add<FriendsRelationDTO>(new FriendsRelationDTO(Guid.NewGuid(), user, friend, false));
+        }
     }
 }

@@ -4,13 +4,6 @@ namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
-        private readonly IUserService _userService;
-
-        public MenuService() 
-        {
-            _userService = new UserService();
-        }
-
         public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1)
         {
             if (inputkey.Key != ConsoleKey.Enter)
@@ -85,23 +78,32 @@ namespace FastBank.Services
             Console.WriteLine();
         }
 
-        public string InputEmail()
+        public List<string> ValidateEmail(string email, List<string> validationErrors)
         {
-            Console.WriteLine("Please input you email:");
-            Console.Write("Email: ");
+            var regEmailPattern = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+            if (!regEmailPattern.IsMatch(email))
+            {
+                validationErrors.Add("You entered wrong email");
+            }
+            return validationErrors;
+        }
+
+        public string InputEmail(string inquiryMsg = "Please input you email:", string emailTypeToInput = "Email:")
+        {
+            Console.WriteLine(inquiryMsg);
+            Console.Write(emailTypeToInput);
             var email = Console.ReadLine();
-            while (_userService.ValidateEmail(email ?? string.Empty, new List<string>()).Count > 0)
+            while (ValidateEmail(email ?? string.Empty, new List<string>()).Count > 0)
             {
                 Console.WriteLine("You've inputted wrong email. Press any key to try again or type \"quit\" for exit");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
-                Console.Write("Email: ");
+                Console.Write(emailTypeToInput);
                 email = Console.ReadLine()??string.Empty;
                 if (email == "quit")
                 return email;
             }
             return email ?? string.Empty;
-
         }
     }
 }

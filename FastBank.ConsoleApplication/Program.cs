@@ -1,5 +1,6 @@
 ﻿using FastBank.Domain;
 using FastBank.Services;
+using System.Text;
 
 namespace FastBank
 {
@@ -7,6 +8,7 @@ namespace FastBank
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             MenuOptions.ShowMainMenu();
         }
     }
