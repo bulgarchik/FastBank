@@ -24,9 +24,11 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
+                _menuService.Logo();
+
                 if (ActiveUser == null)
                 {
-                    var menuOptions = "Please choose your action: \n 1: For login. 2: For registration. 0: for exit";
+                    var menuOptions = "Please choose your action: \n 1: For login. 2: For customer registration. 0: for exit";
                     int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
 
                     switch (action)
@@ -62,11 +64,16 @@ namespace FastBank
             IUserService usersService = new UserService();
 
             Console.Clear();
+            _menuService.Logo();
 
-            Console.WriteLine("Please input login(email):");
-            var currentEmail = Console.ReadLine() ?? "";
+            Console.WriteLine("\nLogin to FastBank\n");
+
+            var currentEmail = new MenuService().InputEmail();
+            if (currentEmail == "quit")
+                return;
             Console.WriteLine("Please input password:");
 
+            Console.Write("Password: ");
             var inputPassword = _menuService.PasswordStaredInput();
 
             var loginUser = usersService.Login(currentEmail, inputPassword);
@@ -92,29 +99,35 @@ namespace FastBank
         {
             IUserService userService = new UserService();
             Console.Clear();
+            _menuService.Logo();
 
             var role = Roles.Customer;
 
-            Console.WriteLine("Please input registration data about you:");
+            Console.WriteLine("\nNew customer registration process is started.\n");
 
             Console.WriteLine("Please input you name:");
+            Console.Write("Name: ");
             var name = Console.ReadLine();
 
-            Console.WriteLine("Please input you email:");
-            var email = Console.ReadLine();
+            var email = new MenuService().InputEmail();
+            if (email == "quit")
+                return;
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
-            string birthdayInput = Console.ReadLine() ?? "";
+            Console.Write("Birthday:");
+            string birthdayInput = Console.ReadLine() ?? string.Empty;
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
             {
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
-                birthdayInput = Console.ReadLine() ?? "";
+                Console.Write("Birthday:");
+                birthdayInput = Console.ReadLine() ?? string.Empty;
             }
 
             Console.WriteLine("Please input you password:");
+            Console.Write("Password:");
             var password = _menuService.PasswordStaredInput();
 
             userService.Add(name, email, birthday, password, role, false);
@@ -125,6 +138,8 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
+            _menuService.Logo();
+
             switch (ActiveUser.Role)
             {
                 case Roles.Accountant:
@@ -161,24 +176,34 @@ namespace FastBank
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
-                Console.WriteLine($"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
+                Console.WriteLine($"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
+                bankAccountService.DepositAmount((Customer)ActiveUser, ref customerBankAccount);
+                
+                if (customerBankAccount == null || customerBankAccount.Amount == 0)
+                {
+                    Console.WriteLine("\nYou can't use your account without funds." +
+                                      "\nPlease press \"q\" for exit or any key to continue... ");
+                    var qkey = Console.ReadKey().KeyChar;
+                    if (qkey == 'q')
+                        ActiveUser = null;
+                }
                 Console.Clear();
+                _menuService.Logo();
                 return;
             }
             else
             {
-                var menuOptions = $"Welcome {ActiveUser.Name} as {ActiveUser.Role} of FastBank" +
+                var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 3: For inquiry. 4. Check inquiries  0: for exit";
+                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. 4. Check inquiries  0: for exit";
                 int action = _menuService.CommandRead(new Regex("^[01234]{1}$"), menuOptions);
                 switch (action)
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount((Customer)ActiveUser, customerBankAccount);
+                            bankAccountService.DepositAmount((Customer)ActiveUser, ref customerBankAccount);
                             break;
                         }
                     case 2:
@@ -193,7 +218,7 @@ namespace FastBank
                         }
                     case 4:
                         {
-                            MessageService.GetMessages(ActiveUser);
+                            MessageService.ShowMessagesMenu(ActiveUser);
                             break;
                         }
                     case 0:

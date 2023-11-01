@@ -55,7 +55,7 @@ namespace FastBank.Services
             UserExist(user, validationErrors);
 
             //TODO validate password 
-            ValidateEmail(user.Email, validationErrors);
+            //ValidateEmail(user.Email, validationErrors);
             UserAgeIsValid(user, validationErrors);
             //TODO validate role
             return validationErrors;
@@ -144,13 +144,16 @@ namespace FastBank.Services
                     {
                         Console.WriteLine($"Wrong password! Press any key to try again!");
                         var keyIsEnter = Console.ReadKey();
-
                         new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                         passwordtries++;
                         Console.WriteLine("Please input password:");
                         
-                        password = menuServie.PasswordStaredInput();
-                        password = Console.ReadLine()??"";
+                        password = menuServie.PasswordStaredInput()??string.Empty;
+                        password = Console.ReadLine()??string.Empty;
+                        if (password == string.Empty)
+                        {
+                            new MenuService().MoveToPreviousLine(keyIsEnter, 1);
+                        }
                     }
                     else
                     {

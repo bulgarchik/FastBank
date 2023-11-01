@@ -22,5 +22,7 @@ namespace FastBank.Services.MessageService
             Message basedOnMessage);
 
         public Message InputMessage(User user);
+
+        public void ShowMessagesMenu(User user);
     }
 }

@@ -2,16 +2,19 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
+using System.Text.RegularExpressions;
 
 namespace FastBank.Services.MessageService
 {
     public class MessageService : IMessageService
     {
         private readonly IMessageRepository _messageRepo;
+        private readonly IMenuService _menuService;
 
         public MessageService()
         {
             _messageRepo = new MessageRepository();
+            _menuService = new MenuService();
         }
 
         public void AddMessage(Message message)
@@ -23,15 +26,23 @@ namespace FastBank.Services.MessageService
         {
             var messages = _messageRepo.GetCustomerMessages(user);
 
+            if (messages.Count > 0)
+            {
+                Console.WriteLine($"Messages list:");
+                Console.WriteLine(new string(' ', Console.WindowWidth));
+            }
+            int msgNumber = 0;
             foreach (var message in messages)
             {
-                Console.WriteLine($"Subject: {message.Subject}");
-                Console.WriteLine($"Text: {message.Text}");
-                Console.WriteLine($"Status: {message.Status}");
+                msgNumber++;
+                Console.WriteLine(new string('*', Console.WindowWidth));
+                Console.WriteLine($"Message number: {msgNumber}");
+                Console.WriteLine($"\nSubject: {message?.Subject}");
+                Console.WriteLine($"\nText: {message?.Text}");
+                Console.WriteLine($"\nStatus: {message?.Status}");
                 Console.WriteLine(new string('*', Console.WindowWidth));
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
-            Console.ReadKey();
         }
 
         public void AddMessage(
@@ -51,9 +62,11 @@ namespace FastBank.Services.MessageService
         public Message InputMessage(User user)
         {
             Console.WriteLine("Please input message subject:");
+            Console.Write("Subject: ");
             var subject = Console.ReadLine();
 
             Console.WriteLine("Please text message");
+            Console.Write("Text: ");
             var text = Console.ReadLine();
 
             var message = new Message(Guid.NewGuid(), user, null, Roles.CustomerService,
@@ -61,6 +74,21 @@ namespace FastBank.Services.MessageService
 
             _messageRepo.Add(message);
             return message;
+        }
+
+        public void ShowMessagesMenu(User user)
+        {
+            Console.Clear();
+            _menuService.Logo();
+            GetMessages(user);
+            var menuOptions = $"\nPlease choose your action: " +
+                              $"\n  0: for exit";
+            int action = _menuService.CommandRead(new Regex("^[0]{1}$"), menuOptions);
+            
+            switch (action)
+            {
+                case 0: return;
+            }
         }
     }
 }
