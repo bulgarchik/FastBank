@@ -170,5 +170,10 @@ namespace FastBank.Services
                         
             return user;
         }
+
+        public List<User> GetUserFriends(User user)
+        {
+            return _userRepo.GetUserFriends(user);
+        }
     }
 }

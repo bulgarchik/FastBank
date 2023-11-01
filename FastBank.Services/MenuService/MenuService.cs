@@ -71,18 +71,18 @@ namespace FastBank.Services
         public void Logo()
         {
             Console.WriteLine();
-            Console.WriteLine("-----------------------");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBB  |");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFF       BBBBBBBBB |");
-            Console.WriteLine("| FFF       BBBBBBBB  |");
-            Console.WriteLine("-----------------------");
+            Console.WriteLine("-----------------------------------------------------------------------------------");
+            Console.WriteLine("| FFFFFFFFF                                BBBBBBBB                               |");
+            Console.WriteLine("| FFFFFFFFF                                BBBBBBBBB                              |");
+            Console.WriteLine("| FFF          AAA    SSSSSSSSS TTTTTTTTT  BBB   BBB    AAA    NNN   NNN KKK   KKK|");
+            Console.WriteLine("| FFF        AAAAAAA  SSSSSSSSS TTTTTTTTT  BBB   BBB  AAAAAAA  NNNN  NNN KKK  KKK |");
+            Console.WriteLine("| FFFFFFFFF AAA   AAA SSS          TTT     BBBBBBBBB AAA   AAA NNNNN NNN KKK KKK  |");
+            Console.WriteLine("| FFFFFFFFF AAA   AAA SSSSSSSS     TTT     BBBBBBBBB AAA   AAA NNNNNNNNN KKKKKK   |");
+            Console.WriteLine("| FFF       AAAAAAAAA  SSSSSSSS    TTT     BBB   BBB AAAAAAAAA NNN NNNNN KKKKKK   |");
+            Console.WriteLine("| FFF       AAAAAAAAA       SSS    TTT     BBB   BBB AAAAAAAAA NNN  NNNN KKK KKK  |");
+            Console.WriteLine("| FFF       AAA   AAA SSSSSSSSS    TTT     BBBBBBBBB AAA   AAA NNN   NNN KKK  KKK |");
+            Console.WriteLine("| FFF       AAA   AAA SSSSSSSSS    TTT     BBBBBBBB  AAA   AAA NNN   NNN KKK   KKK|");
+            Console.WriteLine("-----------------------------------------------------------------------------------");
             Console.WriteLine();
         }
 

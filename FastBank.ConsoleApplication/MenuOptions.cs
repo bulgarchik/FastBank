@@ -199,8 +199,9 @@ namespace FastBank
                 var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. 4. Check inquiries  0: for exit";
-                int action = _menuService.CommandRead(new Regex("^[01234]{1}$"), menuOptions);
+                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. " +
+                                    $"4: Check inquiries. 5: Transfer to friend 0: for exit";
+                int action = _menuService.CommandRead(new Regex("^[012345]{1}$"), menuOptions);
                 switch (action)
                 {
                     case 1:
@@ -223,10 +224,15 @@ namespace FastBank
                             MessageService.ShowMessagesMenu(ActiveUser);//GetMessages(ActiveUser);
                             break;
                         }
+                    case 5:
+                        {
+                            bankAccountService.TransferMoneyToFriendMenu((Customer)ActiveUser);
+                            break;
+                        }
                     case 0:
                         {
                             ActiveUser = null;
-                            break;
+                            break;  
                         }
                 }
             }

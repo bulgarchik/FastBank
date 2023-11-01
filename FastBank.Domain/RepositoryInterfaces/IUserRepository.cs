@@ -7,5 +7,7 @@
         public User? GetByEmail(string email);
 
         public void Add(User user);
+
+        public List<User> GetUserFriends(User user);
     }
 }

@@ -1,24 +1,30 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 
 namespace FastBank.Infrastructure.DTOs
 {
+    [Table("FriendRelations")]
     public class FriendsRelationDTO
     {
-        public FriendsRelationDTO(Guid relationId, Customer friend1, Customer friend2, bool blocked)
+        private FriendsRelationDTO() { }
+
+        public FriendsRelationDTO(Guid relationId, User user, User friend, bool blocked)
         {
             RelationId = relationId;
-            Friend1 = friend1;
-            Friend2 = friend2;
+            UserId = user.Id;
+            FriendId = friend.Id;
             Blocked = blocked;
         }
 
+        [Key]
         public Guid RelationId { get; set; }
-        public Guid Friend1Id { get; set; }
-        [ForeignKey(nameof(Friend1Id))]
-        public Customer Friend1 { get; set; }
-        public Guid Friend2Id { get; set; }
-        [ForeignKey(nameof(Friend2Id))]
-        public Customer Friend2 { get; set; }
+        public Guid UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public UserDTO User { get; set; } = null!;
+        public Guid FriendId { get; set; }
+        [ForeignKey(nameof(FriendId))]
+        public UserDTO Friend { get; set; } = null!;
         public bool Blocked {  get; set; }
     }
 }

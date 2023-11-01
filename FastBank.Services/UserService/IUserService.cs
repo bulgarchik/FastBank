@@ -13,5 +13,7 @@
         public User? Login(string username, string password);
 
         public List<string> ValidateEmail(string email, List<string> validationErrors);
+
+        public List<User> GetUserFriends(User user);
     }
 }

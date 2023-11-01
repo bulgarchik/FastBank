@@ -38,19 +38,38 @@ namespace FastBank.Infrastructure.Context
                 .WithMany()
                 .HasForeignKey(m => m.BasedOnMessageId);
 
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Roles.Customer, false));
+            modelBuilder.Entity<FriendsRelationDTO>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .IsRequired();
+
+            modelBuilder.Entity<FriendsRelationDTO>()
+                .HasOne(f => f.Friend)
+                .WithMany()
+                .HasForeignKey(f => f.FriendId)
+                .IsRequired();
+
+            var testCustomer = new UserDTO(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Roles.Customer, false);
+            var customerFriend = new UserDTO(Guid.NewGuid(), "Ivan Friend", "2@2.com", DateTime.Now, "123", Roles.Customer, false); ;
+
+            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
+            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Roles.Manager, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Roles.Accountant, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Roles.Banker, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Roles.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
+
+            modelBuilder.Entity<FriendsRelationDTO>().HasData(new FriendsRelationDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }
         public virtual DbSet<BankDTO> Banks { get; set; }
         public virtual DbSet<BankAccountDTO> BankAccounts { get; set; }
         public virtual DbSet<MessageDTO> Messages { get; set; }
+        public virtual DbSet<FriendsRelationDTO> FriendsRelations { get; set;}
 
     }
 }

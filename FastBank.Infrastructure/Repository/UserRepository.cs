@@ -1,6 +1,7 @@
 ﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastBank.Infrastructure.Repository
 {
@@ -43,6 +44,17 @@ namespace FastBank.Infrastructure.Repository
                     user.Inactive);
 
             _repo.Add(userDTO);           
+        }
+
+        public List<User> GetUserFriends(User user)
+        {
+            var friends = _repo.SetNoTracking<FriendsRelationDTO>()
+                                    .Where(u=>u.UserId == user.Id)
+                                    .Include(u => u.User)
+                                    .Include(u => u.Friend)
+                                    .Select(u => u.Friend.ToDomainObj())
+                                    .ToList();
+            return friends;
         }
     }
 }
