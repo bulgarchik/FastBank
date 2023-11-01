@@ -224,7 +224,7 @@ namespace FastBank
                         }
                     case 5:
                         {
-                            bankAccountService.TransferMoneyToFriendMenu((Customer)ActiveUser);
+                            bankAccountService.TransferMoneyToFriendMenu((Customer)ActiveUser, customerBankAccount);
                             break;
                         }
                     case 0:

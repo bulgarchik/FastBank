@@ -91,9 +91,9 @@ namespace FastBank.Services.BankAccountService
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
-            } 
-            while (withdrawAmount <=0);
-            
+            }
+            while (withdrawAmount <= 0);
+
             if (withdrawAmount > 0)
             {
                 bool hasEnoughFunds = (customerBankAccount.Amount - withdrawAmount) < 0;
@@ -110,30 +110,78 @@ namespace FastBank.Services.BankAccountService
             }
         }
 
-        public void TransferMoneyToFriend(Customer customer, BankAccount customerBankAccount, Customer friend, decimal amount)
+        public void TransferMoneyToFriend(Customer customer, BankAccount customerBankAccount, Dictionary<int, User> friends)
         {
-            //1 Open new screen for money transfer
-            //2 Show the list of friends
-            //3 Show menu options: 1. Add friend; 2 Transfer money; 0 for exit
-            //4 On money transfer write friend email or number
-            //5 Write amount
-            //6 Confirm with Y...If it is first tranfer to friend to confirm friend with Y 
-            //7 Execute Withdraw for current user and execute deposit to friend user
-            throw new NotImplementedException();
+            var inquiryMsg = "Please input friend's email to transfer mone. (type \"quit\" for exit):";
+            var emailTypeToInput = "Friend email:";
+            var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
+
+            if (emailFriend == "quit")
+                return;
+
+            var friend = friends.FirstOrDefault(f => f.Value.Email == emailFriend).Value;
+
+            decimal amountToTransfer;
+            do
+            {
+                Console.WriteLine("Please write the amount for transferm to friend (type 'q' for exit):");
+                Console.Write("Transfer amount: ");
+                var inputTransferAmount = Console.ReadLine();
+                if (inputTransferAmount == "q")
+                    return;
+                if (!decimal.TryParse(inputTransferAmount, out amountToTransfer) || amountToTransfer <= 0)
+                {
+                    Console.WriteLine("Plese input correct ammount to transfer (press any key to continue...)");
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 3);
+                }
+            }
+            while (amountToTransfer <= 0);
+
+            if (amountToTransfer > 0)
+            {
+                bool hasEnoughFunds = (customerBankAccount.Amount - amountToTransfer) < 0;
+                if (hasEnoughFunds)
+                {
+                    Console.WriteLine("You do not have enough funds to transfer (press any key to continue...)");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    var friendAccount = bankAccountRepository.GetBankAccountByCustomer(new Customer(friend));
+                    if (friendAccount == null)
+                    {
+                        Console.WriteLine("You friend has not bank account. Press any ket to continue...");
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Please confirm with Y transfer of {amountToTransfer} to {friend.Name} or press any other ket to cancel...");
+                        var confirmKey = Console.ReadKey();
+                        if (confirmKey.KeyChar == 'Y')
+                        {
+                            friendAccount.DepositAmount(amountToTransfer);
+                            Update(friendAccount);
+                            customerBankAccount.WithdrawAmount(amountToTransfer);
+                            Update(customerBankAccount);
+                        }
+                    }
+                }
+            }
         }
 
-        public void TransferMoneyToFriendMenu(Customer customer)
+        public void TransferMoneyToFriendMenu(Customer customer, BankAccount customerBankAccount)
         {
             Console.Clear();
             _menuService.Logo();
 
-            Dictionary<int,User> friends = new Dictionary<int,User>();
+            Dictionary<int, User> friends = new Dictionary<int, User>();
             var friendIndex = 0;
             var friendsList = _userService.GetUserFriends(customer);
             if (friendsList != null)
             {
 
-                Console.WriteLine($"\nYou have {friendsList.Count} friend{(friendsList.Count>1?'s':string.Empty) }:\n");
+                Console.WriteLine($"\nYou have {friendsList.Count} friend{(friendsList.Count > 1 ? 's' : string.Empty)}:\n");
                 foreach (var friend in friendsList)
                 {
                     friends.Add(++friendIndex, friend);
@@ -157,12 +205,17 @@ namespace FastBank.Services.BankAccountService
                     {
                         _userService.RemoveFriend(customer, friendsList ?? new List<User>());
                         break;
+                    };
+                case 3:
+                    {
+                        TransferMoneyToFriend(customer, customerBankAccount, friends);
+                        break;
                     }
 
                 case 0: return;
             }
 
-            TransferMoneyToFriendMenu(customer);
+            TransferMoneyToFriendMenu(customer, customerBankAccount);
 
         }
     }
