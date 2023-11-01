@@ -68,8 +68,6 @@ namespace FastBank
 
             Console.WriteLine("\nLogin to FastBank\n");
 
-            //Console.WriteLine("Please input login:");
-            //Console.Write("Email: ");
             var currentEmail = new MenuService().InputEmail();
             if (currentEmail == "quit")
                 return;
@@ -221,7 +219,7 @@ namespace FastBank
                         }
                     case 4:
                         {
-                            MessageService.ShowMessagesMenu(ActiveUser);//GetMessages(ActiveUser);
+                            MessageService.ShowMessagesMenu(ActiveUser);
                             break;
                         }
                     case 5:

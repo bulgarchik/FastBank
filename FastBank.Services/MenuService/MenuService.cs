@@ -51,7 +51,6 @@ namespace FastBank.Services
             return pass;
         }
 
-        //TODO Move to MenuService
         public int CommandRead(Regex regPattern, string menuOptions)
         {
             Console.WriteLine(menuOptions);
