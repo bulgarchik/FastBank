@@ -16,6 +16,6 @@
 
         public void AddFriend(User user, List<User> friendsList);
 
-        public void RemoveFriend(User user);
+        public void RemoveFriend(User user, List<User> friendsList);
     }
 }

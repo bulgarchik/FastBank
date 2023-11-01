@@ -147,12 +147,19 @@ namespace FastBank.Services.BankAccountService
 
             switch (action)
             {
-                case 0: return;
                 case 1:
                     {
                         _userService.AddFriend(customer, friendsList ?? new List<User>());
                         break;
                     };
+
+                case 2:
+                    {
+                        _userService.RemoveFriend(customer, friendsList ?? new List<User>());
+                        break;
+                    }
+
+                case 0: return;
             }
 
             TransferMoneyToFriendMenu(customer);

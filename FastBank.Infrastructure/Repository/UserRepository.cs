@@ -21,7 +21,7 @@ namespace FastBank.Infrastructure.Repository
             return users;
         }
 
-        public User? GetByEmail(string email) 
+        public User? GetByEmail(string email)
         {
             var user = _repo.SetNoTracking<UserDTO>()
                                 .Where(c => c.Email == email)
@@ -33,7 +33,7 @@ namespace FastBank.Infrastructure.Repository
 
         public void Add(User user)
         {
-            var userDTO = 
+            var userDTO =
                 new UserDTO(
                     user.Id,
                     user.Name,
@@ -43,13 +43,13 @@ namespace FastBank.Infrastructure.Repository
                     user.Role,
                     user.Inactive);
 
-            _repo.Add(userDTO);           
+            _repo.Add(userDTO);
         }
 
         public List<User> GetUserFriends(User user)
         {
             var friends = _repo.SetNoTracking<FriendsRelationDTO>()
-                                    .Where(u=>u.UserId == user.Id)
+                                    .Where(u => u.UserId == user.Id)
                                     .Include(u => u.User)
                                     .Include(u => u.Friend)
                                     .Select(u => u.Friend.ToDomainObj())
@@ -60,6 +60,15 @@ namespace FastBank.Infrastructure.Repository
         public void AddFriend(User user, User friend)
         {
             _repo.Add<FriendsRelationDTO>(new FriendsRelationDTO(Guid.NewGuid(), user, friend, false));
+        }
+
+        public void RemoveFriend(User user, User friend)
+        {
+            var friendRelation = _repo.Set<FriendsRelationDTO>().Where(u => u.UserId == user.Id && u.FriendId == friend.Id).FirstOrDefault();
+            if (friendRelation != null)
+            {
+                _repo.Delete<FriendsRelationDTO>(friendRelation);
+            }
         }
     }
 }

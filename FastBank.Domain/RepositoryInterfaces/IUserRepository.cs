@@ -11,5 +11,7 @@
         public List<User> GetUserFriends(User user);
 
         public void AddFriend(User user, User Friend);
+
+        public void RemoveFriend(User user, User friend);
     }
 }

@@ -197,9 +197,26 @@ namespace FastBank.Services
             }
         }
 
-        public void RemoveFriend(User user)
+        public void RemoveFriend(User user, List<User> friendsList)
         {
-            throw new NotImplementedException();
+            var inquiryMsg = "Please input user's email to remove him from friend list (type \"quit\" for exit):";
+            var emailTypeToInput = "Friend email:";
+            var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
+
+            if (emailFriend == "quit")
+                return;
+
+            var friend = friendsList.FirstOrDefault(f => f.Email == emailFriend);
+
+            if (friend != null)
+            {
+               _userRepo.RemoveFriend(user, friend);
+            }
+            else
+            {
+                Console.WriteLine("Friend with this email is not in your friend list");
+                Console.ReadKey(true);
+            }
         }
     }
 }
