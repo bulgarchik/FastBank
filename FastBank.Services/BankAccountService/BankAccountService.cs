@@ -112,7 +112,7 @@ namespace FastBank.Services.BankAccountService
 
         public void TransferMoneyToFriend(Customer customer, BankAccount customerBankAccount, Dictionary<int, User> friends)
         {
-            var inquiryMsg = "Please input friend's email to transfer mone. (type \"quit\" for exit):";
+            var inquiryMsg = "Please input friend's email to transfer money. (type \"quit\" for exit):";
             var emailTypeToInput = "Friend email:";
             var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
 
@@ -156,7 +156,7 @@ namespace FastBank.Services.BankAccountService
                     }
                     else
                     {
-                        Console.WriteLine($"Please confirm with Y transfer of {amountToTransfer} to {friend.Name} or press any other ket to cancel...");
+                        Console.WriteLine($"Please confirm with Y transfer of {amountToTransfer} to {friend.Name} or press any other key to cancel...");
                         var confirmKey = Console.ReadKey();
                         if (confirmKey.KeyChar == 'Y')
                         {
