@@ -151,7 +151,7 @@ namespace FastBank.Services.BankAccountService
                     var friendAccount = bankAccountRepository.GetBankAccountByCustomer(new Customer(friend));
                     if (friendAccount == null)
                     {
-                        Console.WriteLine("You friend has not bank account. Press any ket to continue...");
+                        Console.WriteLine("You friend has not bank account. Press any key to continue...");
                         Console.ReadKey();
                     }
                     else
