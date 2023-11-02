@@ -124,7 +124,7 @@ namespace FastBank.Services.BankAccountService
             decimal amountToTransfer;
             do
             {
-                Console.WriteLine("Please write the amount for transferm to friend (type 'q' for exit):");
+                Console.WriteLine("Please write the amount for transfer to friend (type 'q' for exit):");
                 Console.Write("Transfer amount: ");
                 var inputTransferAmount = Console.ReadLine();
                 if (inputTransferAmount == "q")
