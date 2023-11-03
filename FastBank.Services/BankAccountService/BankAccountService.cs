@@ -119,7 +119,12 @@ namespace FastBank.Services.BankAccountService
             if (emailFriend == "quit")
                 return;
 
-            var friend = friends.FirstOrDefault(f => f.Value.Email == emailFriend).Value;
+            var friend = friends.Where(f => f.Value.Email == emailFriend).Select(f => f.Value).FirstOrDefault();
+
+            if (friend == null)
+                Console.WriteLine("This email is not in your friendlist");
+                Console.ReadKey(true);
+                return;
 
             decimal amountToTransfer;
             do
