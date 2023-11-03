@@ -14,6 +14,19 @@ namespace FastBank.Services.BankService
             _repo = new Repository(new FastBankDbContext());
         }
 
+        public void CapitalReplenishment(User user)
+        {
+            //Here we should
+            //1.Validate user rights
+            //2.Show current bank capital amount
+            //3.Ask about amount to be replenished
+            //4 Confirm the operation
+            //5.Create transaction about action
+            
+
+            throw new NotImplementedException();
+        }
+
         public Bank? Get()
         {
             var bank = _repo.Set<BankDTO>().Select(a => a.ToDomainObj()).FirstOrDefault();
