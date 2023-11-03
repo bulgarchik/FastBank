@@ -29,7 +29,7 @@ namespace FastBank
                 if (ActiveUser == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For customer registration. 0: for exit";
-                    int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                    int action = _menuService.CommandRead(3, menuOptions);
 
                     switch (action)
                     {
@@ -199,7 +199,7 @@ namespace FastBank
                                   $"\nPlease choose your action: " +
                                   $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. " +
                                     $"4: Check inquiries. 5: Transfer to friend 0: for exit";
-                int action = _menuService.CommandRead(new Regex("^[012345]{1}$"), menuOptions);
+                int action = _menuService.CommandRead(6, menuOptions);
                 switch (action)
                 {
                     case 1:

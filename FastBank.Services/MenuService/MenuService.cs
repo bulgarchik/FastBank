@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FastBank.Services
 {
@@ -44,8 +45,14 @@ namespace FastBank.Services
             return pass;
         }
 
-        public int CommandRead(Regex regPattern, string menuOptions)
+        public int CommandRead(int countOfOptions, string menuOptions)
         {
+            var sb = new StringBuilder();
+            for (int i = 0; i < countOfOptions; i++)
+            {
+                sb.Append(i);
+            }
+            var regPattern = new Regex($"^[{sb?.ToString()}]{{1}}$");
             Console.WriteLine(menuOptions);
             string? inputCommand = Console.ReadLine();
             while (!regPattern.IsMatch(inputCommand ?? string.Empty))

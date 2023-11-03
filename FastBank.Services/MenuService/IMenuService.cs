@@ -8,7 +8,7 @@ namespace FastBank.Services
 
         public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1);
 
-        public int CommandRead(Regex regPattern, string menuOptions);
+        public int CommandRead(int countOfOptions, string menuOptions);
 
         public void ShowLogo();
 

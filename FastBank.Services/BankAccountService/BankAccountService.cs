@@ -196,7 +196,7 @@ namespace FastBank.Services.BankAccountService
 
             var menuOptions = $"\nPlease choose your action: " +
                              $"\n1: Add friend. 2. Remove friend. 3. Transfer money to friend  0: for exit";
-            int action = _menuService.CommandRead(new Regex("^[0123]{1}$"), menuOptions);
+            int action = _menuService.CommandRead(4, menuOptions);
 
             switch (action)
             {
