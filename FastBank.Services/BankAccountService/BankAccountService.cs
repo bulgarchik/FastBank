@@ -36,7 +36,7 @@ namespace FastBank.Services.BankAccountService
             return bankAccount;
         }
 
-        public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount)
+        public void DepositAmount(ref BankAccount? customerBankAccount)
         {
             decimal depositAmount;
             do
@@ -60,7 +60,7 @@ namespace FastBank.Services.BankAccountService
             {
                 if (customerBankAccount == null)
                 {
-                    customerBankAccount = Add(customer, depositAmount);
+                    customerBankAccount = Add((Customer)customerBankAccount.Customer, depositAmount);
                 }
                 else
                 {
