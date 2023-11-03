@@ -10,7 +10,7 @@ namespace FastBank.Services
 
         public int CommandRead(Regex regPattern, string menuOptions);
 
-        public void Logo();
+        public void ShowLogo();
 
         public List<string> ValidateEmail(string email, List<string> validationErrors);
 

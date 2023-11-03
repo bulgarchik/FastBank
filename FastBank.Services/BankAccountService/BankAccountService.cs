@@ -178,7 +178,7 @@ namespace FastBank.Services.BankAccountService
         public void TransferMoneyToFriendMenu(Customer customer, BankAccount customerBankAccount)
         {
             Console.Clear();
-            _menuService.Logo();
+            _menuService.ShowLogo();
 
             Dictionary<int, User> friends = new Dictionary<int, User>();
             var friendIndex = 0;

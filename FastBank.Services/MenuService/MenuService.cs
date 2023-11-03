@@ -60,7 +60,7 @@ namespace FastBank.Services
             return Convert.ToInt32(inputCommand);
         }
 
-        public void Logo()
+        public void ShowLogo()
         {
             Console.WriteLine();
             Console.WriteLine("-----------------------------------------------------------------------------------");
