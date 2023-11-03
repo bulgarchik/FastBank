@@ -10,12 +10,12 @@ namespace FastBank.Services.BankAccountService
 
         public void Update(BankAccount bankAccount);
 
-        public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount);
+        public void DepositAmount(ref BankAccount? customerBankAccount);
 
-        public void WithdrawAmount(Customer customer, BankAccount customerBankAccount);
+        public void WithdrawAmount(BankAccount customerBankAccount);
 
-        public void TransferMoneyToFriend(Customer customer, BankAccount customerBankAccount, Dictionary<int, User> friends);
+        public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends);
 
-        public void TransferMoneyToFriendMenu(Customer customer, BankAccount customerBankAccount);
+        public void TransferMoneyToFriendMenu(BankAccount customerBankAccount);
     }
 }

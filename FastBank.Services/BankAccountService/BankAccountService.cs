@@ -75,7 +75,7 @@ namespace FastBank.Services.BankAccountService
             bankAccountRepository.Update(bankAccount);
         }
 
-        public void WithdrawAmount(Customer customer, BankAccount customerBankAccount)
+        public void WithdrawAmount(BankAccount customerBankAccount)
         {
             decimal withdrawAmount;
             do
@@ -110,7 +110,7 @@ namespace FastBank.Services.BankAccountService
             }
         }
 
-        public void TransferMoneyToFriend(Customer customer, BankAccount customerBankAccount, Dictionary<int, User> friends)
+        public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends)
         {
             var inquiryMsg = "Please input friend's email to transfer money. (type \"quit\" for exit):";
             var emailTypeToInput = "Friend email:";
@@ -175,14 +175,14 @@ namespace FastBank.Services.BankAccountService
             }
         }
 
-        public void TransferMoneyToFriendMenu(Customer customer, BankAccount customerBankAccount)
+        public void TransferMoneyToFriendMenu(BankAccount customerBankAccount)
         {
             Console.Clear();
             _menuService.ShowLogo();
 
             Dictionary<int, User> friends = new Dictionary<int, User>();
             var friendIndex = 0;
-            var friendsList = _userService.GetUserFriends(customer);
+            var friendsList = _userService.GetUserFriends(customerBankAccount.Customer);
             if (friendsList != null)
             {
 
@@ -202,25 +202,25 @@ namespace FastBank.Services.BankAccountService
             {
                 case 1:
                     {
-                        _userService.AddFriend(customer, friendsList ?? new List<User>());
+                        _userService.AddFriend(customerBankAccount.Customer, friendsList ?? new List<User>());
                         break;
                     };
 
                 case 2:
                     {
-                        _userService.RemoveFriend(customer, friendsList ?? new List<User>());
+                        _userService.RemoveFriend(customerBankAccount.Customer, friendsList ?? new List<User>());
                         break;
                     };
                 case 3:
                     {
-                        TransferMoneyToFriend(customer, customerBankAccount, friends);
+                        TransferMoneyToFriend(customerBankAccount, friends);
                         break;
                     }
 
                 case 0: return;
             }
 
-            TransferMoneyToFriendMenu(customer, customerBankAccount);
+            TransferMoneyToFriendMenu(customerBankAccount);
 
         }
     }

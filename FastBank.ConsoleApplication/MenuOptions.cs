@@ -209,7 +209,7 @@ namespace FastBank
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount((Customer)ActiveUser, customerBankAccount);
+                            bankAccountService.WithdrawAmount(customerBankAccount);
                             break;
                         }
                     case 3:
@@ -224,7 +224,7 @@ namespace FastBank
                         }
                     case 5:
                         {
-                            bankAccountService.TransferMoneyToFriendMenu((Customer)ActiveUser, customerBankAccount);
+                            bankAccountService.TransferMoneyToFriendMenu(customerBankAccount);
                             break;
                         }
                     case 0:
