@@ -4,12 +4,12 @@ using System.Data;
 
 namespace FastBank.Infrastructure.DTOs
 {
-    [Table("FriendRelations")]
-    public class FriendsRelationDTO
+    [Table("UserFriends")]
+    public class UserFriendDTO
     {
-        private FriendsRelationDTO() { }
+        private UserFriendDTO() { }
 
-        public FriendsRelationDTO(Guid relationId, User user, User friend, bool blocked)
+        public UserFriendDTO(Guid relationId, User user, User friend, bool blocked)
         {
             RelationId = relationId;
             UserId = user.Id;

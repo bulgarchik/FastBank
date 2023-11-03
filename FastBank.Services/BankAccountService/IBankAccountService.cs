@@ -10,7 +10,7 @@ namespace FastBank.Services.BankAccountService
 
         public void Update(BankAccount bankAccount);
 
-        public void DepositAmount(ref BankAccount? customerBankAccount);
+        public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount);
 
         public void WithdrawAmount(BankAccount customerBankAccount);
 

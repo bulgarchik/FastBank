@@ -48,7 +48,7 @@ namespace FastBank.Infrastructure.Repository
 
         public List<User> GetUserFriends(User user)
         {
-            var friends = _repo.SetNoTracking<FriendsRelationDTO>()
+            var friends = _repo.SetNoTracking<UserFriendDTO>()
                                     .Where(u => u.UserId == user.Id)
                                     .Include(u => u.User)
                                     .Include(u => u.Friend)
@@ -59,15 +59,15 @@ namespace FastBank.Infrastructure.Repository
 
         public void AddFriend(User user, User friend)
         {
-            _repo.Add<FriendsRelationDTO>(new FriendsRelationDTO(Guid.NewGuid(), user, friend, false));
+            _repo.Add<UserFriendDTO>(new UserFriendDTO(Guid.NewGuid(), user, friend, false));
         }
 
         public void RemoveFriend(User user, User friend)
         {
-            var friendRelation = _repo.Set<FriendsRelationDTO>().Where(u => u.UserId == user.Id && u.FriendId == friend.Id).FirstOrDefault();
+            var friendRelation = _repo.Set<UserFriendDTO>().Where(u => u.UserId == user.Id && u.FriendId == friend.Id).FirstOrDefault();
             if (friendRelation != null)
             {
-                _repo.Delete<FriendsRelationDTO>(friendRelation);
+                _repo.Delete<UserFriendDTO>(friendRelation);
             }
         }
     }

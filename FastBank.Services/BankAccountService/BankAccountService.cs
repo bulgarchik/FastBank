@@ -36,7 +36,7 @@ namespace FastBank.Services.BankAccountService
             return bankAccount;
         }
 
-        public void DepositAmount(ref BankAccount? customerBankAccount)
+        public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount)
         {
             decimal depositAmount;
             do
@@ -60,7 +60,7 @@ namespace FastBank.Services.BankAccountService
             {
                 if (customerBankAccount == null)
                 {
-                    customerBankAccount = Add((Customer)customerBankAccount.Customer, depositAmount);
+                    customerBankAccount = Add(customer, depositAmount);
                 }
                 else
                 {
@@ -122,9 +122,12 @@ namespace FastBank.Services.BankAccountService
             var friend = friends.Where(f => f.Value.Email == emailFriend).Select(f => f.Value).FirstOrDefault();
 
             if (friend == null)
+            {
                 Console.WriteLine("This email is not in your friendlist");
                 Console.ReadKey(true);
                 return;
+            }
+                
 
             decimal amountToTransfer;
             do
@@ -145,7 +148,7 @@ namespace FastBank.Services.BankAccountService
 
             if (amountToTransfer > 0)
             {
-                bool hasEnoughFunds = (customerBankAccount.Amount - amountToTransfer) < 0;
+                bool hasEnoughFunds = (customerBankAccount.Amount - amountToTransfer) > 0;
                 if (!hasEnoughFunds)
                 {
                     Console.WriteLine("You do not have enough funds to transfer (press any key to continue...)");

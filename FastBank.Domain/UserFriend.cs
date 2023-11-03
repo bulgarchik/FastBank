@@ -1,8 +1,8 @@
 ﻿namespace FastBank.Domain
 {
-    public class FriendsRelation
+    public class UserFriend
     {
-        public FriendsRelation(Guid relationId, Customer friend1, Customer friend2, bool blocked)
+        public UserFriend(Guid relationId, Customer friend1, Customer friend2, bool blocked)
         {
             RelationId = relationId;
             Friend1 = friend1;

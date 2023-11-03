@@ -178,7 +178,7 @@ namespace FastBank
             {
                 Console.WriteLine($"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                                   "\nPlease make a deposit at Fast Bank");
-                bankAccountService.DepositAmount(ref customerBankAccount);
+                bankAccountService.DepositAmount((Customer)ActiveUser, ref customerBankAccount);
                 
                 if (customerBankAccount == null || customerBankAccount.Amount == 0)
                 {
@@ -204,7 +204,7 @@ namespace FastBank
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount(ref customerBankAccount);
+                            bankAccountService.DepositAmount((Customer)ActiveUser,ref customerBankAccount);
                             break;
                         }
                     case 2:
