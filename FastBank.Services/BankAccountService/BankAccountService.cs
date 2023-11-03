@@ -146,7 +146,7 @@ namespace FastBank.Services.BankAccountService
             if (amountToTransfer > 0)
             {
                 bool hasEnoughFunds = (customerBankAccount.Amount - amountToTransfer) < 0;
-                if (hasEnoughFunds)
+                if (!hasEnoughFunds)
                 {
                     Console.WriteLine("You do not have enough funds to transfer (press any key to continue...)");
                     Console.ReadKey();
