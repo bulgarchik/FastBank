@@ -26,10 +26,10 @@ namespace FastBank.Infrastructure.DTOs
         public Guid MessageId { get; private set; }
         public Guid SenderId { get; private set; }
         [ForeignKey(nameof(SenderId))]
-        public UserDTO Sender { get; private set; }
+        public UserDTO Sender { get; private set; } = null!;
         public Guid? ReceiverId { get; private set; }
         [ForeignKey(nameof(ReceiverId))]
-        public UserDTO? Receiver { get; private set; }
+        public UserDTO? Receiver { get; private set; } = null;
         public Roles ReceiverRole { get; private set; }
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;

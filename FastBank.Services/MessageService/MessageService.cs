@@ -79,11 +79,11 @@ namespace FastBank.Services.MessageService
         public void ShowMessagesMenu(User user)
         {
             Console.Clear();
-            _menuService.Logo();
+            _menuService.ShowLogo();
             GetMessages(user);
             var menuOptions = $"\nPlease choose your action: " +
                               $"\n  0: for exit";
-            int action = _menuService.CommandRead(new Regex("^[0]{1}$"), menuOptions);
+            int action = _menuService.CommandRead(1, menuOptions);
             
             switch (action)
             {

@@ -1,16 +1,10 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FastBank.Services
 {
     public class MenuService : IMenuService
     {
-        private readonly IUserService _userService;
-
-        public MenuService() 
-        {
-            _userService = new UserService();
-        }
-
         public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1)
         {
             if (inputkey.Key != ConsoleKey.Enter)
@@ -51,8 +45,14 @@ namespace FastBank.Services
             return pass;
         }
 
-        public int CommandRead(Regex regPattern, string menuOptions)
+        public int CommandRead(int countOfOptions, string menuOptions)
         {
+            var sb = new StringBuilder();
+            for (int i = 0; i < countOfOptions; i++)
+            {
+                sb.Append(i);
+            }
+            var regPattern = new Regex($"^[{sb?.ToString()}]{{1}}$");
             Console.WriteLine(menuOptions);
             string? inputCommand = Console.ReadLine();
             while (!regPattern.IsMatch(inputCommand ?? string.Empty))
@@ -67,41 +67,50 @@ namespace FastBank.Services
             return Convert.ToInt32(inputCommand);
         }
 
-        public void Logo()
+        public void ShowLogo()
         {
             Console.WriteLine();
-            Console.WriteLine("-----------------------");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBB  |");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
-            Console.WriteLine("| FFFFFFFFF BBBBBBBBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFF       BBB   BBB |");
-            Console.WriteLine("| FFF       BBBBBBBBB |");
-            Console.WriteLine("| FFF       BBBBBBBB  |");
-            Console.WriteLine("-----------------------");
+            Console.WriteLine("-----------------------------------------------------------------------------------");
+            Console.WriteLine("| FFFFFFFFF                                BBBBBBBB                               |");
+            Console.WriteLine("| FFFFFFFFF                                BBBBBBBBB                              |");
+            Console.WriteLine("| FFF          AAA    SSSSSSSSS TTTTTTTTT  BBB   BBB    AAA    NNN   NNN KKK   KKK|");
+            Console.WriteLine("| FFF        AAAAAAA  SSSSSSSSS TTTTTTTTT  BBB   BBB  AAAAAAA  NNNN  NNN KKK  KKK |");
+            Console.WriteLine("| FFFFFFFFF AAA   AAA SSS          TTT     BBBBBBBBB AAA   AAA NNNNN NNN KKK KKK  |");
+            Console.WriteLine("| FFFFFFFFF AAA   AAA SSSSSSSS     TTT     BBBBBBBBB AAA   AAA NNNNNNNNN KKKKKK   |");
+            Console.WriteLine("| FFF       AAAAAAAAA  SSSSSSSS    TTT     BBB   BBB AAAAAAAAA NNN NNNNN KKKKKK   |");
+            Console.WriteLine("| FFF       AAAAAAAAA       SSS    TTT     BBB   BBB AAAAAAAAA NNN  NNNN KKK KKK  |");
+            Console.WriteLine("| FFF       AAA   AAA SSSSSSSSS    TTT     BBBBBBBBB AAA   AAA NNN   NNN KKK  KKK |");
+            Console.WriteLine("| FFF       AAA   AAA SSSSSSSSS    TTT     BBBBBBBB  AAA   AAA NNN   NNN KKK   KKK|");
+            Console.WriteLine("-----------------------------------------------------------------------------------");
             Console.WriteLine();
         }
 
-        public string InputEmail()
+        public List<string> ValidateEmail(string email, List<string> validationErrors)
         {
-            Console.WriteLine("Please input you email:");
-            Console.Write("Email: ");
+            var regEmailPattern = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+            if (!regEmailPattern.IsMatch(email))
+            {
+                validationErrors.Add("You entered wrong email");
+            }
+            return validationErrors;
+        }
+
+        public string InputEmail(string inquiryMsg = "Please input you email:", string emailTypeToInput = "Email:")
+        {
+            Console.WriteLine(inquiryMsg);
+            Console.Write(emailTypeToInput);
             var email = Console.ReadLine();
-            while (_userService.ValidateEmail(email ?? string.Empty, new List<string>()).Count > 0)
+            while (ValidateEmail(email ?? string.Empty, new List<string>()).Count > 0)
             {
                 Console.WriteLine("You've inputted wrong email. Press any key to try again or type \"quit\" for exit");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
-                Console.Write("Email: ");
+                Console.Write(emailTypeToInput);
                 email = Console.ReadLine()??string.Empty;
                 if (email == "quit")
                 return email;
             }
             return email ?? string.Empty;
-
         }
     }
 }

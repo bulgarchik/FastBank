@@ -24,12 +24,12 @@ namespace FastBank
             while (inProgress)
             {
                 Console.Clear();
-                _menuService.Logo();
+                _menuService.ShowLogo();
 
                 if (ActiveUser == null)
                 {
                     var menuOptions = "Please choose your action: \n 1: For login. 2: For customer registration. 0: for exit";
-                    int action = _menuService.CommandRead(new Regex("^[012]{1}$"), menuOptions);
+                    int action = _menuService.CommandRead(3, menuOptions);
 
                     switch (action)
                     {
@@ -64,7 +64,7 @@ namespace FastBank
             IUserService usersService = new UserService();
 
             Console.Clear();
-            _menuService.Logo();
+            _menuService.ShowLogo();
 
             Console.WriteLine("\nLogin to FastBank\n");
 
@@ -99,7 +99,7 @@ namespace FastBank
         {
             IUserService userService = new UserService();
             Console.Clear();
-            _menuService.Logo();
+            _menuService.ShowLogo();
 
             var role = Roles.Customer;
 
@@ -138,7 +138,7 @@ namespace FastBank
         public static void RenderMenuByRole()
         {
             Console.Clear();
-            _menuService.Logo();
+            _menuService.ShowLogo();
 
             switch (ActiveUser.Role)
             {
@@ -189,7 +189,7 @@ namespace FastBank
                         ActiveUser = null;
                 }
                 Console.Clear();
-                _menuService.Logo();
+                _menuService.ShowLogo();
                 return;
             }
             else
@@ -197,18 +197,19 @@ namespace FastBank
                 var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
                                   $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. 4. Check inquiries  0: for exit";
-                int action = _menuService.CommandRead(new Regex("^[01234]{1}$"), menuOptions);
+                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. " +
+                                    $"4: Check inquiries. 5: Transfer to friend 0: for exit";
+                int action = _menuService.CommandRead(6, menuOptions);
                 switch (action)
                 {
                     case 1:
                         {
-                            bankAccountService.DepositAmount((Customer)ActiveUser, ref customerBankAccount);
+                            bankAccountService.DepositAmount((Customer)ActiveUser,ref customerBankAccount);
                             break;
                         }
                     case 2:
                         {
-                            bankAccountService.WithdrawAmount((Customer)ActiveUser, customerBankAccount);
+                            bankAccountService.WithdrawAmount(customerBankAccount);
                             break;
                         }
                     case 3:
@@ -221,10 +222,15 @@ namespace FastBank
                             MessageService.ShowMessagesMenu(ActiveUser);
                             break;
                         }
+                    case 5:
+                        {
+                            bankAccountService.TransferMoneyToFriendMenu(customerBankAccount);
+                            break;
+                        }
                     case 0:
                         {
                             ActiveUser = null;
-                            break;
+                            break;  
                         }
                 }
             }

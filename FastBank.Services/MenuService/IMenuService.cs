@@ -8,10 +8,12 @@ namespace FastBank.Services
 
         public void MoveToPreviousLine(ConsoleKeyInfo inputkey, int countOfLines = 1);
 
-        public int CommandRead(Regex regPattern, string menuOptions);
+        public int CommandRead(int countOfOptions, string menuOptions);
 
-        public void Logo();
+        public void ShowLogo();
 
-        public string InputEmail();
+        public List<string> ValidateEmail(string email, List<string> validationErrors);
+
+        public string InputEmail(string inquiryMsg, string emailTypeToInput);
     }
 }
