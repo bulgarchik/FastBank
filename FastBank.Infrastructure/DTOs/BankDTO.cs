@@ -22,5 +22,10 @@ namespace FastBank.Infrastructure.DTOs
         {
             return new Bank(BankId, CapitalAmount);
         }
+
+        public void ReplenishCapital(decimal capitalAmountToReplenish)
+        {
+            CapitalAmount = CapitalAmount + capitalAmountToReplenish;
+        }
     }
 }

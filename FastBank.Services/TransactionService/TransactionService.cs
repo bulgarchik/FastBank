@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace FastBank.Services.TransactionService
 {
-    internal interface TransactionService :ITransactionService
+    public class TransactionService : ITransactionService
     {
+        public void AddTranscation()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

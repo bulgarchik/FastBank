@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
 using FastBank.Services.MessageService;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using FastBank.Services.BankService;
 
 namespace FastBank
 {
@@ -165,6 +166,9 @@ namespace FastBank
 
         static public void OpenBankerMenu()
         {
+
+            var bankService = new BankService();
+
             if (ActiveUser == null || ActiveUser is Customer)
             {
                 return;
@@ -179,6 +183,7 @@ namespace FastBank
             {
                 case 1:
                     {
+                        bankService.CapitalReplenishment(ActiveUser);
                         break;
                     }
                 case 0:

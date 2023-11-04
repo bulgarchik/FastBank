@@ -56,17 +56,14 @@ namespace FastBank.Services.BankAccountService
             }
             while (depositAmount <= 0);
 
-            if (depositAmount > 0)
+            if (customerBankAccount == null)
             {
-                if (customerBankAccount == null)
-                {
-                    customerBankAccount = Add(customer, depositAmount);
-                }
-                else
-                {
-                    customerBankAccount.DepositAmount(depositAmount);
-                    Update(customerBankAccount);
-                }
+                customerBankAccount = Add(customer, depositAmount);
+            }
+            else
+            {
+                customerBankAccount.DepositAmount(depositAmount);
+                Update(customerBankAccount);
             }
         }
 
@@ -120,7 +117,6 @@ namespace FastBank.Services.BankAccountService
                 return;
 
             var friend = friends.Where(f => f.Value.Email == emailFriend).Select(f => f.Value).FirstOrDefault();
-
             if (friend == null)
             {
                 Console.WriteLine("This email is not in your friendlist");

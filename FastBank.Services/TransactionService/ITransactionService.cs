@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace FastBank.Services.TransactionService
 {
-    internal interface ITransactionService
+    public interface ITransactionService
     {
+        public void AddTranscation();
     }
 }
