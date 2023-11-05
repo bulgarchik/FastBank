@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FastBank.Domain;
 
 namespace FastBank.Services.TransactionService
 {
@@ -10,6 +6,7 @@ namespace FastBank.Services.TransactionService
     {
         public void AddTranscation()
         {
+            //var transaction = new Transaction();
             throw new NotImplementedException();
         }
     }
