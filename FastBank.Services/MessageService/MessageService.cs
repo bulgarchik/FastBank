@@ -1,8 +1,6 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
-using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
-using System.Text.RegularExpressions;
 
 namespace FastBank.Services.MessageService
 {

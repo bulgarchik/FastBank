@@ -23,12 +23,18 @@ namespace FastBank.Infrastructure.DTOs
         public Guid TransactionId { get; private set; }
         public DateTime CreatedDate { get; private set; } = DateTime.UtcNow;
         public Guid CreatedByUserId { get; private set; }
+        
+        [ForeignKey(nameof(CreatedByUserId))]
         public UserDTO CreatedByUser { get; private set; } = null!;
         public decimal Amount { get; private set; }
         public string UserNameInitial { get; private set; } = string.Empty;
         public Guid? BankId { get; private set; }
+        
+        [ForeignKey(nameof(BankId))]
         public BankDTO? Bank { get; private set; }
         public Guid? BankAccountId { get; private set; }
+
+        [ForeignKey(nameof(BankAccountId))]
         public BankAccountDTO? BankAccount { get; private set; }
         public TransactionType TransactionType { get; private set; }
     }

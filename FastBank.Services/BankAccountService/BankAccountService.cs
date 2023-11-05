@@ -32,8 +32,7 @@ namespace FastBank.Services.BankAccountService
                 bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
                 bankAccountRepository.Add(bankAccount);
             }
-
-            return bankAccount;
+                        return bankAccount;
         }
 
         public void DepositAmount(Customer customer, ref BankAccount? customerBankAccount)

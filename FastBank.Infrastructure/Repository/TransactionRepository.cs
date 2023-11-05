@@ -1,13 +1,19 @@
-﻿using FastBank.Domain.RepositoryInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FastBank.Domain;
+using FastBank.Domain.RepositoryInterfaces;
+using FastBank.Infrastructure.DTOs;
 
 namespace FastBank.Infrastructure.Repository
 {
-    internal class TransactionRepository : ITransactionRepository
+    public class TransactionRepository : ITransactionRepository
     {
+        private readonly IRepository _repository;
+        public TransactionRepository()
+        {
+            _repository = new Repository(new Context.FastBankDbContext());
+        }
+        public void AddTransaction(Transaction transaction)
+        {
+            _repository.Add<TransactionDTO>(new TransactionDTO(transaction));
+        }
     }
 }

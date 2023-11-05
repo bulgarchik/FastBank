@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FastBank.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,11 @@ namespace FastBank.Services.TransactionService
 {
     public interface ITransactionService
     {
-        public void AddTranscation();
+        public void AddTranscation(
+            User createdByUser,
+            decimal amount,
+            Bank? bank,
+            BankAccount? bankAccount,
+            TransactionType transactionType);
     }
 }

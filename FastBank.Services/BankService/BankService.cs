@@ -1,17 +1,18 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
-using FastBank.Infrastructure.DTOs;
-using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
+using FastBank.Services.TransactionService;
 
 namespace FastBank.Services.BankService
 {
     public class BankService : IBankService
     {
         private readonly IBankRepository _repoBank;
+        private readonly ITransactionService _transactionService;
         public BankService()
         {
             _repoBank = new BankRepository();
+            _transactionService = new TransactionService.TransactionService();
         }
         public void CapitalReplenishment(User user)
         {
@@ -62,9 +63,8 @@ namespace FastBank.Services.BankService
             var confirmKey = Console.ReadKey();
             if (confirmKey.KeyChar == 'Y' && bank != null)
             {
-                
                 _repoBank.ReplenishCapital(user, bank, capitalAmountToReplenish);
-
+                _transactionService.AddTranscation(user, capitalAmountToReplenish, bank, null, TransactionType.BankTransaction);
             }
             return;
         }
