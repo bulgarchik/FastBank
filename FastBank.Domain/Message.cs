@@ -11,7 +11,8 @@
             string subject,
             Message? basedOnMessage,
             MessageStatuses messageStatuses,
-            MessageType messageType)
+            MessageType messageType,
+            Transaction? transaction)
         {
             MessageId = messageId;
             Sender = sender;
@@ -22,6 +23,7 @@
             BasedOnMessage = basedOnMessage;
             Status = messageStatuses;
             Type = messageType;
+            Transaction = transaction;
         }
         public Guid MessageId { get; private set; }
         public User Sender { get; private set; }
@@ -32,6 +34,7 @@
         public Message? BasedOnMessage { get; private set; }
         public MessageStatuses Status { get; private set; }
         public MessageType Type { get; private set; }
+        public Transaction? Transaction { get; private set; }
     }
 
     public enum MessageStatuses
@@ -45,5 +48,6 @@
     public enum MessageType
     {
         Inquery,
+        CapitalReplenishment
     }
 }

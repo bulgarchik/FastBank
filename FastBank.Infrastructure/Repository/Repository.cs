@@ -13,7 +13,7 @@ namespace FastBank.Infrastructure.Repository
         public Repository(
             FastBankDbContext context)
         {
-            _context = context;
+            _context =  ;
         }
 
         readonly FastBankDbContext _context;

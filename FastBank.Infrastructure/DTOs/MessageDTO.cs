@@ -38,6 +38,9 @@ namespace FastBank.Infrastructure.DTOs
         public MessageDTO? BasedOnMessage { get; private set; }
         public MessageStatuses Statuses { get; private set; }
         public MessageType Type { get; private set; }
+        public Guid? TransactionId { get; private set; }
+        [ForeignKey(nameof(TransactionId))]
+        public TransactionDTO? Transaction { get; private set; }
 
         public Message? ToDomainObj()
         {
@@ -50,7 +53,8 @@ namespace FastBank.Infrastructure.DTOs
                 Subject,
                 BasedOnMessage?.ToDomainObj(),
                 Statuses,
-                Type);
+                Type,
+                Transaction?.ToDomainObj());
         }
     }
 }

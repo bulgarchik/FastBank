@@ -9,7 +9,7 @@ namespace FastBank.Services.TransactionService
 {
     public interface ITransactionService
     {
-        public void AddTranscation(
+        public Transaction AddTranscation(
             User createdByUser,
             decimal amount,
             Bank? bank,

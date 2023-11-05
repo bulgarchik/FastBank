@@ -1,6 +1,7 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using FastBank.Services.MessageService;
 using FastBank.Services.TransactionService;
 
 namespace FastBank.Services.BankService
@@ -9,10 +10,12 @@ namespace FastBank.Services.BankService
     {
         private readonly IBankRepository _repoBank;
         private readonly ITransactionService _transactionService;
+        private readonly IMessageService _messageService;
         public BankService()
         {
             _repoBank = new BankRepository();
             _transactionService = new TransactionService.TransactionService();
+            _messageService = new MessageService.MessageService();
         }
         public void CapitalReplenishment(User user)
         {
@@ -64,7 +67,23 @@ namespace FastBank.Services.BankService
             if (confirmKey.KeyChar == 'Y' && bank != null)
             {
                 _repoBank.ReplenishCapital(user, bank, capitalAmountToReplenish);
-                _transactionService.AddTranscation(user, capitalAmountToReplenish, bank, null, TransactionType.BankTransaction);
+                var transaction = _transactionService.AddTranscation(user, capitalAmountToReplenish, bank, null, TransactionType.BankTransaction);
+                var subjectMessage = $"\nCapital replenishment.";
+                var textMessage = $"\nTransaction date: {transaction.CreatedDate}" +
+                                  $"\nResponsible for replenishment: {transaction.CreatedByUser.Name} ({transaction.UserNameInitial})" +
+                                  $"\nBalance before transaction: {bank.CapitalAmount}" +
+                                  $"\nReplenishment amount: {capitalAmountToReplenish}" +
+                                  $"\nBalance after transaction: {bank.CapitalAmount + capitalAmountToReplenish}";
+
+                _messageService.AddMessage(subjectMessage,
+                                           textMessage,
+                                           MessageStatuses.Sent,
+                                           MessageType.CapitalReplenishment,
+                                           user,
+                                           null,
+                                           Roles.Manager,
+                                           null,
+                                           transaction);
             }
             return;
         }

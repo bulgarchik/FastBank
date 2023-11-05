@@ -37,5 +37,18 @@ namespace FastBank.Infrastructure.DTOs
         [ForeignKey(nameof(BankAccountId))]
         public BankAccountDTO? BankAccount { get; private set; }
         public TransactionType TransactionType { get; private set; }
+
+        public Transaction ToDomainObj()
+        {
+            return new Transaction(
+                TransactionId,
+                CreatedDate,
+                CreatedByUser.ToDomainObj(),
+                Amount,
+                UserNameInitial,
+                Bank?.ToDomainObj(),
+                BankAccount?.ToDomainObj(),
+                TransactionType);
+        }
     }
 }
