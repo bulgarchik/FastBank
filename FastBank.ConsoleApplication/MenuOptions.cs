@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
 using FastBank.Services.MessageService;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using FastBank.Services.BankService;
 
 namespace FastBank
 {
@@ -152,7 +153,7 @@ namespace FastBank
                     OpenCustomerMenu();
                     break;
                 case Roles.Banker:
-                    OpenCustomerMenu();
+                    OpenBankerMenu();
                     break;
                 case Roles.CustomerService:
                     OpenCustomerMenu();
@@ -161,6 +162,39 @@ namespace FastBank
                     ShowMainMenu();
                     break;
             }
+        }
+
+        static public void OpenBankerMenu()
+        {
+
+            var bankService = new BankService();
+
+            if (ActiveUser == null || ActiveUser is Customer)
+            {
+                return;
+            }
+
+            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+                                 $"\nPlease choose your action: " +
+                                  $"\n1: Capital Replenishment. 0: for exit";
+            int action = _menuService.CommandRead(2, menuOptions);
+
+            switch (action)
+            {
+                case 1:
+                    {
+                        bankService.CapitalReplenishment(ActiveUser);
+                        break;
+                    }
+                case 0:
+                    {
+                        ActiveUser = null;
+                        break;
+                    }
+                default:
+                    break;
+            }
+            Console.Clear();
         }
 
         static public void OpenCustomerMenu()

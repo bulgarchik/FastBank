@@ -28,7 +28,7 @@ namespace FastBank.Services
         public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive)
         {
             var user = new User(Guid.NewGuid(), name, email, birthday, password, role, inactive);
-            
+
             if (user.Role == Roles.Customer)
             {
                 user = new Customer(user);
@@ -114,7 +114,7 @@ namespace FastBank.Services
         public User? Login(string email, string password)
         {
             var user = _userRepo.GetByEmail(email);
-            
+
             if (user == null)
             {
                 Console.WriteLine($"\nUser with name: {email} not exist. Press any key to continue...");
@@ -130,36 +130,25 @@ namespace FastBank.Services
                 }
                 var passwordtries = 0;
                 var menuServie = new MenuService();
-                while (passwordtries < 2)
+                while (user.Password != password)
                 {
-                    if (user.Password != password)
+                    if (passwordtries == 2)
                     {
-                        Console.WriteLine($"Wrong password! Press any key to try again!");
-                        var keyIsEnter = Console.ReadKey();
-                        new MenuService().MoveToPreviousLine(keyIsEnter, 2);
-                        passwordtries++;
-                        Console.WriteLine("Please input password:");
-                        
-                        password = menuServie.PasswordStaredInput()??string.Empty;
-                        password = Console.ReadLine()??string.Empty;
-                        if (password == string.Empty)
-                        {
-                            new MenuService().MoveToPreviousLine(keyIsEnter, 1);
-                        }
-                    }
-                    else
-                    {
+                        Console.WriteLine("\nWrong password! You try to login with wrong password 3 times! Press any key to continue...");
+                        Console.ReadKey(true);
+                        user = null;
                         return user;
                     }
-                }
-                if (passwordtries == 2)
-                {
-                    Console.WriteLine("You try to login with wrong password 3 times! Press any key to continue...");
-                    Console.ReadKey(true);
-                    user = null;
+
+                    Console.WriteLine($"\nWrong password! Press any key to try again!");
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 3);
+                    passwordtries++;
+                    Console.WriteLine("Please input password:");
+
+                    password = menuServie.PasswordStaredInput() ?? string.Empty;
                 }
             }
-                        
             return user;
         }
 
@@ -210,7 +199,7 @@ namespace FastBank.Services
 
             if (friend != null)
             {
-               _userRepo.RemoveFriend(user, friend);
+                _userRepo.RemoveFriend(user, friend);
             }
             else
             {

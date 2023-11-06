@@ -50,20 +50,26 @@ namespace FastBank.Infrastructure.Context
                 .HasForeignKey(f => f.FriendId)
                 .IsRequired();
 
-           
+            modelBuilder.Entity<TransactionDTO>()
+                .HasOne(t => t.CreatedByUser) 
+                .WithMany()
+                .HasForeignKey(t => t.CreatedByUserId)
+                .IsRequired();
+            modelBuilder.Entity<TransactionDTO>()
+                .HasOne(t => t.Bank)
+                .WithMany()
+                .HasForeignKey(t => t.BankId);
+            modelBuilder.Entity<TransactionDTO>()
+                .HasOne(t => t.BankAccount)
+                .WithMany()
+                .HasForeignKey(t => t.BankAccountId);
+                       
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Roles.Manager, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Roles.Accountant, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Roles.Banker, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Roles.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
-
-            var testCustomer = new UserDTO(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Roles.Customer, false);
-            var customerFriend = new UserDTO(Guid.NewGuid(), "Ivan Friend", "2@2.com", DateTime.Now, "123", Roles.Customer, false); ;
-
-            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
-            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
-            modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }
@@ -71,6 +77,7 @@ namespace FastBank.Infrastructure.Context
         public virtual DbSet<BankAccountDTO> BankAccounts { get; set; }
         public virtual DbSet<MessageDTO> Messages { get; set; }
         public virtual DbSet<UserFriendDTO> FriendsRelations { get; set;}
+        public virtual DbSet<TransactionDTO> Transactions { get; set; }
 
     }
 }

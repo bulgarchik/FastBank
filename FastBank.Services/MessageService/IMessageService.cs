@@ -19,7 +19,8 @@ namespace FastBank.Services.MessageService
             User sender,
             User? receiver,
             Roles receiverRole,
-            Message basedOnMessage);
+            Message? basedOnMessage,
+            Transaction transaction);
 
         public Message InputMessage(User user);
 

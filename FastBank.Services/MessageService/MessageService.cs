@@ -1,8 +1,6 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
-using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
-using System.Text.RegularExpressions;
 
 namespace FastBank.Services.MessageService
 {
@@ -53,9 +51,10 @@ namespace FastBank.Services.MessageService
             User sender,
             User? receiver,
             Roles receiverRole,
-            Message basedOnMessage)
+            Message? basedOnMessage,
+            Transaction? transaction)
         {
-            Message message = new Message(Guid.NewGuid(), sender, receiver, receiverRole, text, subject, null, status, type);
+            Message message = new Message(Guid.NewGuid(), sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction);
             _messageRepo.Add(message);
         }
 
@@ -63,14 +62,14 @@ namespace FastBank.Services.MessageService
         {
             Console.WriteLine("Please input message subject:");
             Console.Write("Subject: ");
-            var subject = Console.ReadLine();
+            var subject = Console.ReadLine() ?? string.Empty;
 
             Console.WriteLine("Please text message");
             Console.Write("Text: ");
-            var text = Console.ReadLine();
+            var text = Console.ReadLine() ?? string.Empty;
 
             var message = new Message(Guid.NewGuid(), user, null, Roles.CustomerService,
-                                      text, subject, null, MessageStatuses.Sent, MessageType.Inquery);
+                                      text, subject, null, MessageStatuses.Sent, MessageType.Inquery, null);
 
             _messageRepo.Add(message);
             return message;
