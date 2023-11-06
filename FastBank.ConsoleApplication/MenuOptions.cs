@@ -17,6 +17,8 @@ namespace FastBank
 
         static readonly MenuService _menuService = new MenuService();
 
+        static readonly MessageService _messageService = new MessageService();
+
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
@@ -156,7 +158,7 @@ namespace FastBank
                     OpenBankerMenu();
                     break;
                 case Roles.CustomerService:
-                    OpenCustomerMenu();
+                    OpenCustomerServiceMenu();
                     break;
                 default:
                     ShowMainMenu();
@@ -166,7 +168,6 @@ namespace FastBank
 
         static public void OpenBankerMenu()
         {
-
             var bankService = new BankService();
 
             if (ActiveUser == null || ActiveUser is Customer)
@@ -267,6 +268,41 @@ namespace FastBank
                             break;  
                         }
                 }
+            }
+            Console.Clear();
+        }
+
+        static public void OpenCustomerServiceMenu()
+        {
+            if (ActiveUser == null || ActiveUser is Customer)
+            {
+                return;
+            }
+
+            var messages = _messageService.GetMessages(ActiveUser);
+
+            var messagesCount = messages.Where(m => m.Status == Domain.MessageStatuses.Sent).Count();
+
+            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+                                $"You have {messagesCount} message{(messagesCount > 0 ? 's' : string.Empty)}" +
+                                $"\nPlease choose your action: " +
+                                $"\n1: Manage messages. 0: for exit";
+            int action = _menuService.CommandRead(2, menuOptions);
+
+            switch (action)
+            {
+                case 1:
+                    {
+                        _messageService.ShowMessagesMenu(ActiveUser, messages);
+                        break;
+                    }
+
+                case 0:
+                    {
+                        ActiveUser = null;
+                        break;
+                    }
+
             }
             Console.Clear();
         }

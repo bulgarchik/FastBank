@@ -42,7 +42,7 @@ namespace FastBank.Infrastructure.DTOs
         [ForeignKey(nameof(TransactionId))]
         public TransactionDTO? Transaction { get; private set; }
 
-        public Message? ToDomainObj()
+        public Message? ToDomainObj(int index)  
         {
             return new Message(
                 MessageId,
@@ -51,10 +51,11 @@ namespace FastBank.Infrastructure.DTOs
                 ReceiverRole,
                 Text,
                 Subject,
-                BasedOnMessage?.ToDomainObj(),
+                BasedOnMessage?.ToDomainObj(index),
                 Statuses,
                 Type,
-                Transaction?.ToDomainObj());
+                Transaction?.ToDomainObj(),
+                index);
         }
     }
 }

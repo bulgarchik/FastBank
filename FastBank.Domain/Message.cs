@@ -12,7 +12,8 @@
             Message? basedOnMessage,
             MessageStatuses messageStatuses,
             MessageType messageType,
-            Transaction? transaction)
+            Transaction? transaction,
+            int index = 0)
         {
             MessageId = messageId;
             Sender = sender;
@@ -24,6 +25,7 @@
             Status = messageStatuses;
             Type = messageType;
             Transaction = transaction;
+            Index = index;
         }
         public Guid MessageId { get; private set; }
         public User Sender { get; private set; }
@@ -35,6 +37,7 @@
         public MessageStatuses Status { get; private set; }
         public MessageType Type { get; private set; }
         public Transaction? Transaction { get; private set; }
+        public int Index { get; private set; }
     }
 
     public enum MessageStatuses

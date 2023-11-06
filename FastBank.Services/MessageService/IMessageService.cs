@@ -9,7 +9,7 @@ namespace FastBank.Services.MessageService
 {
     public interface IMessageService
     {
-        public void GetMessages(User user);
+        public List<Message?> GetMessages(User user);
 
         public void AddMessage(
             string Subject,
@@ -24,6 +24,8 @@ namespace FastBank.Services.MessageService
 
         public Message InputMessage(User user);
 
-        public void ShowMessagesMenu(User user);
+        public void ShowMessagesMenu(User user, List<Message?>? messages = null);
+
+        public void ShowMessages(List<Message?> messages);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
+using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
 
 namespace FastBank.Services.MessageService
@@ -20,27 +21,20 @@ namespace FastBank.Services.MessageService
             _messageRepo.Add(message);
         }
 
-        public void GetMessages(User user)
+        public List<Message?> GetMessages(User user)
         {
-            var messages = _messageRepo.GetCustomerMessages(user);
+            var messages = new List<Message?>();
 
-            if (messages.Count > 0)
+            if (user.Role == Roles.CustomerService)
             {
-                Console.WriteLine($"Messages list:");
-                Console.WriteLine(new string(' ', Console.WindowWidth));
+                messages = _messageRepo.GetCustomerServiceMessages(user);
             }
-            int msgNumber = 0;
-            foreach (var message in messages)
+            else if (user.Role == Roles.Customer)
             {
-                msgNumber++;
-                Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine($"Message number: {msgNumber}");
-                Console.WriteLine($"\nSubject: {message?.Subject}");
-                Console.WriteLine($"\nText: {message?.Text}");
-                Console.WriteLine($"\nStatus: {message?.Status}");
-                Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine(new string(' ', Console.WindowWidth));
+                messages = _messageRepo.GetCustomerMessages(user);
             }
+
+            return messages;
         }
 
         public void AddMessage(
@@ -75,18 +69,43 @@ namespace FastBank.Services.MessageService
             return message;
         }
 
-        public void ShowMessagesMenu(User user)
+        public void ShowMessagesMenu(User user, List<Message?>? messages = null)
         {
             Console.Clear();
             _menuService.ShowLogo();
-            GetMessages(user);
+            if (messages == null)
+            {
+                messages = GetMessages(user);
+            }
+            ShowMessages(messages);
+
             var menuOptions = $"\nPlease choose your action: " +
                               $"\n  0: for exit";
             int action = _menuService.CommandRead(1, menuOptions);
-            
+
             switch (action)
             {
                 case 0: return;
+            }
+        }
+
+        public void ShowMessages(List<Message?> messages)
+        {
+            if (messages.Count > 0)
+            {
+                Console.WriteLine($"Messages list:");
+                Console.WriteLine(new string(' ', Console.WindowWidth));
+            }
+            
+            foreach (var message in messages)
+            {
+                Console.WriteLine(new string('*', Console.WindowWidth));
+                Console.WriteLine($"Message number: {message?.Index}");
+                Console.WriteLine($"\nSubject: {message?.Subject}");
+                Console.WriteLine($"\nText: {message?.Text}");
+                Console.WriteLine($"\nStatus: {message?.Status}");
+                Console.WriteLine(new string('*', Console.WindowWidth));
+                Console.WriteLine(new string(' ', Console.WindowWidth));
             }
         }
     }
