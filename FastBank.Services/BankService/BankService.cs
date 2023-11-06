@@ -11,12 +11,14 @@ namespace FastBank.Services.BankService
         private readonly IBankRepository _repoBank;
         private readonly ITransactionService _transactionService;
         private readonly IMessageService _messageService;
+
         public BankService()
         {
             _repoBank = new BankRepository();
             _transactionService = new TransactionService.TransactionService();
             _messageService = new MessageService.MessageService();
         }
+
         public void CapitalReplenishment(User user)
         {
             //Here we should
@@ -37,24 +39,24 @@ namespace FastBank.Services.BankService
 
             if (bank == null)
             {
-                Console.WriteLine("Bank is not ready. Press any key for exit!");
+                Console.WriteLine("bank isn't available. Press any key for exit!");
                 Console.ReadKey();
                 return;
             }
-            Console.WriteLine($"Fast bank have capital amount:{bank?.CapitalAmount}");
+            Console.WriteLine($"Current capital of Fast Bank:{bank?.CapitalAmount}");
 
             decimal capitalAmountToReplenish;
             do
             {
                 Console.WriteLine("Please write the amount to replenish the capital (type 'q' for exit):");
                 Console.Write("Replenish the capital amount:");
-                var inputcapitalAmountToReplenish = Console.ReadLine();
-                if (inputcapitalAmountToReplenish == "q")
+                var inputCapitalAmountToReplenish = Console.ReadLine();
+                if (inputCapitalAmountToReplenish == "q")
                     return;
 
-                if (!decimal.TryParse(inputcapitalAmountToReplenish, out capitalAmountToReplenish) || capitalAmountToReplenish <= 0)
+                if (!decimal.TryParse(inputCapitalAmountToReplenish, out capitalAmountToReplenish) || capitalAmountToReplenish <= 0)
                 {
-                    Console.WriteLine("Please input correct amount to replenishment (press any key to continue...)");
+                    Console.WriteLine("Please input correct repenishment amount (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }

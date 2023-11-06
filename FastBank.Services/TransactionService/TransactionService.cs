@@ -12,6 +12,7 @@ namespace FastBank.Services.TransactionService
         {
             _transactionRepo = new TransactionRepository();
         }
+
         public Transaction AddTranscation(
             User createdByUser,
             decimal amount,
