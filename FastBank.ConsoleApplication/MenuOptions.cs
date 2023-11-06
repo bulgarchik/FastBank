@@ -166,7 +166,6 @@ namespace FastBank
 
         static public void OpenBankerMenu()
         {
-
             var bankService = new BankService();
 
             if (ActiveUser == null || ActiveUser is Customer)

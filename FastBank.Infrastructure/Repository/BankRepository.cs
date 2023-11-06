@@ -17,6 +17,7 @@ namespace FastBank.Infrastructure.Repository
         {
             _repo = new Repository(new FastBankDbContext());
         }
+
         public void ReplenishCapital(User user, Bank bank, decimal amountToReplenish)
         {
             var bankDto = _repo.Set<BankDTO>().Where(b => b.BankId == bank.Id).FirstOrDefault();
