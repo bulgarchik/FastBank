@@ -38,6 +38,11 @@
         public MessageType Type { get; private set; }
         public Transaction? Transaction { get; private set; }
         public int Index { get; private set; }
+
+        public void UpdateMessageStatus(MessageStatuses messageStatuses)
+        {
+            this.Status = messageStatuses;
+        }
     }
 
     public enum MessageStatuses

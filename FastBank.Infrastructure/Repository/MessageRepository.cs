@@ -20,6 +20,18 @@ namespace FastBank.Infrastructure.Repository
             _repo.Add<MessageDTO>(new MessageDTO(message));
         }
 
+        public void UpdateStatus(Message message, MessageStatuses newMsgStatus)
+        {
+            message.UpdateMessageStatus(newMsgStatus);
+
+            var msgDto = _repo.Set<MessageDTO>().Where(m => m.MessageId == message.MessageId).FirstOrDefault();
+            if (msgDto != null)
+            {
+                msgDto.UpdateMessageStatus(message.Status);
+                _repo.Update<MessageDTO>(msgDto);
+            }
+        }
+
         public List<Message?> GetCustomerMessages(User user)
         {
             var messagesDTO = _repo.SetNoTracking<MessageDTO>()
@@ -37,7 +49,6 @@ namespace FastBank.Infrastructure.Repository
                     .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id || m.ReceiverRole == Roles.CustomerService)
                     .Include(m => m.Sender)
                     .Include(m => m.Receiver)
-                    .Include(m => m.BasedOnMessage)
                     .ToList();
 
             var messages = messagesDTO.Select((m, c) => m.ToDomainObj(c + 1)).ToList();

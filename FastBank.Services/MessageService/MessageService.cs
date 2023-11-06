@@ -2,6 +2,7 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
+using System.Data;
 
 namespace FastBank.Services.MessageService
 {
@@ -69,6 +70,30 @@ namespace FastBank.Services.MessageService
             return message;
         }
 
+        public Message ReplayToMessage(User user, Message message)
+        {
+            Console.WriteLine("Please intput replay to text message");
+            Console.Write("Replay: ");
+            var text = Console.ReadLine() ?? string.Empty;
+
+            var replayMessage = new Message(
+                                        Guid.NewGuid(), 
+                                        user, 
+                                        message.Sender, 
+                                        Roles.Customer,
+                                        text, 
+                                        $"Re: {message.Subject}",
+                                        message, 
+                                        MessageStatuses.Sent, 
+                                        MessageType.Inquery, 
+                                        null);
+
+            _messageRepo.Add(replayMessage);
+            _messageRepo.UpdateStatus(message, MessageStatuses.Replied);
+
+            return replayMessage;
+        }
+
         public void ShowMessagesMenu(User user, List<Message?>? messages = null)
         {
             Console.Clear();
@@ -80,12 +105,85 @@ namespace FastBank.Services.MessageService
             ShowMessages(messages);
 
             var menuOptions = $"\nPlease choose your action: " +
-                              $"\n  0: for exit";
-            int action = _menuService.CommandRead(1, menuOptions);
+                              $"\n1: Open message;  0: for exit";
+            int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
             {
                 case 0: return;
+                case 1:
+                    {
+                       if (messages != null)
+                        {
+                            var msg = SelectMessageByInputId(messages);
+                            if (msg != null)
+                            {
+                                ShowMessageMenu(user, msg);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("You have no messages. Press any key to continue...");
+                            var keyIsEnter = Console.ReadKey();
+                            return;
+                        }
+
+                        break;
+                    }
+            }
+        }
+
+        public Message? SelectMessageByInputId(List<Message?>? messages)
+        {
+            if (messages == null)
+            {
+                return null;
+            }
+
+            int msgId;
+            do
+            {
+                Console.Write($"To open please input message ID from the list (type 'q' for exit):");
+                var inputMsgId = Console.ReadLine();
+                if (inputMsgId == "q")
+                    return null;
+
+                if (!int.TryParse(inputMsgId, out msgId) || msgId <= 0)
+                {
+                    Console.WriteLine("Please input correct message ID (press any key to continue...)");
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 3);
+                }
+
+            }while (msgId < 1 || msgId > messages.Count);
+
+            return messages.FirstOrDefault(m => m?.Index == msgId);
+        }
+
+        public void ShowMessageMenu(User user, Message message)
+        {
+            if (message == null)
+            {
+                return;
+            }
+
+            Console.Clear();
+            _menuService.ShowLogo();
+
+            ShowMessageDetails(user, message);
+
+            var menuOptions = $"\nPlease choose your action: " +
+                             $"\n1: Replay to message. 0: for exit.";
+            int action = _menuService.CommandRead(2, menuOptions);
+
+            switch (action)
+            {
+                case 0: return;
+                case 1:
+                    {
+                        ReplayToMessage(user, message);
+                        break;
+                    }
             }
         }
 
@@ -96,17 +194,32 @@ namespace FastBank.Services.MessageService
                 Console.WriteLine($"Messages list:");
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
-            
+
             foreach (var message in messages)
             {
                 Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine($"Message number: {message?.Index}");
-                Console.WriteLine($"\nSubject: {message?.Subject}");
-                Console.WriteLine($"\nText: {message?.Text}");
-                Console.WriteLine($"\nStatus: {message?.Status}");
+                Console.WriteLine($"Message ID: {message?.Index}; " +
+                                  $"Status: {message?.Status}; " +
+                                  $"Subject: {message?.Subject}; " +
+                                  $"{(message?.BasedOnMessage!=null ? $"Based on message ID:{message?.BasedOnMessage.Index}" : string.Empty)}");
+                Console.WriteLine($"Text: {message?.Text}");
                 Console.WriteLine(new string('*', Console.WindowWidth));
                 Console.WriteLine(new string(' ', Console.WindowWidth));
             }
+        }
+
+        public void ShowMessageDetails(User user, Message message)
+        {
+            if (message.Status == MessageStatuses.Sent && message.Sender != user)
+            {
+                _messageRepo.UpdateStatus(message, MessageStatuses.Delivered);
+            }
+
+            Console.WriteLine(new string('*', Console.WindowWidth));
+            Console.WriteLine($"Status: {message?.Status};\nSubject: {message?.Subject};");
+            Console.WriteLine($"Text: {message?.Text}");
+            Console.WriteLine(new string('*', Console.WindowWidth));
+            Console.WriteLine(new string(' ', Console.WindowWidth));
         }
     }
 }

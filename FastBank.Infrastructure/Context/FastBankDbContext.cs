@@ -70,13 +70,6 @@ namespace FastBank.Infrastructure.Context
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Roles.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
-
-            var testCustomer = new UserDTO(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Roles.Customer, false);
-            var customerFriend = new UserDTO(Guid.NewGuid(), "Ivan Friend", "2@2.com", DateTime.Now, "123", Roles.Customer, false); ;
-
-            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
-            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
-            modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }

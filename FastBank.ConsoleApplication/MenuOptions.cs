@@ -284,7 +284,7 @@ namespace FastBank
             var messagesCount = messages.Where(m => m.Status == Domain.MessageStatuses.Sent).Count();
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"You have {messagesCount} message{(messagesCount > 0 ? 's' : string.Empty)}" +
+                                $"You have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}" +
                                 $"\nPlease choose your action: " +
                                 $"\n1: Manage messages. 0: for exit";
             int action = _menuService.CommandRead(2, menuOptions);

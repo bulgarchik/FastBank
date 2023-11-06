@@ -24,8 +24,16 @@ namespace FastBank.Services.MessageService
 
         public Message InputMessage(User user);
 
+        public Message ReplayToMessage(User user, Message message);
+
+        public Message? SelectMessageByInputId(List<Message?>? messages);
+
         public void ShowMessagesMenu(User user, List<Message?>? messages = null);
 
+        public void ShowMessageMenu(User user, Message message);
+
         public void ShowMessages(List<Message?> messages);
+
+        public void ShowMessageDetails(User user, Message message);
     }
 }

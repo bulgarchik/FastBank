@@ -18,7 +18,7 @@ namespace FastBank.Infrastructure.DTOs
             Text = message.Text;
             Subject = message.Subject;
             BasedOnMessageId = message.BasedOnMessage?.MessageId;
-            Statuses = message.Status;
+            Status = message.Status;
             Type = message.Type;    
         }
 
@@ -26,7 +26,7 @@ namespace FastBank.Infrastructure.DTOs
         public Guid MessageId { get; private set; }
         public Guid SenderId { get; private set; }
         [ForeignKey(nameof(SenderId))]
-        public UserDTO Sender { get; private set; } = null!;
+        public UserDTO Sender { get; private set; }
         public Guid? ReceiverId { get; private set; }
         [ForeignKey(nameof(ReceiverId))]
         public UserDTO? Receiver { get; private set; } = null;
@@ -36,12 +36,16 @@ namespace FastBank.Infrastructure.DTOs
         public Guid? BasedOnMessageId { get; private set; }
         [ForeignKey(nameof(BasedOnMessageId))]
         public MessageDTO? BasedOnMessage { get; private set; }
-        public MessageStatuses Statuses { get; private set; }
+        public MessageStatuses Status { get; private set; }
         public MessageType Type { get; private set; }
         public Guid? TransactionId { get; private set; }
         [ForeignKey(nameof(TransactionId))]
         public TransactionDTO? Transaction { get; private set; }
 
+        public void UpdateMessageStatus(MessageStatuses messageStatuses)
+        {
+            this.Status = messageStatuses;
+        }
         public Message? ToDomainObj(int index)  
         {
             return new Message(
@@ -52,7 +56,7 @@ namespace FastBank.Infrastructure.DTOs
                 Text,
                 Subject,
                 BasedOnMessage?.ToDomainObj(index),
-                Statuses,
+                Status,
                 Type,
                 Transaction?.ToDomainObj(),
                 index);
