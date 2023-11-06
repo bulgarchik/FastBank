@@ -28,7 +28,7 @@ namespace FastBank.Services.BankService
             //4 Confirm the operation
             //5.Create transaction about action
 
-            if (user.Role != Roles.Banker)
+            if (user.Role != Role.Banker)
             {
                 Console.WriteLine("You have not access to this operation. Press any key for exit!");
                 Console.ReadKey();
@@ -39,7 +39,7 @@ namespace FastBank.Services.BankService
 
             if (bank == null)
             {
-                Console.WriteLine("bank isn't available. Press any key for exit!");
+                Console.WriteLine("Bank isn't available. Press any key for exit!");
                 Console.ReadKey();
                 return;
             }
@@ -79,11 +79,11 @@ namespace FastBank.Services.BankService
 
                 _messageService.AddMessage(subjectMessage,
                                            textMessage,
-                                           MessageStatuses.Sent,
+                                           MessageStatus.Sent,
                                            MessageType.CapitalReplenishment,
                                            user,
                                            null,
-                                           Roles.Manager,
+                                           Role.Manager,
                                            null,
                                            transaction);
             }

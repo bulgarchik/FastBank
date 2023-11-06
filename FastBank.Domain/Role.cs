@@ -1,6 +1,6 @@
 ﻿namespace FastBank
 {
-    public enum Roles
+    public enum Role
     {
         Accountant,
         Manager,

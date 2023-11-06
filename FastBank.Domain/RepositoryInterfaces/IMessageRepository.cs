@@ -4,7 +4,7 @@
     {
         public void Add(Message message);
 
-        public void UpdateStatus(Message message, MessageStatuses newMsgStatus);
+        public void UpdateStatus(Message message, MessageStatus newMsgStatus);
 
         public List<Message?> GetCustomerMessages(User user);
 

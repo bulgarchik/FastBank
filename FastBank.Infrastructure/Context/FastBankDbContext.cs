@@ -1,6 +1,7 @@
 ﻿using FastBank.Infrastructure.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Data;
 
 namespace FastBank.Infrastructure.Context
 {
@@ -64,12 +65,47 @@ namespace FastBank.Infrastructure.Context
                 .WithMany()
                 .HasForeignKey(t => t.BankAccountId);
                        
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Roles.Manager, false));
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Roles.Accountant, false));
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Roles.Banker, false));
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Roles.CustomerService, false));
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Role.Manager, false));
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Role.Accountant, false));
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Role.Banker, false));
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Role.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
+
+            var testCustomer = new UserDTO(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Role.Customer, false);
+            var customerFriend = new UserDTO(Guid.NewGuid(), "Ivan Friend", "2@2.com", DateTime.Now, "123", Role.Customer, false);
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Костюмер Сервисович", "2@2.bg", DateTime.Now, "1", Role.CustomerService, false));
+
+            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
+            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
+            modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
+            modelBuilder.Entity<MessageDTO>().HasData(
+                new MessageDTO(
+                    new Domain.Message(
+                            Guid.NewGuid(),
+                            testCustomer.ToDomainObj(),
+            null,
+                            Role.CustomerService,
+                            "First Message Subjectr",
+                            "First message text to Customer Service",
+                            null,
+                            Domain.MessageStatus.Sent,
+                            Domain.MessageType.Inquery, null)
+                    ));
+
+            modelBuilder.Entity<MessageDTO>().HasData(
+                new MessageDTO(
+                    new Domain.Message(
+                            Guid.NewGuid(),
+                            testCustomer.ToDomainObj(),
+                            null,
+                            Role.CustomerService,
+                            "Second Message Subjectr",
+                            "Second message text to Customer Service",
+                            null,
+                            Domain.MessageStatus.Sent,
+                            Domain.MessageType.Inquery, null)
+                    ));
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }

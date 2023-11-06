@@ -83,7 +83,7 @@ namespace FastBank
             if (loginUser != null)
             {
                 Console.WriteLine("Authorized");
-                if (loginUser.Role == Roles.Customer)
+                if (loginUser.Role == Role.Customer)
                 {
                     ActiveUser = new Customer(loginUser);
                 }
@@ -104,7 +104,7 @@ namespace FastBank
             Console.Clear();
             _menuService.ShowLogo();
 
-            var role = Roles.Customer;
+            var role = Role.Customer;
 
             Console.WriteLine("\nNew customer registration process is started.\n");
 
@@ -145,19 +145,19 @@ namespace FastBank
 
             switch (ActiveUser.Role)
             {
-                case Roles.Accountant:
+                case Role.Accountant:
                     OpenCustomerMenu();
                     break;
-                case Roles.Manager:
+                case Role.Manager:
                     OpenCustomerMenu();
                     break;
-                case Roles.Customer:
+                case Role.Customer:
                     OpenCustomerMenu();
                     break;
-                case Roles.Banker:
+                case Role.Banker:
                     OpenBankerMenu();
                     break;
-                case Roles.CustomerService:
+                case Role.CustomerService:
                     OpenCustomerServiceMenu();
                     break;
                 default:
@@ -170,7 +170,7 @@ namespace FastBank
         {
             var bankService = new BankService();
 
-            if (ActiveUser == null || ActiveUser is Customer)
+            if (ActiveUser == null || ActiveUser.Role !=  Role.Banker)
             {
                 return;
             }
@@ -200,7 +200,7 @@ namespace FastBank
 
         static public void OpenCustomerMenu()
         {
-            if (ActiveUser == null || ActiveUser is not Customer)
+            if (ActiveUser == null || ActiveUser.Role != Role.Customer)
             {
                 return;
             }
@@ -274,14 +274,17 @@ namespace FastBank
 
         static public void OpenCustomerServiceMenu()
         {
-            if (ActiveUser == null || ActiveUser is Customer)
+            if (ActiveUser == null || ActiveUser.Role != Role.CustomerService)
             {
                 return;
             }
 
             var messages = _messageService.GetMessages(ActiveUser);
 
-            var messagesCount = messages.Where(m => m.Status == Domain.MessageStatuses.Sent).Count();
+            var messagesCount = messages
+                                    .Where(m => m?.MessageStatus == Domain.MessageStatus.Sent 
+                                                && m.ReceiverRole == Role.CustomerService)
+                                    .Count();
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                                 $"You have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}" +
@@ -302,7 +305,6 @@ namespace FastBank
                         ActiveUser = null;
                         break;
                     }
-
             }
             Console.Clear();
         }

@@ -20,38 +20,38 @@ namespace FastBank.Infrastructure.Repository
             _repo.Add<MessageDTO>(new MessageDTO(message));
         }
 
-        public void UpdateStatus(Message message, MessageStatuses newMsgStatus)
+        public void UpdateStatus(Message message, MessageStatus newMsgStatus)
         {
             message.UpdateMessageStatus(newMsgStatus);
 
             var msgDto = _repo.Set<MessageDTO>().Where(m => m.MessageId == message.MessageId).FirstOrDefault();
             if (msgDto != null)
             {
-                msgDto.UpdateMessageStatus(message.Status);
+                msgDto.UpdateMessageStatus(message.MessageStatus);
                 _repo.Update<MessageDTO>(msgDto);
             }
         }
 
         public List<Message?> GetCustomerMessages(User user)
         {
-            var messagesDTO = _repo.SetNoTracking<MessageDTO>()
+            var dbMessages = _repo.SetNoTracking<MessageDTO>()
                     .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id)
                     .Include(m => m.Sender)
                     .Include(m => m.Receiver)
                     .Include(m => m.BasedOnMessage)
                     .ToList();
-            var messages = messagesDTO.Select((m, c) => m.ToDomainObj(c + 1)).ToList();
+            var messages = dbMessages.Select((m, c) => m.ToDomainObj(c + 1)).ToList();
             return messages;
         }   
         public List<Message?> GetCustomerServiceMessages(User user)
         {
-            var messagesDTO = _repo.SetNoTracking<MessageDTO>()
-                    .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id || m.ReceiverRole == Roles.CustomerService)
+            var dbMessages = _repo.SetNoTracking<MessageDTO>()
+                    .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id || m.ReceiverRole == Role.CustomerService)
                     .Include(m => m.Sender)
                     .Include(m => m.Receiver)
                     .ToList();
 
-            var messages = messagesDTO.Select((m, c) => m.ToDomainObj(c + 1)).ToList();
+            var messages = dbMessages.Select((m, c) => m.ToDomainObj(c + 1)).ToList();
             return messages;
         }
     }

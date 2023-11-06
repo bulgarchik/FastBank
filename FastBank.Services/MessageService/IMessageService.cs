@@ -14,17 +14,17 @@ namespace FastBank.Services.MessageService
         public void AddMessage(
             string Subject,
             string text,
-            MessageStatuses status,
+            MessageStatus status,
             MessageType type,
             User sender,
             User? receiver,
-            Roles receiverRole,
+            Role receiverRole,
             Message? basedOnMessage,
             Transaction transaction);
 
         public Message InputMessage(User user);
 
-        public Message ReplayToMessage(User user, Message message);
+        public Message ReplyToMessage(User user, Message message);
 
         public Message? SelectMessageByInputId(List<Message?>? messages);
 

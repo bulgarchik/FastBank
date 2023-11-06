@@ -8,7 +8,7 @@ namespace FastBank.Infrastructure.DTOs
     {
         public UserDTO() { }
 
-        public UserDTO(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inactive)
+        public UserDTO(Guid id, string name, string email, DateTime birthday, string password, Role role, bool inactive)
         {
             UserId = id;
             Name = name;
@@ -30,7 +30,7 @@ namespace FastBank.Infrastructure.DTOs
 
         public User ToDomainObj()
         {
-            var role = Enum.Parse<Roles>(Role);
+            var role = Enum.Parse<Role>(Role);
 
             return new User(UserId, Name, Email, Birthday, Password, role, Inactive);
         }

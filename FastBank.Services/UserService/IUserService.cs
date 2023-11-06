@@ -6,7 +6,7 @@
 
         public void Add(User customer);
 
-        public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive);
+        public void Add(string name, string email, DateTime birthday, string password, Role role, bool inactive);
 
         public List<string> CheckLoginUserName(string username);
 
