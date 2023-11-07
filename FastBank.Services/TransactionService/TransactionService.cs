@@ -18,6 +18,11 @@ namespace FastBank.Services
             _transactionRepo.AddTransactionOrder(transactionOrder);
         }
 
+        public void ConfirmTransactionOrder(TransactionOrder transactionOrder)
+        {
+
+        }
+
         public Transaction AddTranscation(
             User createdByUser,
             decimal amount,

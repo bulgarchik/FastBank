@@ -8,11 +8,13 @@ namespace FastBank.Services
     {
         private readonly IMessageRepository _messageRepo;
         private readonly IMenuService _menuService;
+        private readonly ITransactionService _transactionService;
 
         public MessageService()
         {
             _messageRepo = new MessageRepository();
             _menuService = new MenuService();
+            _transactionService = new TransactionService();
         }
 
         public void AddMessage(Message message)
@@ -76,14 +78,14 @@ namespace FastBank.Services
             var text = Console.ReadLine() ?? string.Empty;
 
             var replayMessage = new Message(
-                                        Guid.NewGuid(), 
-                                        user, 
-                                        message.Sender, 
+                                        Guid.NewGuid(),
+                                        user,
+                                        message.Sender,
                                         Role.Customer,
-                                        text, 
+                                        text,
                                         $"Re: {message.Subject}",
-                                        message, 
-                                        MessageStatus.Sent, 
+                                        message,
+                                        MessageStatus.Sent,
                                         MessageType.Inquery);
 
             _messageRepo.Add(replayMessage);
@@ -111,7 +113,7 @@ namespace FastBank.Services
                 case 0: return;
                 case 1:
                     {
-                       if (messages != null)
+                        if (messages != null)
                         {
                             var msg = SelectMessageByInputId(messages);
                             if (msg != null)
@@ -154,7 +156,7 @@ namespace FastBank.Services
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
 
-            }while (msgId < 1 || msgId > messages.Count);
+            } while (msgId < 1 || msgId > messages.Count);
 
             return messages.FirstOrDefault(m => m?.Index == msgId);
         }
@@ -172,8 +174,9 @@ namespace FastBank.Services
             ShowMessageDetails(user, message);
 
             var menuOptions = $"\nPlease choose your action: " +
-                             $"\n1: Reply to message. 0: for exit.";
-            int action = _menuService.CommandRead(2, menuOptions);
+                             $"\n1: Reply to message." +
+                             $"{(message.Transaction != null ? " 2: Confirm transfer order. " : string.Empty)} 0: for exit.";
+            int action = _menuService.CommandRead((message.Transaction != null ? 3 : 2), menuOptions);
 
             switch (action)
             {
@@ -181,6 +184,14 @@ namespace FastBank.Services
                 case 1:
                     {
                         ReplyToMessage(user, message);
+                        break;
+                    }
+                case 2:
+                    {
+                        if (message.TransactionOrder != null)
+                        {
+                            _transactionService.ConfirmTransactionOrder(message.TransactionOrder);
+                        }
                         break;
                     }
             }
@@ -200,7 +211,7 @@ namespace FastBank.Services
                 Console.WriteLine($"Message ID: {message?.Index}; " +
                                   $"Status: {message?.MessageStatus}; " +
                                   $"Subject: {message?.Subject}; " +
-                                  $"{(message?.BasedOnMessage!=null ? $"Based on message ID:{message?.BasedOnMessage.Index}" : string.Empty)}");
+                                  $"{(message?.BasedOnMessage != null ? $"Based on message ID:{message?.BasedOnMessage.Index}" : string.Empty)}");
                 Console.WriteLine($"Text: {message?.Text}");
                 Console.WriteLine(new string('*', Console.WindowWidth));
                 Console.WriteLine(new string(' ', Console.WindowWidth));
