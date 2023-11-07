@@ -211,7 +211,7 @@ namespace FastBank.Services.MessageService
 
         public void ShowMessageDetails(User user, Message message)
         {
-            if (message.MessageStatus == MessageStatus.Sent && message.Sender != user)
+            if (message.MessageStatus == MessageStatus.Sent && message.Sender != null && message.Sender != user)
             {
                 _messageRepo.UpdateStatus(message, MessageStatus.Delivered);
             }

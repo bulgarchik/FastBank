@@ -71,6 +71,42 @@ namespace FastBank.Infrastructure.Context
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Role.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
+
+            var testCustomer = new UserDTO(Guid.NewGuid(), "Александър Георгиев", "1@1.com", DateTime.Now, "1", Role.Customer, false);
+            var customerFriend = new UserDTO(Guid.NewGuid(), "Ангел Костадинов", "2@2.com", DateTime.Now, "1", Role.Customer, false);
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Васили Иванов", "3@3.bg", DateTime.Now, "1", Role.CustomerService, false));
+
+            //seed data
+            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
+            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
+            modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
+            modelBuilder.Entity<MessageDTO>().HasData(
+                new MessageDTO(
+                    new Domain.Message(
+                            Guid.NewGuid(),
+                            testCustomer.ToDomainObj(),
+            null,
+                            Role.CustomerService,
+                            "First Message Subject",
+                            "First message text to Customer Service",
+                            null,
+                            Domain.MessageStatus.Sent,
+                            Domain.MessageType.Inquery, null)
+                    ));
+
+            modelBuilder.Entity<MessageDTO>().HasData(
+                new MessageDTO(
+                    new Domain.Message(
+                            Guid.NewGuid(),
+                            testCustomer.ToDomainObj(),
+                            null,
+                            Role.CustomerService,
+                            "Second Message Subject",
+                            "Second message text to Customer Service",
+                            null,
+                            Domain.MessageStatus.Sent,
+                            Domain.MessageType.Inquery, null)
+                    ));
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }
