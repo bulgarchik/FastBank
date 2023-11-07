@@ -31,7 +31,7 @@ namespace FastBank.Infrastructure.Context
                 .HasOne(m => m.Receiver)
                 .WithMany()
                 .HasForeignKey(m => m.ReceiverId);
-                
+
             modelBuilder.Entity<MessageDTO>()
                 .HasOne(m => m.BasedOnMessage)
                 .WithMany()
@@ -60,7 +60,7 @@ namespace FastBank.Infrastructure.Context
                 .IsRequired();
 
             modelBuilder.Entity<TransactionDTO>()
-                .HasOne(t => t.CreatedByUser) 
+                .HasOne(t => t.CreatedByUser)
                 .WithMany()
                 .HasForeignKey(t => t.CreatedByUserId)
                 .IsRequired();
@@ -96,49 +96,13 @@ namespace FastBank.Infrastructure.Context
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Role.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
-
-            var testCustomer = new UserDTO(Guid.NewGuid(), "Ivan", "1@1.com", DateTime.Now, "123", Role.Customer, false);
-            var customerFriend = new UserDTO(Guid.NewGuid(), "Ivan Friend", "2@2.com", DateTime.Now, "123", Role.Customer, false);
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Костюмер Сервисович", "2@2.bg", DateTime.Now, "1", Role.CustomerService, false));
-
-            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
-            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
-            modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
-            modelBuilder.Entity<MessageDTO>().HasData(
-                new MessageDTO(
-                    new Domain.Message(
-                            Guid.NewGuid(),
-                            testCustomer.ToDomainObj(),
-            null,
-                            Role.CustomerService,
-                            "First Message Subjectr",
-                            "First message text to Customer Service",
-                            null,
-                            Domain.MessageStatus.Sent,
-                            Domain.MessageType.Inquery, null)
-                    ));
-
-            modelBuilder.Entity<MessageDTO>().HasData(
-                new MessageDTO(
-                    new Domain.Message(
-                            Guid.NewGuid(),
-                            testCustomer.ToDomainObj(),
-                            null,
-                            Role.CustomerService,
-                            "Second Message Subjectr",
-                            "Second message text to Customer Service",
-                            null,
-                            Domain.MessageStatus.Sent,
-                            Domain.MessageType.Inquery, null)
-                    ));
-
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }
         public virtual DbSet<BankDTO> Banks { get; set; }
         public virtual DbSet<BankAccountDTO> BankAccounts { get; set; }
         public virtual DbSet<MessageDTO> Messages { get; set; }
-        public virtual DbSet<UserFriendDTO> FriendsRelations { get; set;}
+        public virtual DbSet<UserFriendDTO> FriendsRelations { get; set; }
         public virtual DbSet<TransactionDTO> Transactions { get; set; }
         public virtual DbSet<TransactionOrderDto> TransactionsOrder { get; set; }
     }
