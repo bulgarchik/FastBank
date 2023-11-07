@@ -11,8 +11,6 @@ namespace FastBank.Services
             BankAccount? bankAccount,
             TransactionType transactionType);
 
-        public void ConfirmTransactionOrder(TransactionOrder transactionOrder);
-
         public void AddTransactionOrder(TransactionOrder transactionOrder);
     }
 }

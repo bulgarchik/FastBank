@@ -46,7 +46,7 @@ namespace FastBank.Infrastructure.DTOs
                 FromBankAccount?.ToDomainObj(),
                 ToBankAccount?.ToDomainObj(),
                 Bank?.ToDomainObj(),
-                OrderedByUser.ToDomainObj(),
+                OrderedByUser?.ToDomainObj(),
                 Amount);
         }
     }

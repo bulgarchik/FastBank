@@ -8,13 +8,13 @@ namespace FastBank.Services
     {
         private readonly IMessageRepository _messageRepo;
         private readonly IMenuService _menuService;
-        private readonly ITransactionService _transactionService;
+        private readonly IBankAccountService? _bankAccountService;
 
-        public MessageService()
+        public MessageService(IBankAccountService? _bankAccountService)
         {
             _messageRepo = new MessageRepository();
             _menuService = new MenuService();
-            _transactionService = new TransactionService();
+            this._bankAccountService = _bankAccountService;
         }
 
         public void AddMessage(Message message)
@@ -34,7 +34,7 @@ namespace FastBank.Services
             {
                 messages = _messageRepo.GetCustomerMessages(user);
             }
-
+            
             return messages;
         }
 
@@ -175,8 +175,8 @@ namespace FastBank.Services
 
             var menuOptions = $"\nPlease choose your action: " +
                              $"\n1: Reply to message." +
-                             $"{(message.Transaction != null ? " 2: Confirm transfer order. " : string.Empty)} 0: for exit.";
-            int action = _menuService.CommandRead((message.Transaction != null ? 3 : 2), menuOptions);
+                             $"{(message.TransactionOrder != null ? " 2: Confirm transfer order. " : string.Empty)} 0: for exit.";
+            int action = _menuService.CommandRead((message.TransactionOrder != null ? 3 : 2), menuOptions);
 
             switch (action)
             {
@@ -190,7 +190,15 @@ namespace FastBank.Services
                     {
                         if (message.TransactionOrder != null)
                         {
-                            _transactionService.ConfirmTransactionOrder(message.TransactionOrder);
+                            Console.WriteLine($"Please confirm with Y execution of order transfer for {message.TransactionOrder.Amount} " +
+                                $"from {message.TransactionOrder?.FromBankAccount?.Customer.Name} " +
+                                $"to {message.TransactionOrder?.ToBankAccount?.Customer.Name} or press any other key to cancel...");
+                            var confirmKey = Console.ReadKey();
+                            if (confirmKey.KeyChar == 'Y')
+                            {
+                                _bankAccountService?.ConfirmTransactionOrder(message.TransactionOrder);
+                                message.UpdateMessageStatus(MessageStatus.Accepted);
+                            }
                         }
                         break;
                     }

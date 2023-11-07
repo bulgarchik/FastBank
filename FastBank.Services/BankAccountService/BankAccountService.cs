@@ -2,7 +2,7 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 
-namespace FastBank.Services.BankAccountService
+namespace FastBank.Services
 {
     public class BankAccountService : IBankAccountService
     {
@@ -18,7 +18,7 @@ namespace FastBank.Services.BankAccountService
             _menuService = new MenuService();
             _userService = new UserService();
             _transactionService = new TransactionService();
-            _messageService = new MessageService();
+            _messageService = new MessageService(this);
         }
 
         public BankAccount? GetBankAccount(Customer customer)
@@ -196,10 +196,10 @@ namespace FastBank.Services.BankAccountService
                             }
                             else
                             {
-                            friendAccount.DepositAmount(amountToTransfer);
-                            Update(friendAccount);
-                            customerBankAccount.WithdrawAmount(amountToTransfer);
-                            Update(customerBankAccount);
+                                friendAccount.DepositAmount(amountToTransfer);
+                                Update(friendAccount);
+                                customerBankAccount.WithdrawAmount(amountToTransfer);
+                                Update(customerBankAccount);
                             }
                         }
                     }
@@ -260,6 +260,14 @@ namespace FastBank.Services.BankAccountService
 
             TransferMoneyToFriendMenu(customerBankAccount);
 
+        }
+
+        public void ConfirmTransactionOrder(TransactionOrder transactionOrder)
+        {
+            transactionOrder?.FromBankAccount?.WithdrawAmount(transactionOrder.Amount);
+            Update(transactionOrder.FromBankAccount);
+            transactionOrder.ToBankAccount.DepositAmount(transactionOrder.Amount);
+            Update(transactionOrder.ToBankAccount);
         }
     }
 }

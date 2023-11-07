@@ -19,7 +19,9 @@ namespace FastBank.Infrastructure.DTOs
             Subject = message.Subject;
             BasedOnMessageId = message.BasedOnMessage?.MessageId;
             MessageStatus = message.MessageStatus;
-            Type = message.MessageType;    
+            Type = message.MessageType;
+            TransactionId = message?.Transaction?.TransactionId;
+            TransactionOrderId = message?.TransactionOrder?.TransactionOrderId;
         }
 
         [Key]

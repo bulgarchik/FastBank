@@ -7,7 +7,7 @@ namespace FastBank.Services
     public class TransactionService : ITransactionService
     {
         private readonly ITransactionRepository _transactionRepo;
-
+        
         public TransactionService()
         {
             _transactionRepo = new TransactionRepository();
@@ -17,12 +17,7 @@ namespace FastBank.Services
         {
             _transactionRepo.AddTransactionOrder(transactionOrder);
         }
-
-        public void ConfirmTransactionOrder(TransactionOrder transactionOrder)
-        {
-
-        }
-
+        
         public Transaction AddTranscation(
             User createdByUser,
             decimal amount,

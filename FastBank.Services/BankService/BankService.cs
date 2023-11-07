@@ -14,7 +14,7 @@ namespace FastBank.Services.BankService
         {
             _repoBank = new BankRepository();
             _transactionService = new TransactionService();
-            _messageService = new MessageService();
+            _messageService = new MessageService(_bankAccountService: null);
         }
 
         public void CapitalReplenishment(User user)

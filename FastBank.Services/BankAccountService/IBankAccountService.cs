@@ -1,6 +1,6 @@
 ﻿using FastBank.Domain;
 
-namespace FastBank.Services.BankAccountService
+namespace FastBank.Services
 {
     public interface IBankAccountService
     {
@@ -17,5 +17,7 @@ namespace FastBank.Services.BankAccountService
         public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends, bool transderOrder = false);
 
         public void TransferMoneyToFriendMenu(BankAccount customerBankAccount);
+
+        public void ConfirmTransactionOrder(TransactionOrder transactionOrder);
     }
 }

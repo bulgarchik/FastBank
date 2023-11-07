@@ -1,7 +1,6 @@
 ﻿using FastBank.Services;
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
-using FastBank.Services.BankAccountService;
 using FastBank.Services.BankService;
 
 namespace FastBank
@@ -14,7 +13,9 @@ namespace FastBank
 
         static readonly MenuService _menuService = new MenuService();
 
-        static readonly MessageService _messageService = new MessageService();
+        static readonly BankAccountService bankAccountService = new BankAccountService();
+
+        static readonly MessageService _messageService = new MessageService(bankAccountService);
 
         static public void ShowMainMenu()
         {
@@ -202,9 +203,8 @@ namespace FastBank
                 return;
             }
 
-            var bankAccountService = new BankAccountService();
             var customerBankAccount = bankAccountService.GetBankAccount((Customer)ActiveUser);
-            IMessageService MessageService = new MessageService();
+            IMessageService MessageService = new MessageService(bankAccountService);
 
             if (customerBankAccount == null || customerBankAccount.Amount == 0)
             {
