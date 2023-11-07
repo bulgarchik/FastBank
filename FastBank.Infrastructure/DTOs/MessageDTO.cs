@@ -18,31 +18,35 @@ namespace FastBank.Infrastructure.DTOs
             Text = message.Text;
             Subject = message.Subject;
             BasedOnMessageId = message.BasedOnMessage?.MessageId;
-            Statuses = message.Status;
-            Type = message.Type;    
+            MessageStatus = message.MessageStatus;
+            Type = message.MessageType;    
         }
 
         [Key]
         public Guid MessageId { get; private set; }
         public Guid SenderId { get; private set; }
         [ForeignKey(nameof(SenderId))]
-        public UserDTO Sender { get; private set; } = null!;
+        public UserDTO Sender { get; private set; }
         public Guid? ReceiverId { get; private set; }
         [ForeignKey(nameof(ReceiverId))]
         public UserDTO? Receiver { get; private set; } = null;
-        public Roles ReceiverRole { get; private set; }
+        public Role ReceiverRole { get; private set; }
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;
         public Guid? BasedOnMessageId { get; private set; }
         [ForeignKey(nameof(BasedOnMessageId))]
         public MessageDTO? BasedOnMessage { get; private set; }
-        public MessageStatuses Statuses { get; private set; }
+        public MessageStatus MessageStatus { get; private set; }
         public MessageType Type { get; private set; }
         public Guid? TransactionId { get; private set; }
         [ForeignKey(nameof(TransactionId))]
         public TransactionDTO? Transaction { get; private set; }
 
-        public Message? ToDomainObj()
+        public void UpdateMessageStatus(MessageStatus messageStatuses)
+        {
+            this.MessageStatus = messageStatuses;
+        }
+        public Message? ToDomainObj(int index)  
         {
             return new Message(
                 MessageId,
@@ -51,10 +55,11 @@ namespace FastBank.Infrastructure.DTOs
                 ReceiverRole,
                 Text,
                 Subject,
-                BasedOnMessage?.ToDomainObj(),
-                Statuses,
+                BasedOnMessage?.ToDomainObj(index),
+                MessageStatus,
                 Type,
-                Transaction?.ToDomainObj());
+                Transaction?.ToDomainObj(),
+                index);
         }
     }
 }

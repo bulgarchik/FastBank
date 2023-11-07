@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public User(Guid id, string name, string email, DateTime birthday, string password, Roles role, bool inactive)
+        public User(Guid id, string name, string email, DateTime birthday, string password, Role role, bool inactive)
         {
             Id = id;
             Name = name;
@@ -18,7 +18,7 @@
         public string Email { get; private set; }
         public DateTime Birthday { get; private set; }
         public string Password { get; private set; }
-        public Roles Role { get; private set; }
+        public Role Role { get; private set; }
         public bool Inactive { get; private set; }
     }
 }

@@ -25,11 +25,11 @@ namespace FastBank.Services
             _userRepo.Add(user);
         }
 
-        public void Add(string name, string email, DateTime birthday, string password, Roles role, bool inactive)
+        public void Add(string name, string email, DateTime birthday, string password, Role role, bool inactive)
         {
             var user = new User(Guid.NewGuid(), name, email, birthday, password, role, inactive);
 
-            if (user.Role == Roles.Customer)
+            if (user.Role == Role.Customer)
             {
                 user = new Customer(user);
             }

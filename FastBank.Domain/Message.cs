@@ -6,13 +6,14 @@
             Guid messageId,
             User sender,
             User? receiver,
-            Roles receiverRole,
+            Role receiverRole,
             string text,
             string subject,
             Message? basedOnMessage,
-            MessageStatuses messageStatuses,
+            MessageStatus messageStatuses,
             MessageType messageType,
-            Transaction? transaction)
+            Transaction? transaction,
+            int index = 0)
         {
             MessageId = messageId;
             Sender = sender;
@@ -21,23 +22,30 @@
             Text = text;
             Subject = subject;
             BasedOnMessage = basedOnMessage;
-            Status = messageStatuses;
-            Type = messageType;
+            MessageStatus = messageStatuses;
+            MessageType = messageType;
             Transaction = transaction;
+            Index = index;
         }
         public Guid MessageId { get; private set; }
         public User Sender { get; private set; }
         public User? Receiver { get; private set; }
-        public Roles ReceiverRole { get; private set; }
+        public Role ReceiverRole { get; private set; }
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;
         public Message? BasedOnMessage { get; private set; }
-        public MessageStatuses Status { get; private set; }
-        public MessageType Type { get; private set; }
+        public MessageStatus MessageStatus { get; private set; }
+        public MessageType MessageType { get; private set; }
         public Transaction? Transaction { get; private set; }
+        public int Index { get; private set; }
+
+        public void UpdateMessageStatus(MessageStatus messageStatuses)
+        {
+            this.MessageStatus = messageStatuses;
+        }
     }
 
-    public enum MessageStatuses
+    public enum MessageStatus
     {
         Sent,
         Delivered,

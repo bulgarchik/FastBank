@@ -27,7 +27,7 @@ namespace FastBank.Services.BankAccountService
         {
             var bankAccount = GetBankAccount(customer);
 
-            if (bankAccount == null && customer.Role == Roles.Customer)
+            if (bankAccount == null && customer.Role == Role.Customer)
             {
                 bankAccount = new BankAccount(Guid.NewGuid(), customer, amount);
                 bankAccountRepository.Add(bankAccount);
