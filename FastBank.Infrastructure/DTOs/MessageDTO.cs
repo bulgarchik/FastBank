@@ -55,7 +55,7 @@ namespace FastBank.Infrastructure.DTOs
         {
             return new Message(
                 MessageId,
-                Sender.ToDomainObj(),
+                Sender?.ToDomainObj(),
                 Receiver?.ToDomainObj(),
                 ReceiverRole,
                 Text,
