@@ -1,11 +1,6 @@
 ﻿using FastBank.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FastBank.Services.MessageService
+namespace FastBank.Services
 {
     public interface IMessageService
     {
@@ -20,7 +15,8 @@ namespace FastBank.Services.MessageService
             User? receiver,
             Role receiverRole,
             Message? basedOnMessage,
-            Transaction transaction);
+            Transaction? transaction = null,
+            TransactionOrder? transactionOrder = null);
 
         public Message InputMessage(User user);
 

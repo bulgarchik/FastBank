@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FastBank.Domain.RepositoryInterfaces
+﻿namespace FastBank.Domain.RepositoryInterfaces
 {
     public interface ITransactionRepository
     {
         public void AddTransaction(Transaction transaction);
+
+        public void AddTransactionOrder(TransactionOrder transactionOrder);
     }
 }

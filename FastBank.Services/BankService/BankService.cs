@@ -1,8 +1,6 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
-using FastBank.Services.MessageService;
-using FastBank.Services.TransactionService;
 
 namespace FastBank.Services.BankService
 {
@@ -15,8 +13,8 @@ namespace FastBank.Services.BankService
         public BankService()
         {
             _repoBank = new BankRepository();
-            _transactionService = new TransactionService.TransactionService();
-            _messageService = new MessageService.MessageService();
+            _transactionService = new TransactionService();
+            _messageService = new MessageService(_bankAccountService: null);
         }
 
         public void CapitalReplenishment(User user)
@@ -85,7 +83,7 @@ namespace FastBank.Services.BankService
                                            null,
                                            Role.Manager,
                                            null,
-                                           transaction);
+                                           transaction,null);
             }
             return;
         }

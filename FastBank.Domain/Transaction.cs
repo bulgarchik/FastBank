@@ -37,4 +37,5 @@ public enum TransactionType
 {
     BankTransaction,
     BankAccountTransaction,
+    InternalTransfer,
 }
