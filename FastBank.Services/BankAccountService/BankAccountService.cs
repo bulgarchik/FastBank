@@ -253,13 +253,10 @@ namespace FastBank.Services
                         TransferMoneyToFriend(customerBankAccount, friends, transferOrder: true);
                         break;
                     }
-
-
                 case 0: return;
             }
 
             TransferMoneyToFriendMenu(customerBankAccount);
-
         }
 
         public void ConfirmTransactionOrder(TransactionOrder transactionOrder)
