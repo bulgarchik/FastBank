@@ -14,7 +14,7 @@ namespace FastBank.Services
 
         public void WithdrawAmount(BankAccount customerBankAccount);
 
-        public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends, bool transderOrder = false);
+        public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends, bool transferOrder = false);
 
         public void TransferMoneyToFriendMenu(BankAccount customerBankAccount);
 
