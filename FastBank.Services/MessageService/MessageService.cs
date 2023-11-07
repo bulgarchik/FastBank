@@ -1,10 +1,8 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
-using FastBank.Infrastructure.DTOs;
 using FastBank.Infrastructure.Repository;
-using System.Data;
 
-namespace FastBank.Services.MessageService
+namespace FastBank.Services
 {
     public class MessageService : IMessageService
     {
@@ -47,9 +45,10 @@ namespace FastBank.Services.MessageService
             User? receiver,
             Role receiverRole,
             Message? basedOnMessage,
-            Transaction? transaction)
+            Transaction? transaction = null,
+            TransactionOrder? transactionOrder = null)
         {
-            Message message = new Message(Guid.NewGuid(), sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction);
+            Message message = new Message(Guid.NewGuid(), sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
             _messageRepo.Add(message);
         }
 
@@ -64,7 +63,7 @@ namespace FastBank.Services.MessageService
             var text = Console.ReadLine() ?? string.Empty;
 
             var message = new Message(Guid.NewGuid(), user, null, Role.CustomerService,
-                                      text, subject, null, MessageStatus.Sent, MessageType.Inquery, null);
+                                      text, subject, null, MessageStatus.Sent, MessageType.Inquery);
 
             _messageRepo.Add(message);
             return message;
@@ -85,8 +84,7 @@ namespace FastBank.Services.MessageService
                                         $"Re: {message.Subject}",
                                         message, 
                                         MessageStatus.Sent, 
-                                        MessageType.Inquery, 
-                                        null);
+                                        MessageType.Inquery);
 
             _messageRepo.Add(replayMessage);
             _messageRepo.UpdateStatus(message, MessageStatus.Replied);

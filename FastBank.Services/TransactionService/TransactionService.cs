@@ -2,7 +2,7 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 
-namespace FastBank.Services.TransactionService
+namespace FastBank.Services
 {
     public class TransactionService : ITransactionService
     {
@@ -11,6 +11,11 @@ namespace FastBank.Services.TransactionService
         public TransactionService()
         {
             _transactionRepo = new TransactionRepository();
+        }
+
+        public void AddTransactionOrder(TransactionOrder transactionOrder)
+        {
+            _transactionRepo.AddTransactionOrder(transactionOrder);
         }
 
         public Transaction AddTranscation(

@@ -64,7 +64,16 @@ namespace FastBank.Infrastructure.Context
                 .HasOne(t => t.BankAccount)
                 .WithMany()
                 .HasForeignKey(t => t.BankAccountId);
-                       
+
+            modelBuilder.Entity<TransactionOrderDto>()
+                .HasOne(to => to.Bank) .WithMany().HasForeignKey(to => to.BankId);
+            modelBuilder.Entity<TransactionOrderDto>()
+                .HasOne(to => to.ToBankAccount).WithMany().HasForeignKey(to => to.ToBankAccountId);
+            modelBuilder.Entity<TransactionOrderDto>()
+                .HasOne(to => to.FromBankAccount).WithMany().HasForeignKey(to => to.FromBankAccountId);
+            modelBuilder.Entity<TransactionOrderDto>()
+                .HasOne(to => to.OrderedByUser).WithMany().HasForeignKey(to => to.OrderedByUserId);
+
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Role.Manager, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Role.Accountant, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Role.Banker, false));
@@ -80,6 +89,5 @@ namespace FastBank.Infrastructure.Context
         public virtual DbSet<UserFriendDTO> FriendsRelations { get; set;}
         public virtual DbSet<TransactionDTO> Transactions { get; set; }
         public virtual DbSet<TransactionOrderDto> TransactionsOrder { get; set; }
-
     }
 }

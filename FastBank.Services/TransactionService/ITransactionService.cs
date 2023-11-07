@@ -1,11 +1,6 @@
 ﻿using FastBank.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FastBank.Services.TransactionService
+namespace FastBank.Services
 {
     public interface ITransactionService
     {
@@ -15,5 +10,7 @@ namespace FastBank.Services.TransactionService
             Bank? bank,
             BankAccount? bankAccount,
             TransactionType transactionType);
+
+        public void AddTransactionOrder(TransactionOrder transactionOrder);
     }
 }

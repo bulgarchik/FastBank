@@ -1,10 +1,7 @@
 ﻿using FastBank.Services;
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
-using System.Text.RegularExpressions;
 using FastBank.Services.BankAccountService;
-using FastBank.Services.MessageService;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using FastBank.Services.BankService;
 
 namespace FastBank
