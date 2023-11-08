@@ -226,6 +226,8 @@ namespace FastBank.Services
                 }
             }
 
+            Console.WriteLine($"\nYou bank amount: {customerBankAccount.Amount:0.00} ");
+
             var menuOptions = $"\nPlease choose your action: " +
                              $"\n1:Add friend. 2:Remove friend. 3:Transfer money to friend 4:Request money transfer.  0:For exit";
             int action = _menuService.CommandRead(5, menuOptions);
