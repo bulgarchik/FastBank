@@ -7,7 +7,7 @@ namespace FastBank.Services
         public List<Message?> GetMessages(User user);
 
         public void AddMessage(
-            string Subject,
+            string subject,
             string text,
             MessageStatus status,
             MessageType type,

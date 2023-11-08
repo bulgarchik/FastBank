@@ -26,7 +26,7 @@ namespace FastBank.Services
             TransactionType transactionType)
         {
             var transaction = new Transaction(
-                                    new Guid(),
+                                    Guid.NewGuid(),
                                     DateTime.UtcNow,
                                     createdByUser,
                                     amount,

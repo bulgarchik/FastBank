@@ -75,15 +75,16 @@ namespace FastBank.Services.BankService
                                   $"\nReplenishment amount: {capitalAmountToReplenish}" +
                                   $"\nBalance after transaction: {bank.CapitalAmount + capitalAmountToReplenish}";
 
-                _messageService.AddMessage(subjectMessage,
-                                           textMessage,
-                                           MessageStatus.Sent,
-                                           MessageType.CapitalReplenishment,
-                                           user,
-                                           null,
-                                           Role.Manager,
-                                           null,
-                                           transaction,null);
+                _messageService.AddMessage(subject: subjectMessage,
+                                           text: textMessage,
+                                           status: MessageStatus.Sent,
+                                           type: MessageType.CapitalReplenishment,
+                                           sender: user,
+                                           receiver: null,
+                                           receiverRole: Role.Manager,
+                                           basedOnMessage: null,
+                                           transaction: transaction,
+                                           transactionOrder: null);
             }
             return;
         }
