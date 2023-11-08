@@ -17,5 +17,10 @@ namespace FastBank.Infrastructure.Repository
         {
             _repository.Add<TransactionDTO>(new TransactionDTO(transaction));
         }
+
+        public void AddTransactionOrder(TransactionOrder transactionOrder)
+        {
+            _repository.Add<TransactionOrderDto>(new TransactionOrderDto(transactionOrder));
+        }
     }
 }

@@ -12,7 +12,8 @@
             Message? basedOnMessage,
             MessageStatus messageStatuses,
             MessageType messageType,
-            Transaction? transaction,
+            Transaction? transaction = null,
+            TransactionOrder? transactionOrder = null,
             int index = 0)
         {
             MessageId = messageId;
@@ -25,6 +26,7 @@
             MessageStatus = messageStatuses;
             MessageType = messageType;
             Transaction = transaction;
+            TransactionOrder = transactionOrder;
             Index = index;
         }
         public Guid MessageId { get; private set; }
@@ -37,6 +39,7 @@
         public MessageStatus MessageStatus { get; private set; }
         public MessageType MessageType { get; private set; }
         public Transaction? Transaction { get; private set; }
+        public TransactionOrder? TransactionOrder { get; private set; }
         public int Index { get; private set; }
 
         public void UpdateMessageStatus(MessageStatus messageStatuses)
@@ -56,6 +59,8 @@
     public enum MessageType
     {
         Inquery,
+        InqueryForOrderTransfer,
         CapitalReplenishment
+
     }
 }
