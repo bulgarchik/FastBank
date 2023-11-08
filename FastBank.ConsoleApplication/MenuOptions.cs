@@ -47,7 +47,10 @@ namespace FastBank
                             }
                         case 0:
                             {
-                                inProgress = false;
+                                Console.WriteLine("Do you want to exit from the system? Press Y to confirm or any key to cancel...");
+                                var confirmKey = Console.ReadKey();
+                                if (confirmKey.KeyChar == 'Y')
+                                    inProgress = false;
                                 break;
                             }
                     }
@@ -58,6 +61,11 @@ namespace FastBank
                     RenderMenuByRole();
                 }
             }
+
+            Console.Clear();
+            Console.WriteLine("You successfully exited the system! Pres any key to close programm...");
+            Console.ReadKey();
+            Environment.Exit(0);
         }
 
         static public void Login()
