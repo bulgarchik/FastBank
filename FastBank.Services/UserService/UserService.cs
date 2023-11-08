@@ -145,7 +145,7 @@ namespace FastBank.Services
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                     passwordtries++;
                     Console.WriteLine("Please input password:");
-
+                    Console.Write("Password:");
                     password = menuServie.PasswordStaredInput() ?? string.Empty;
                 }
             }
