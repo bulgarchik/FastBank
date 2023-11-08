@@ -73,7 +73,7 @@ namespace FastBank.Services
 
         public Message ReplyToMessage(User user, Message message)
         {
-            Console.WriteLine("Please intput replay to text message");
+            Console.WriteLine("Please enter reply to message:");
             Console.Write("Reply text: ");
             var text = Console.ReadLine() ?? string.Empty;
 
