@@ -183,7 +183,7 @@ namespace FastBank.Services
                                                            text: $"Please execute transfer from {transactionOrder?.FromBankAccount?.Customer.Name}" +
                                                            $"(email: {transactionOrder?.FromBankAccount?.Customer.Email}) to " +
                                                            $"{transactionOrder?.ToBankAccount?.Customer.Name}" +
-                                                           $"(email: {transactionOrder?.FromBankAccount?.Customer.Email}) for " +
+                                                           $"(email: {transactionOrder?.ToBankAccount?.Customer.Email}) for " +
                                                            $"amount {transactionOrder?.Amount}",
                                                            MessageStatus.Sent,
                                                            MessageType.InqueryForOrderTransfer,
