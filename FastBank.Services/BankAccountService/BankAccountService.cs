@@ -228,8 +228,8 @@ namespace FastBank.Services
 
             Console.WriteLine($"\nYou bank amount: {customerBankAccount.Amount:0.00} ");
 
-            var menuOptions = $"\nPlease choose your action: " +
-                             $"\n1:Add friend. 2:Remove friend. 3:Transfer money to friend 4:Request money transfer.  0:For exit";
+            var menuOptions = $"\nPlease choose your action: \n" +
+                             $"\n 1: Add friend \n 2: Remove friend \n 3: Transfer money to friend \n 4: Request money transfer  \n 0: Exit";
             int action = _menuService.CommandRead(5, menuOptions);
 
             switch (action)

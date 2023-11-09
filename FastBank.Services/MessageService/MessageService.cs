@@ -104,8 +104,8 @@ namespace FastBank.Services
             }
             ShowMessages(messages);
 
-            var menuOptions = $"\nPlease choose your action: " +
-                              $"\n1: Open message;  0: for exit";
+            var menuOptions = $"\nPlease choose your action: \n" +
+                              $"\n 1: Open message  \n 0: Exit";
             int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
@@ -173,9 +173,9 @@ namespace FastBank.Services
 
             ShowMessageDetails(user, message);
 
-            var menuOptions = $"\nPlease choose your action: " +
-                             $"\n1: Reply to message." +
-                             $"{(message.TransactionOrder != null ? " 2: Confirm transfer order. " : string.Empty)} 0: for exit.";
+            var menuOptions = $"\nPlease choose your action: \n" +
+                             $"\n 1: Reply to message" +
+                             $"{(message.TransactionOrder != null ? " \n 2: Confirm transfer order " : string.Empty)} \n 0: Exit";
             int action = _menuService.CommandRead((message.TransactionOrder != null ? 3 : 2), menuOptions);
 
             switch (action)

@@ -110,7 +110,7 @@ namespace FastBank.Infrastructure.Context
                     new Domain.Message(
                             Guid.NewGuid(),
                             testCustomer.ToDomainObj(),
-            null,
+                            null,
                             Role.CustomerService,
                             "First Message Subject",
                             "First message text to Customer Service",

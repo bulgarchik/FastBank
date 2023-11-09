@@ -54,6 +54,7 @@ namespace FastBank.Services
             }
             var regPattern = new Regex($"^[{sb?.ToString()}]{{1}}$");
             Console.WriteLine(menuOptions);
+            Console.Write("\nAction: ");
             string? inputCommand = Console.ReadLine();
             while (!regPattern.IsMatch(inputCommand ?? string.Empty))
             {
