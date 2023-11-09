@@ -222,14 +222,12 @@ namespace FastBank.Services
 
             foreach (var message in messages)
             {
-                Console.WriteLine(new string('*', Console.WindowWidth));
+                Console.WriteLine(new string('-', Console.WindowWidth));
                 Console.WriteLine($"Message ID: {message?.Index}; " +
                                   $"Status: {message?.MessageStatus}; " +
                                   $"Subject: {message?.Subject}; " +
                                   $"{(message?.BasedOnMessage != null ? $"Based on message ID:{message?.BasedOnMessage.Index}" : string.Empty)}");
-                Console.WriteLine($"Text: {message?.Text}");
-                Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine(new string(' ', Console.WindowWidth));
+                Console.WriteLine(new string('-', Console.WindowWidth));
             }
         }
 
