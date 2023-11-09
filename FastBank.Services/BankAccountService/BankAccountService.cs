@@ -222,7 +222,7 @@ namespace FastBank.Services
                 foreach (var friend in friendsList)
                 {
                     friends.Add(++friendIndex, friend);
-                    Console.WriteLine($"{friendIndex}. Name: {friend.Name}; email: {friend.Email}");
+                    Console.WriteLine($"{friendIndex}. Name: {friend.Name}; Email: {friend.Email}");
                 }
             }
 
