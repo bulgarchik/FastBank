@@ -60,8 +60,9 @@ namespace FastBank.Services
             {
                 Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
                 var inputKey = Console.ReadKey();
-                MoveToPreviousLine(inputKey, menuOptions.Split("\n").Length + 3);
+                MoveToPreviousLine(inputKey, menuOptions.Split("\n").Length + 4);
                 Console.WriteLine(menuOptions);
+                Console.Write("\nAction: ");
                 inputCommand = Console.ReadLine();
 
             }
