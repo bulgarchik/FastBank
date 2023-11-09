@@ -72,6 +72,8 @@ namespace FastBank.Services
         public void Update(BankAccount bankAccount)
         {
             bankAccountRepository.Update(bankAccount);
+
+            _menuService.OperationCompleteScreen();
         }
 
         public void WithdrawAmount(BankAccount customerBankAccount)
@@ -112,7 +114,7 @@ namespace FastBank.Services
         public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends, bool transferOrder = false)
         {
             var inquiryMsg = $"Please enter your friend's email for the money transfer{(transferOrder ? " order" : string.Empty)}. (type \"quit\" for exit):";
-            var emailTypeToInput = "Friend email:";
+            var emailTypeToInput = "Friend email: ";
             var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
 
             if (emailFriend == "quit")
@@ -202,6 +204,7 @@ namespace FastBank.Services
                                 Update(customerBankAccount);
                             }
                         }
+                        _menuService.OperationCompleteScreen();
                     }
                 }
             }

@@ -9,12 +9,14 @@ namespace FastBank.Services.BankService
         private readonly IBankRepository _repoBank;
         private readonly ITransactionService _transactionService;
         private readonly IMessageService _messageService;
+        private readonly IMenuService _menuService;
 
         public BankService()
         {
             _repoBank = new BankRepository();
             _transactionService = new TransactionService();
             _messageService = new MessageService(_bankAccountService: null);
+            _menuService = new MenuService();
         }
 
         public void CapitalReplenishment(User user)
@@ -41,7 +43,7 @@ namespace FastBank.Services.BankService
                 Console.ReadKey();
                 return;
             }
-            Console.WriteLine($"Current capital of Fast Bank:{bank?.CapitalAmount}");
+            Console.WriteLine($"Current capital of Fast Bank :{bank?.CapitalAmount}");
 
             decimal capitalAmountToReplenish;
             do
@@ -85,6 +87,8 @@ namespace FastBank.Services.BankService
                                            basedOnMessage: null,
                                            transaction: transaction,
                                            transactionOrder: null);
+
+                _menuService.OperationCompleteScreen();
             }
             return;
         }

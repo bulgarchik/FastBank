@@ -123,7 +123,7 @@ namespace FastBank
                 return;
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
-            Console.Write("Birthday:");
+            Console.Write("Birthday: ");
             string birthdayInput = Console.ReadLine() ?? string.Empty;
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
@@ -131,12 +131,12 @@ namespace FastBank
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
-                Console.Write("Birthday:");
+                Console.Write("Birthday: ");
                 birthdayInput = Console.ReadLine() ?? string.Empty;
             }
 
             Console.WriteLine("Please input you password:");
-            Console.Write("Password:");
+            Console.Write("Password: ");
             var password = _menuService.PasswordStaredInput();
 
             userService.Add(name, email, birthday, password, role, false);
@@ -201,6 +201,7 @@ namespace FastBank
                 default:
                     break;
             }
+
             Console.Clear();
         }
 
@@ -274,6 +275,7 @@ namespace FastBank
                         }
                 }
             }
+
             Console.Clear();
         }
 
@@ -311,6 +313,7 @@ namespace FastBank
                         break;
                     }
             }
+
             Console.Clear();
         }
     }

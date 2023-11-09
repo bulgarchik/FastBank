@@ -65,6 +65,7 @@ namespace FastBank.Services
                 inputCommand = Console.ReadLine();
 
             }
+            Console.WriteLine();
             return Convert.ToInt32(inputCommand);
         }
 
@@ -96,7 +97,7 @@ namespace FastBank.Services
             return validationErrors;
         }
 
-        public string InputEmail(string inquiryMsg = "Please input you email:", string emailTypeToInput = "Email:")
+        public string InputEmail(string inquiryMsg = "Please input you email: ", string emailTypeToInput = "Email: ")
         {
             Console.WriteLine(inquiryMsg);
             Console.Write(emailTypeToInput);
@@ -112,6 +113,12 @@ namespace FastBank.Services
                 return email;
             }
             return email ?? string.Empty;
+        }
+
+        public void OperationCompleteScreen()
+        {
+            Console.WriteLine("\nOperation complete successful! Press any key to continue...");
+            Console.ReadLine();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace FastBank.Services
             {
                 messages = _messageRepo.GetCustomerMessages(user);
             }
-            
+
             return messages;
         }
 
@@ -68,6 +68,9 @@ namespace FastBank.Services
                                       text, subject, null, MessageStatus.Sent, MessageType.Inquery);
 
             _messageRepo.Add(message);
+
+            _menuService.OperationCompleteScreen();
+
             return message;
         }
 
@@ -90,6 +93,8 @@ namespace FastBank.Services
 
             _messageRepo.Add(replayMessage);
             _messageRepo.UpdateStatus(message, MessageStatus.Replied);
+
+            _menuService.OperationCompleteScreen();
 
             return replayMessage;
         }
@@ -144,7 +149,7 @@ namespace FastBank.Services
             do
             {
                 Console.WriteLine($"To open please input message ID from the list (type 'q' for exit):");
-                Console.Write("Message ID:");
+                Console.Write("Message ID: ");
                 var inputMsgId = Console.ReadLine();
                 if (inputMsgId == "q")
                     return null;
@@ -198,6 +203,8 @@ namespace FastBank.Services
                             {
                                 _bankAccountService?.ConfirmTransactionOrder(message.TransactionOrder);
                                 message.UpdateMessageStatus(MessageStatus.Accepted);
+
+                                _menuService.OperationCompleteScreen();
                             }
                         }
                         break;
