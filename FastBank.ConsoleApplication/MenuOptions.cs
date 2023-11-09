@@ -292,7 +292,7 @@ namespace FastBank
                                     .Count();
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}" +
+                                $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
                                 $"\nPlease choose your action: \n" +
                                 $"\n1: Manage messages \n0: Exit";
             int action = _menuService.CommandRead(2, menuOptions);
