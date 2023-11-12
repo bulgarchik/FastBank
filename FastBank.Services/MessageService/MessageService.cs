@@ -50,13 +50,13 @@ namespace FastBank.Services
                     m.MessageLevel = (baseMsg?.MessageLevel ?? 0) + 1;
                 }
             }
-            
+
             messages = messages.OrderBy(m => m.MessageOrderId).ThenBy(m => m.CreatedOn).ToList();
 
             var indexedMessages = messages.Select((m, c) =>
                                                     {
                                                         m.Index = (c + 1);
-                                                        return m??null;
+                                                        return m ?? null;
                                                     }).ToList();
             return indexedMessages;
         }
@@ -73,7 +73,7 @@ namespace FastBank.Services
             Transaction? transaction = null,
             TransactionOrder? transactionOrder = null)
         {
-            Message message = new Message(Guid.NewGuid(), DateTime.UtcNow ,sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
+            Message message = new Message(Guid.NewGuid(), DateTime.UtcNow, sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
             _messageRepo.Add(message);
         }
 
@@ -255,7 +255,9 @@ namespace FastBank.Services
 
                 Console.WriteLine($"{heirarchyTab}Message ID: {message?.Index}; " +
                                   $"Status: {message?.MessageStatus}; " +
-                                  $"Subject: {message?.Subject}; "
+                                  $"Subject: {message?.Subject}; " +
+                                  $"From: {message?.Sender?.Name}; " +
+                                  $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; "
                                   );
                 Console.WriteLine(new string('-', Console.WindowWidth));
             }
@@ -263,13 +265,20 @@ namespace FastBank.Services
 
         public void ShowMessageDetails(User user, Message message)
         {
-            if (message.MessageStatus == MessageStatus.Sent && message.Sender != null && message.Sender != user)
+            if (message.MessageStatus == MessageStatus.Sent
+                && message.Sender != null
+                && message.Sender.Id != user.Id
+                && message.ReceiverRole == user.Role)
             {
                 _messageRepo.UpdateStatus(message, MessageStatus.Delivered);
             }
 
             Console.WriteLine(new string('*', Console.WindowWidth));
-            Console.WriteLine($"Status: {message?.MessageStatus};\nSubject: {message?.Subject};");
+            Console.WriteLine($"Status: {message?.MessageStatus};");
+            Console.WriteLine($"From: {message?.Sender?.Name}; " +
+                              $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; ");
+            Console.WriteLine($"Subject: {message?.Subject};");
+            Console.WriteLine(new string('-', Console.WindowWidth));
             Console.WriteLine($"Text: {message?.Text}");
             Console.WriteLine(new string('*', Console.WindowWidth));
             Console.WriteLine(new string(' ', Console.WindowWidth));
