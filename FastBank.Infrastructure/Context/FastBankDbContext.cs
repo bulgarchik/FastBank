@@ -105,33 +105,92 @@ namespace FastBank.Infrastructure.Context
             modelBuilder.Entity<UserDTO>().HasData(testCustomer);
             modelBuilder.Entity<UserDTO>().HasData(customerFriend);
             modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
-            modelBuilder.Entity<MessageDTO>().HasData(
-                new MessageDTO(
+            var msg1 = new MessageDTO(
                     new Domain.Message(
                             Guid.NewGuid(),
+                            DateTime.UtcNow.AddHours(-6),
                             testCustomer.ToDomainObj(),
                             null,
                             Role.CustomerService,
-                            "First Message Subject",
                             "First message text to Customer Service",
+                            "lv 0 First Message Subject",
                             null,
                             Domain.MessageStatus.Sent,
                             Domain.MessageType.Inquery, null)
-                    ));
+                    );
 
-            modelBuilder.Entity<MessageDTO>().HasData(
-                new MessageDTO(
+            var msg2 = new MessageDTO(
                     new Domain.Message(
                             Guid.NewGuid(),
+                            DateTime.UtcNow.AddHours(-5),
                             testCustomer.ToDomainObj(),
                             null,
                             Role.CustomerService,
-                            "Second Message Subject",
                             "Second message text to Customer Service",
+                            "lv 0 Second Message Subject",
                             null,
                             Domain.MessageStatus.Sent,
                             Domain.MessageType.Inquery, null)
-                    ));
+                    );
+
+            var msg3 = new MessageDTO(
+                   new Domain.Message(
+                           Guid.NewGuid(),
+                           DateTime.UtcNow.AddHours(-4),
+                           testCustomer.ToDomainObj(),
+                           null,
+                           Role.CustomerService,
+                           "Reply to first message text to Customer Service",
+                           "lv 1 msg 3 Reply to first Message Subject",
+                           msg1.ToDomainObj(),
+                           Domain.MessageStatus.Sent,
+                           Domain.MessageType.Inquery, null));
+
+            var msg4 = new MessageDTO(
+                 new Domain.Message(
+                         Guid.NewGuid(),
+                         DateTime.UtcNow.AddHours(-3),
+                         testCustomer.ToDomainObj(),
+                         null,
+                         Role.CustomerService,
+                         "4 message text to Customer Service",
+                         "lv 0 4 Message Subject",
+                         null,
+                         Domain.MessageStatus.Sent,
+                         Domain.MessageType.Inquery, null));
+
+            var msg5 = new MessageDTO(
+                 new Domain.Message(
+                         Guid.NewGuid(),
+                         DateTime.UtcNow.AddHours(-2),
+                         testCustomer.ToDomainObj(),
+                         null,
+                         Role.CustomerService,
+                         "5 message text to Customer Service",
+                         "lv 2 5 Message Subject",
+                         msg3.ToDomainObj(),
+                         Domain.MessageStatus.Sent,
+                         Domain.MessageType.Inquery, null));
+
+            var msg6 = new MessageDTO(
+                 new Domain.Message(
+                         Guid.NewGuid(),
+                         DateTime.UtcNow.AddHours(-1),
+                         testCustomer.ToDomainObj(),
+                         null,
+                         Role.CustomerService,
+                         "6 message text to Customer Service",
+                         "lv 1 6 Message Subject",
+                         msg4.ToDomainObj(),
+                         Domain.MessageStatus.Sent,
+                         Domain.MessageType.Inquery, null));
+
+            modelBuilder.Entity<MessageDTO>().HasData(msg1);
+            modelBuilder.Entity<MessageDTO>().HasData(msg2);
+            modelBuilder.Entity<MessageDTO>().HasData(msg3);
+            modelBuilder.Entity<MessageDTO>().HasData(msg4);
+            modelBuilder.Entity<MessageDTO>().HasData(msg5);
+            modelBuilder.Entity<MessageDTO>().HasData(msg6);
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }

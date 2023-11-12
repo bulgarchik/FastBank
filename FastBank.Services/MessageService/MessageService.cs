@@ -1,6 +1,7 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using System.ComponentModel.Design;
 
 namespace FastBank.Services
 {
@@ -35,7 +36,29 @@ namespace FastBank.Services
                 messages = _messageRepo.GetCustomerMessages(user);
             }
 
-            return messages;
+            foreach (var m in messages)
+            {
+                if (m.BasedOnMessage == null)
+                {
+                    m.MessageOrderId = m.MessageId.ToString() ?? string.Empty;
+                    m.MessageLevel = 0;
+                }
+                else
+                {
+                    var baseMsg = messages.FirstOrDefault(bm => bm.MessageId == m.BasedOnMessage.MessageId);
+                    m.MessageOrderId = string.Empty + baseMsg?.MessageOrderId.ToString() + m.MessageId.ToString();
+                    m.MessageLevel = (baseMsg?.MessageLevel ?? 0) + 1;
+                }
+            }
+            
+            messages = messages.OrderBy(m => m.MessageOrderId).ThenBy(m => m.CreatedOn).ToList();
+
+            var indexedMessages = messages.Select((m, c) =>
+                                                    {
+                                                        m.Index = (c + 1);
+                                                        return m??null;
+                                                    }).ToList();
+            return indexedMessages;
         }
 
         public void AddMessage(
@@ -50,7 +73,7 @@ namespace FastBank.Services
             Transaction? transaction = null,
             TransactionOrder? transactionOrder = null)
         {
-            Message message = new Message(Guid.NewGuid(), sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
+            Message message = new Message(Guid.NewGuid(), DateTime.UtcNow ,sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
             _messageRepo.Add(message);
         }
 
@@ -64,7 +87,7 @@ namespace FastBank.Services
             Console.Write("Text: ");
             var text = Console.ReadLine() ?? string.Empty;
 
-            var message = new Message(Guid.NewGuid(), user, null, Role.CustomerService,
+            var message = new Message(Guid.NewGuid(), DateTime.UtcNow, user, null, Role.CustomerService,
                                       text, subject, null, MessageStatus.Sent, MessageType.Inquery);
 
             _messageRepo.Add(message);
@@ -82,6 +105,7 @@ namespace FastBank.Services
 
             var replayMessage = new Message(
                                         Guid.NewGuid(),
+                                        DateTime.UtcNow,
                                         user,
                                         message.Sender,
                                         Role.Customer,
@@ -222,11 +246,17 @@ namespace FastBank.Services
 
             foreach (var message in messages)
             {
-                Console.WriteLine(new string('-', Console.WindowWidth));
-                Console.WriteLine($"Message ID: {message?.Index}; " +
+                if (message?.BasedOnMessage == null)
+                {
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                }
+
+                var heirarchyTab = string.Concat(Enumerable.Repeat("\t", message.MessageLevel));
+
+                Console.WriteLine($"{heirarchyTab}Message ID: {message?.Index}; " +
                                   $"Status: {message?.MessageStatus}; " +
-                                  $"Subject: {message?.Subject}; " +
-                                  $"{(message?.BasedOnMessage != null ? $"Based on message ID:{message?.BasedOnMessage.Index}" : string.Empty)}");
+                                  $"Subject: {message?.Subject}; "
+                                  );
                 Console.WriteLine(new string('-', Console.WindowWidth));
             }
         }
