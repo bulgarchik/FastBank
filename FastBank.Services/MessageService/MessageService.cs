@@ -2,6 +2,7 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 using System.ComponentModel.Design;
+using System.Linq;
 
 namespace FastBank.Services
 {
@@ -131,7 +132,7 @@ namespace FastBank.Services
             {
                 messages = GetMessages(user);
             }
-            ShowMessages(messages);
+            ShowMessages(messages, user, false);
 
             var menuOptions = $"\nPlease choose your action: \n" +
                               $"\n 1: Open message  \n 0: Exit";
@@ -147,7 +148,7 @@ namespace FastBank.Services
                             var msg = SelectMessageByInputId(messages);
                             if (msg != null)
                             {
-                                ShowMessageMenu(user, msg);
+                                ShowMessageMenu(user, msg, messages);
                             }
                         }
                         else
@@ -190,7 +191,7 @@ namespace FastBank.Services
             return messages.FirstOrDefault(m => m?.Index == msgId);
         }
 
-        public void ShowMessageMenu(User user, Message message)
+        public void ShowMessageMenu(User user, Message message, List<Message> messages)
         {
             if (message == null)
             {
@@ -200,7 +201,7 @@ namespace FastBank.Services
             Console.Clear();
             _menuService.ShowLogo();
 
-            ShowMessageDetails(user, message);
+            ShowMessageDetails(user, message, messages);
 
             var menuOptions = $"\nPlease choose your action: \n" +
                              $"\n 1: Reply to message" +
@@ -236,7 +237,7 @@ namespace FastBank.Services
             }
         }
 
-        public void ShowMessages(List<Message?> messages)
+        public void ShowMessages(List<Message?> messages, User user, bool heirarchy)
         {
             if (messages.Count > 0)
             {
@@ -250,20 +251,29 @@ namespace FastBank.Services
                 {
                     Console.WriteLine(new string('-', Console.WindowWidth));
                 }
+                else
+                {
+                    if (!heirarchy)
+                        continue;
+                }
 
-                var heirarchyTab = string.Concat(Enumerable.Repeat("\t", message.MessageLevel));
+                var hierarchyTab = string.Concat(Enumerable.Repeat("\t", message.MessageLevel));
 
-                Console.WriteLine($"{heirarchyTab}Message ID: {message?.Index}; " +
+                var countInHierarchy = messages.Where(m => m.MessageOrderId.Contains(message.MessageId.ToString()) && (m.MessageId != message.MessageId)).Count();
+                var countOfNewInHierarchy = messages.Where(m => m.MessageOrderId.Contains(message.MessageId.ToString()) && (m.MessageId != message.MessageId) && (m.ReceiverRole == user.Role || m.Receiver == user)).Count();
+
+                Console.WriteLine($"{hierarchyTab}Message ID: {message?.Index}; " +
                                   $"Status: {message?.MessageStatus}; " +
                                   $"Subject: {message?.Subject}; " +
                                   $"From: {message?.Sender?.Name}; " +
-                                  $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; "
+                                  $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; " +
+                                  $"new messages {countOfNewInHierarchy} from {countInHierarchy} in hierarchy "
                                   );
                 Console.WriteLine(new string('-', Console.WindowWidth));
             }
         }
 
-        public void ShowMessageDetails(User user, Message message)
+        public void ShowMessageDetails(User user, Message message, List<Message> messages)
         {
             if (message.MessageStatus == MessageStatus.Sent
                 && message.Sender != null
@@ -281,6 +291,29 @@ namespace FastBank.Services
             Console.WriteLine(new string('-', Console.WindowWidth));
             Console.WriteLine($"Text: {message?.Text}");
             Console.WriteLine(new string('*', Console.WindowWidth));
+            var showRelatedMessage = true;
+            foreach (var messageInHierarchy in messages)
+            {
+                if (messageInHierarchy.MessageOrderId.Contains(message.MessageId.ToString()) && messageInHierarchy.MessageId != message.MessageId)
+                {
+                    if (showRelatedMessage)
+                    {
+                        Console.WriteLine(new string(' ', Console.WindowWidth));
+                        Console.WriteLine("Related messages:");
+                        showRelatedMessage = false;
+                    }
+                    var hierarchyTab = string.Concat(Enumerable.Repeat("\t", messageInHierarchy.MessageLevel));
+
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                    Console.WriteLine($"{hierarchyTab}Message ID: {messageInHierarchy?.Index}; " +
+                                  $"Status: {messageInHierarchy?.MessageStatus}; " +
+                                  $"Subject: {messageInHierarchy?.Subject}; " +
+                                  $"From: {messageInHierarchy?.Sender?.Name}; " +
+                                  $"To:{messageInHierarchy?.ReceiverRole} {messageInHierarchy?.Receiver?.Name ?? string.Empty}; "
+                                  );
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                }
+            }
             Console.WriteLine(new string(' ', Console.WindowWidth));
         }
     }

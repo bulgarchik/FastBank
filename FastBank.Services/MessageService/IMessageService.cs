@@ -26,10 +26,10 @@ namespace FastBank.Services
 
         public void ShowMessagesMenu(User user, List<Message?>? messages = null);
 
-        public void ShowMessageMenu(User user, Message message);
+        public void ShowMessageMenu(User user, Message message, List<Message> messages);
 
-        public void ShowMessages(List<Message?> messages);
+        public void ShowMessages(List<Message?> messages, User user, bool heirarchy);
 
-        public void ShowMessageDetails(User user, Message message);
+        public void ShowMessageDetails(User user, Message message, List<Message> messages);
     }
 }
