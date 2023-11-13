@@ -103,7 +103,7 @@ namespace FastBank.Services
             Console.Write("Reply text: ");
             var text = Console.ReadLine() ?? string.Empty;
 
-            var replayMessage = new Message(
+            var replyMessage = new Message(
                                         Guid.NewGuid(),
                                         DateTime.UtcNow,
                                         user,
@@ -115,12 +115,12 @@ namespace FastBank.Services
                                         MessageStatus.Sent,
                                         MessageType.Inquery);
 
-            _messageRepo.Add(replayMessage);
+            _messageRepo.Add(replyMessage);
             _messageRepo.UpdateStatus(message, MessageStatus.Replied);
 
             _menuService.OperationCompleteScreen();
 
-            return replayMessage;
+            return replyMessage;
         }
 
         public void ShowMessagesMenu(User user, List<Message?>? messages = null)
