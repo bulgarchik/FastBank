@@ -155,7 +155,7 @@ namespace FastBank
                     OpenCustomerMenu();
                     break;
                 case Role.Manager:
-                    OpenCustomerMenu();
+                    OpenManagerMenu();
                     break;
                 case Role.Customer:
                     OpenCustomerMenu();
@@ -170,6 +170,36 @@ namespace FastBank
                     ShowMainMenu();
                     break;
             }
+        }
+
+        public static void OpenManagerMenu()
+        {
+            if (ActiveUser == null || ActiveUser.Role != Role.Manager)
+            {
+                return;
+            }
+
+            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+                                $"\nPlease choose your action: \n" +
+                                 $"\n 0: Exit";
+            int action = _menuService.CommandRead(1, menuOptions);
+
+            switch (action)
+            {
+                case 1:
+                    {
+                        break;
+                    }
+                case 0:
+                    {
+                        ActiveUser = null;
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+            Console.Clear();
         }
 
         static public void OpenBankerMenu()
