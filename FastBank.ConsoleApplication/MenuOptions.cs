@@ -17,6 +17,8 @@ namespace FastBank
 
         static readonly MessageService _messageService = new MessageService(bankAccountService);
 
+        static readonly TransactionService _transactionService = new TransactionService();
+
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
@@ -181,13 +183,15 @@ namespace FastBank
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                                 $"\nPlease choose your action: \n" +
+                                $"\n 1: Customer transactions report" + 
                                  $"\n 0: Exit";
-            int action = _menuService.CommandRead(1, menuOptions);
+            int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
             {
                 case 1:
                     {
+                        _transactionService.TransactionReport(ActiveUser);
                         break;
                     }
                 case 0:
@@ -198,7 +202,6 @@ namespace FastBank
                 default:
                     break;
             }
-
             Console.Clear();
         }
 

@@ -9,7 +9,7 @@ namespace FastBank.Services
         private readonly IBankAccountRepository bankAccountRepository;
         private readonly IMenuService _menuService;
         private readonly IUserService _userService;
-        private readonly ITransactionService _transactionService;
+        private readonly ITransactionRepository _transactionRepo;
         private readonly IMessageService _messageService;
 
         public BankAccountService()
@@ -17,7 +17,7 @@ namespace FastBank.Services
             bankAccountRepository = new BankAccountRepository();
             _menuService = new MenuService();
             _userService = new UserService();
-            _transactionService = new TransactionService();
+            _transactionRepo = new TransactionRepository();
             _messageService = new MessageService(this);
         }
 
@@ -67,6 +67,8 @@ namespace FastBank.Services
                 customerBankAccount.DepositAmount(depositAmount);
                 Update(customerBankAccount);
             }
+            var transaction = new Transaction(customer, depositAmount, null, customerBankAccount, TransactionType.BankAccountTransaction);
+            _transactionRepo.AddTransaction(transaction);
         }
 
         public void Update(BankAccount bankAccount)
@@ -107,6 +109,8 @@ namespace FastBank.Services
                 {
                     customerBankAccount.WithdrawAmount(withdrawAmount);
                     Update(customerBankAccount);
+                    var transaction = new Transaction(customerBankAccount.Customer, withdrawAmount * (-1), null, customerBankAccount, TransactionType.BankAccountTransaction);
+                    _transactionRepo.AddTransaction(transaction);
                 }
             }
         }
@@ -179,7 +183,7 @@ namespace FastBank.Services
                                                                     customerBankAccount.Customer,
                                                                     amountToTransfer);
 
-                                _transactionService.AddTransactionOrder(transactionOrder);
+                                _transactionRepo.AddTransactionOrder(transactionOrder);
 
                                 _messageService.AddMessage(subject: "Transfer order",
                                                            text: $"Please execute transfer from {transactionOrder?.FromBankAccount?.Customer.Name}" +
@@ -200,8 +204,13 @@ namespace FastBank.Services
                             {
                                 friendAccount.DepositAmount(amountToTransfer);
                                 Update(friendAccount);
+                                var transactionDeposit = new Transaction(friendAccount.Customer, amountToTransfer, null, friendAccount, TransactionType.BankAccountTransaction);
+                                _transactionRepo.AddTransaction(transactionDeposit);
+                                
                                 customerBankAccount.WithdrawAmount(amountToTransfer);
                                 Update(customerBankAccount);
+                                var transactionWithdraw = new Transaction(customerBankAccount.Customer, amountToTransfer * (-1), null, customerBankAccount, TransactionType.BankAccountTransaction);
+                                _transactionRepo.AddTransaction(transactionWithdraw);
                             }
                         }
                         _menuService.OperationCompleteScreen();
@@ -268,8 +277,24 @@ namespace FastBank.Services
         {
             transactionOrder?.FromBankAccount?.WithdrawAmount(transactionOrder.Amount);
             Update(transactionOrder.FromBankAccount);
+
+            _transactionRepo.AddTransaction(new Transaction(
+                                                transactionOrder.FromBankAccount.Customer,
+                                                transactionOrder.Amount * (-1),
+                                                null,
+                                                transactionOrder.FromBankAccount,
+                                                TransactionType.BankAccountTransaction));
+            
+
             transactionOrder.ToBankAccount.DepositAmount(transactionOrder.Amount);
             Update(transactionOrder.ToBankAccount);
+            
+            _transactionRepo.AddTransaction(new Transaction(
+                                                transactionOrder.ToBankAccount.Customer,
+                                                transactionOrder.Amount,
+                                                null,
+                                                transactionOrder.ToBankAccount,
+                                                TransactionType.BankAccountTransaction));
         }
     }
 }

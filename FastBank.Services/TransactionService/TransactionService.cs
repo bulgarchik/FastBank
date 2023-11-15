@@ -13,30 +13,31 @@ namespace FastBank.Services
             _transactionRepo = new TransactionRepository();
         }
 
-        public void AddTransactionOrder(TransactionOrder transactionOrder)
+        public void TransactionReport(User user)
         {
-            _transactionRepo.AddTransactionOrder(transactionOrder);
-        }
-        
-        public Transaction AddTranscation(
-            User createdByUser,
-            decimal amount,
-            Bank? bank,
-            BankAccount? bankAccount,
-            TransactionType transactionType)
-        {
-            var transaction = new Transaction(
-                                    Guid.NewGuid(),
-                                    DateTime.UtcNow,
-                                    createdByUser,
-                                    amount,
-                                    createdByUser.Name.Trim()[..2],
-                                    bank,
-                                    bankAccount,
-                                    transactionType);
-            _transactionRepo.AddTransaction(transaction);
+            if (user == null || user.Role != Role.Manager)
+            {
+                return;
+            }
 
-            return transaction;
+            var transactions = _transactionRepo.GetCustomersTransactions();
+
+            Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
+                "| Date",
+                "| Amount",
+                "| Transaction Type",
+                "| Customer email");
+            Console.WriteLine(new string('-', 85));
+
+            foreach ( var transaction in transactions )
+            {
+                Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
+                    $"| {transaction.CreatedDate}",
+                    $"| {transaction.Amount}",
+                    $"| {transaction.TransactionType.GetDisplayName()}",
+                    $"| {transaction.CreatedByUser.Email}");
+            }
+            Console.ReadKey();
         }
     }
 }
