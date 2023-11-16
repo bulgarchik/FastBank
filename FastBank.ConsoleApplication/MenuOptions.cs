@@ -66,7 +66,7 @@ namespace FastBank
             }
 
             Console.Clear();
-            Console.WriteLine("You successfully exited the system! Pres any key to close programm...");
+            Console.WriteLine("You successfully exited the system! Press any key to close program...");
             Console.ReadKey();
             Environment.Exit(0);
         }
