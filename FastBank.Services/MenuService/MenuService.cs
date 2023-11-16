@@ -118,7 +118,7 @@ namespace FastBank.Services
 
         public void OperationCompleteScreen()
         {
-            Console.WriteLine("\nOperation complete successful! Press any key to continue...");
+            Console.WriteLine("\nOperation completed successfully! Press any key to continue...");
             Console.ReadLine();
         }
     }
