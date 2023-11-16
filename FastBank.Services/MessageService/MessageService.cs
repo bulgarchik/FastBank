@@ -237,7 +237,7 @@ namespace FastBank.Services
             }
         }
 
-        public void ShowMessages(List<Message?> messages, User user, bool heirarchy)
+        public void ShowMessages(List<Message?> messages, User user, bool hierarchy)
         {
             if (messages.Count > 0)
             {
@@ -253,7 +253,7 @@ namespace FastBank.Services
                 }
                 else
                 {
-                    if (!heirarchy)
+                    if (!hierarchy)
                         continue;
                 }
 
