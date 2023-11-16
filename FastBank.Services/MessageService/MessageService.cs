@@ -207,8 +207,7 @@ namespace FastBank.Services
             var menuOptions = $"\nPlease choose your action: \n" +
                              $"\n 1: Reply to message" +
                              $"{(message.TransactionOrder != null ? " \n 2: Confirm transfer order " : string.Empty)} \n 0: Exit";
-            var actionsCount = (message.TransactionOrder != null ? 3 : 2);
-            var commandsCount = 3;
+            var commandsCount = (message.TransactionOrder != null ? 3 : 2);
             int action = _menuService.CommandRead(commandsCount, menuOptions);
 
             switch (action)
