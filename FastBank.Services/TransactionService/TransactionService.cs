@@ -23,20 +23,19 @@ namespace FastBank.Services
                 return;
             }
 
-            var transactions = _transactionRepo.GetCustomersTransactions();
+            var transactionsCount = _transactionRepo.GetCustomersTransactionsCount();
 
-            int transactionsPerPage = 3;
+            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TransactionPerPage);
+
             int currentPage = 1;
-            int totalPages = (int)Math.Ceiling((double)transactions.Count / transactionsPerPage);
 
             do
             {
+                var transactions = _transactionRepo.GetCustomersTransactions(currentPage);
+
                 Console.Clear();
 
                 _menuService.ShowLogo();
-
-                int startIndex = (currentPage - 1) * transactionsPerPage;
-                int endIndex = Math.Min(startIndex + transactionsPerPage - 1, transactions.Count - 1);
 
                 Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
                 "| Date",
@@ -45,13 +44,13 @@ namespace FastBank.Services
                 "| Customer email");
                 Console.WriteLine(new string('-', 85));
 
-                for (int i = startIndex; i <= endIndex; i++)
+                foreach (var transaction in transactions)
                 {
                     Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
-                        $"| {transactions[i].CreatedDate}",
-                        $"| {transactions[i].Amount}",
-                        $"| {transactions[i].TransactionType.GetDisplayName()}",
-                        $"| {transactions[i].CreatedByUser.Email}");
+                        $"| {transaction.CreatedDate}",
+                        $"| {transaction.Amount}",
+                        $"| {transaction.TransactionType.GetDisplayName()}",
+                        $"| {transaction.CreatedByUser.Email}");
                 }
 
                 Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");

@@ -2,7 +2,9 @@
 {
     public interface ITransactionRepository
     {
-        public List<Transaction> GetCustomersTransactions();
+        public List<Transaction> GetCustomersTransactions(int currentPage=1);
+
+        public int GetCustomersTransactionsCount();
 
         public void AddTransaction(Transaction transaction);
 
