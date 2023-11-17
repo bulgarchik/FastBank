@@ -3,6 +3,7 @@ using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Text;
 
 namespace FastBank.Services
 {
@@ -202,7 +203,26 @@ namespace FastBank.Services
             Console.Clear();
             _menuService.ShowLogo();
 
-            ShowMessageDetails(user, message, messages);
+            var hasRelatedMessages = ShowMessageDetails(user, message, messages);
+
+            var commandList = new List<string>();
+
+            commandList.Add($"\n 1: Reply to message");
+            if (hasRelatedMessages)
+            {
+                commandList.Add($"\n 2: Open message");
+            }
+            if (message.TransactionOrder != null && user.Role == Role.CustomerService)
+            {
+                commandList.Add($"\n 3: Confirm transfer order");
+            }
+            commandList.Add($"\n 0: Exit");
+            StringBuilder menuOptions = new StringBuilder();
+            menuOptions.Append($"\nPlease choose your action: \n");
+            foreach (var item in commandList)
+            {
+                menuOptions.Append(item);
+            }
 
             var menuOptions = $"\nPlease choose your action: \n" +
                              $"\n 1: Reply to message" +
@@ -220,7 +240,19 @@ namespace FastBank.Services
                     }
                 case 2:
                     {
-                        if (message.TransactionOrder != null)
+                        if (hasRelatedMessages)
+                        {
+                            var msg = SelectMessageByInputId(messages);
+                            if (msg != null)
+                            {
+                                ShowMessageMenu(user, msg, messages);
+                            }
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        if (message.TransactionOrder != null && user.Role == Role.CustomerService)
                         {
                             Console.WriteLine($"Please confirm with Y execution of order transfer for {message.TransactionOrder.Amount} " +
                                 $"from {message.TransactionOrder?.FromBankAccount?.Customer.Name} " +
@@ -255,7 +287,7 @@ namespace FastBank.Services
                 }
                 else
                 {
-                    if (!heirarchy)
+                    if (!hierarchy)
                         continue;
                 }
 
@@ -269,13 +301,13 @@ namespace FastBank.Services
                                   $"Subject: {message?.Subject}; " +
                                   $"From: {message?.Sender?.Name}; " +
                                   $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; " +
-                                  $"new messages {countOfNewInHierarchy} from {countInHierarchy} in hierarchy "
+                                  $"new messages {countOfNewInHierarchy}"
                                   );
                 Console.WriteLine(new string('-', Console.WindowWidth));
             }
         }
 
-        public void ShowMessageDetails(User user, Message message, List<Message> messages)
+        public bool ShowMessageDetails(User user, Message message, List<Message> messages)
         {
             if (message.MessageStatus == MessageStatus.Sent
                 && message.Sender != null
@@ -293,16 +325,16 @@ namespace FastBank.Services
             Console.WriteLine(new string('-', Console.WindowWidth));
             Console.WriteLine($"Text: {message?.Text}");
             Console.WriteLine(new string('*', Console.WindowWidth));
-            var showRelatedMessage = true;
+            var showedRelatedMessage = false;
             foreach (var messageInHierarchy in messages)
             {
                 if (messageInHierarchy.MessageOrderId.Contains(message.MessageId.ToString()) && messageInHierarchy.MessageId != message.MessageId)
                 {
-                    if (showRelatedMessage)
+                    if (showedRelatedMessage == false)
                     {
                         Console.WriteLine(new string(' ', Console.WindowWidth));
                         Console.WriteLine("Related messages:");
-                        showRelatedMessage = false;
+                        showedRelatedMessage = true;
                     }
                     var hierarchyTab = string.Concat(Enumerable.Repeat("\t", messageInHierarchy.MessageLevel));
 
@@ -317,6 +349,8 @@ namespace FastBank.Services
                 }
             }
             Console.WriteLine(new string(' ', Console.WindowWidth));
+
+            return showedRelatedMessage;
         }
     }
 }

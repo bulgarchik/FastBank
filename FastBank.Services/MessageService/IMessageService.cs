@@ -30,6 +30,6 @@ namespace FastBank.Services
 
         public void ShowMessages(List<Message?> messages, User user, bool heirarchy);
 
-        public void ShowMessageDetails(User user, Message message, List<Message> messages);
+        public bool ShowMessageDetails(User user, Message message, List<Message> messages);
     }
 }
