@@ -9,7 +9,7 @@ namespace FastBank.Services
         private readonly IBankAccountRepository bankAccountRepository;
         private readonly IMenuService _menuService;
         private readonly IUserService _userService;
-        private readonly ITransactionService _transactionService;
+        private readonly ITransactionRepository _transactionRepo;
         private readonly IMessageService _messageService;
 
         public BankAccountService()
@@ -17,7 +17,7 @@ namespace FastBank.Services
             bankAccountRepository = new BankAccountRepository();
             _menuService = new MenuService();
             _userService = new UserService();
-            _transactionService = new TransactionService();
+            _transactionRepo = new TransactionRepository();
             _messageService = new MessageService(this);
         }
 
@@ -179,7 +179,7 @@ namespace FastBank.Services
                                                                     customerBankAccount.Customer,
                                                                     amountToTransfer);
 
-                                _transactionService.AddTransactionOrder(transactionOrder);
+                                _transactionRepo.AddTransactionOrder(transactionOrder);
 
                                 _messageService.AddMessage(subject: "Transfer order",
                                                            text: $"Please execute transfer from {transactionOrder?.FromBankAccount?.Customer.Name}" +
