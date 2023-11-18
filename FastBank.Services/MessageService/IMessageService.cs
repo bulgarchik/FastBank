@@ -31,5 +31,7 @@ namespace FastBank.Services
         public void ShowMessages(List<Message?> messages, User user, bool heirarchy);
 
         public bool ShowMessageDetails(User user, Message message, List<Message> messages);
+
+        public string ReadInputedText(int maxLength);
     }
 }

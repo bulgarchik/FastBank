@@ -10,6 +10,8 @@ namespace FastBank.Services
 
         public int CommandRead(int countOfOptions, string menuOptions);
 
+        public int CommandRead(List<string> menuOptions);
+
         public void ShowLogo();
 
         public List<string> ValidateEmail(string email, List<string> validationErrors);

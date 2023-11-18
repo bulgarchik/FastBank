@@ -64,7 +64,38 @@ namespace FastBank.Services
                 Console.WriteLine(menuOptions);
                 Console.Write("\nAction: ");
                 inputCommand = Console.ReadLine();
+            }
+            Console.WriteLine();
+            return Convert.ToInt32(inputCommand);
+        }
 
+        public int CommandRead(List<string> menuOptions)
+        {
+            var commandsKeys = new StringBuilder();
+            for (int i = 0; i < menuOptions.Count; i++)
+            {
+                commandsKeys.Append(i);
+            }
+            var regPattern = new Regex($"^[{commandsKeys?.ToString()}]{{1}}$");
+
+            StringBuilder menuCommands = new StringBuilder();
+            menuCommands.Append($"\nPlease choose your action: \n");
+            foreach (var item in menuOptions)
+            {
+                menuCommands.Append(item);
+            }
+            var menu = menuCommands.ToString();
+            Console.WriteLine(menu);
+            Console.Write("\nAction: ");
+            string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand ?? string.Empty))
+            {
+                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
+                var inputKey = Console.ReadKey();
+                MoveToPreviousLine(inputKey, menu.Split("\n").Length + 4);
+                Console.WriteLine(menu);
+                Console.Write("\nAction: ");
+                inputCommand = Console.ReadLine();
             }
             Console.WriteLine();
             return Convert.ToInt32(inputCommand);
