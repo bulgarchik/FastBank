@@ -90,123 +90,18 @@ namespace FastBank.Infrastructure.Context
                 .WithMany()
                 .HasForeignKey(to => to.OrderedByUserId)
                 .IsRequired();
+
+            modelBuilder.Entity<EmployeeDTO>()
+                .HasOne(em => em.User)
+                .WithMany()
+                .HasForeignKey(em => em.UserId);
+
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Role.Manager, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Role.Accountant, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Role.Banker, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Камелия Ангелова", "kamiang@abv.bg", DateTime.Now, "kameliq1988", Role.CustomerService, false));
 
             modelBuilder.Entity<BankDTO>().HasData(new BankDTO(10000m));
-
-            //seed data
-
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "m@m.mm", DateTime.Now, "m", Role.Manager, false));
-
-
-            var testCustomer = new UserDTO(Guid.NewGuid(), "Александър Георгиев", "1@1.com", DateTime.Now, "1", Role.Customer, false);
-            var customerFriend = new UserDTO(Guid.NewGuid(), "Ангел Костадинов", "2@2.com", DateTime.Now, "1", Role.Customer, false);
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Васили Иванов", "3@3.bg", DateTime.Now, "1", Role.CustomerService, false));
-
-            modelBuilder.Entity<BankAccountDTO>().HasData(
-                                new BankAccountDTO(
-                                        new Domain.BankAccount(
-                                                    Guid.NewGuid(),
-                                                    customerFriend.ToDomainObj(),100)));
-
-            modelBuilder.Entity<BankAccountDTO>().HasData(
-                                new BankAccountDTO(
-                                        new Domain.BankAccount(
-                                                    Guid.NewGuid(),
-                                                    testCustomer.ToDomainObj(), 100)));
-
-            modelBuilder.Entity<UserDTO>().HasData(testCustomer);
-            modelBuilder.Entity<UserDTO>().HasData(customerFriend);
-            modelBuilder.Entity<UserFriendDTO>().HasData(new UserFriendDTO(Guid.NewGuid(), testCustomer.ToDomainObj(), customerFriend.ToDomainObj(), false));
-            var msg1 = new MessageDTO(
-                    new Domain.Message(
-                            Guid.NewGuid(),
-                            DateTime.UtcNow.AddHours(-6),
-                            testCustomer.ToDomainObj(),
-                            null,
-                            Role.CustomerService,
-                            "First message text to Customer Service",
-                            "lv 0 First Message Subject",
-                            null,
-                            Domain.MessageStatus.Sent,
-                            Domain.MessageType.Inquery, null)
-                    );
-
-            var msg2 = new MessageDTO(
-                    new Domain.Message(
-                            Guid.NewGuid(),
-                            DateTime.UtcNow.AddHours(-5),
-                            testCustomer.ToDomainObj(),
-                            null,
-                            Role.CustomerService,
-                            "Second message text to Customer Service",
-                            "lv 0 Second Message Subject",
-                            null,
-                            Domain.MessageStatus.Sent,
-                            Domain.MessageType.Inquery, null)
-                    );
-
-            var msg3 = new MessageDTO(
-                   new Domain.Message(
-                           Guid.NewGuid(),
-                           DateTime.UtcNow.AddHours(-4),
-                           testCustomer.ToDomainObj(),
-                           null,
-                           Role.CustomerService,
-                           "Reply to first message text to Customer Service",
-                           "lv 1 msg 3 Reply to first Message Subject",
-                           msg1.ToDomainObj(),
-                           Domain.MessageStatus.Sent,
-                           Domain.MessageType.Inquery, null));
-
-            var msg4 = new MessageDTO(
-                 new Domain.Message(
-                         Guid.NewGuid(),
-                         DateTime.UtcNow.AddHours(-3),
-                         testCustomer.ToDomainObj(),
-                         null,
-                         Role.CustomerService,
-                         "4 message text to Customer Service",
-                         "lv 0 4 Message Subject",
-                         null,
-                         Domain.MessageStatus.Sent,
-                         Domain.MessageType.Inquery, null));
-
-            var msg5 = new MessageDTO(
-                 new Domain.Message(
-                         Guid.NewGuid(),
-                         DateTime.UtcNow.AddHours(-2),
-                         testCustomer.ToDomainObj(),
-                         null,
-                         Role.CustomerService,
-                         "5 message text to Customer Service",
-                         "lv 2 5 Message Subject",
-                         msg3.ToDomainObj(),
-                         Domain.MessageStatus.Sent,
-                         Domain.MessageType.Inquery, null));
-
-            var msg6 = new MessageDTO(
-                 new Domain.Message(
-                         Guid.NewGuid(),
-                         DateTime.UtcNow.AddHours(-1),
-                         testCustomer.ToDomainObj(),
-                         null,
-                         Role.CustomerService,
-                         "6 message text to Customer Service",
-                         "lv 1 6 Message Subject",
-                         msg4.ToDomainObj(),
-                         Domain.MessageStatus.Sent,
-                         Domain.MessageType.Inquery, null));
-
-            modelBuilder.Entity<MessageDTO>().HasData(msg1);
-            modelBuilder.Entity<MessageDTO>().HasData(msg2);
-            modelBuilder.Entity<MessageDTO>().HasData(msg3);
-            modelBuilder.Entity<MessageDTO>().HasData(msg4);
-            modelBuilder.Entity<MessageDTO>().HasData(msg5);
-            modelBuilder.Entity<MessageDTO>().HasData(msg6);
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }
@@ -216,5 +111,6 @@ namespace FastBank.Infrastructure.Context
         public virtual DbSet<UserFriendDTO> FriendsRelations { get; set; }
         public virtual DbSet<TransactionDTO> Transactions { get; set; }
         public virtual DbSet<TransactionOrderDto> TransactionsOrder { get; set; }
+        public virtual DbSet<EmployeeDTO> Employees { get; set; }
     }
 }
