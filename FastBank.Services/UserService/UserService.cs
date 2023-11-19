@@ -145,9 +145,11 @@ namespace FastBank.Services
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                     passwordtries++;
                     Console.WriteLine("Please input password:");
-
+                    Console.Write("Password: ");
                     password = menuServie.PasswordStaredInput() ?? string.Empty;
                 }
+
+                _menuService.OperationCompleteScreen();
             }
             return user;
         }
@@ -160,7 +162,7 @@ namespace FastBank.Services
         public void AddFriend(User user, List<User> friendsList)
         {
             var inquiryMsg = "Please input user's email to add him as a friend (type \"quit\" for exit):";
-            var emailTypeToInput = "Friend email:";
+            var emailTypeToInput = "Friend email: ";
             var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
 
             if (emailFriend == "quit")
@@ -178,6 +180,7 @@ namespace FastBank.Services
                 }
 
                 _userRepo.AddFriend(user, friend);
+                _menuService.OperationCompleteScreen();
             }
             else
             {
@@ -189,7 +192,7 @@ namespace FastBank.Services
         public void RemoveFriend(User user, List<User> friendsList)
         {
             var inquiryMsg = "Please input user's email to remove him from friend list (type \"quit\" for exit):";
-            var emailTypeToInput = "Friend email:";
+            var emailTypeToInput = "Friend email: ";
             var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
 
             if (emailFriend == "quit")
@@ -200,6 +203,7 @@ namespace FastBank.Services
             if (friend != null)
             {
                 _userRepo.RemoveFriend(user, friend);
+                _menuService.OperationCompleteScreen();
             }
             else
             {

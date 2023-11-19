@@ -54,16 +54,50 @@ namespace FastBank.Services
             }
             var regPattern = new Regex($"^[{sb?.ToString()}]{{1}}$");
             Console.WriteLine(menuOptions);
+            Console.Write("\nAction: ");
             string? inputCommand = Console.ReadLine();
             while (!regPattern.IsMatch(inputCommand ?? string.Empty))
             {
                 Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
                 var inputKey = Console.ReadKey();
-                MoveToPreviousLine(inputKey, menuOptions.Split("\n").Length + 3);
+                MoveToPreviousLine(inputKey, menuOptions.Split("\n").Length + 4);
                 Console.WriteLine(menuOptions);
+                Console.Write("\nAction: ");
                 inputCommand = Console.ReadLine();
-
             }
+            Console.WriteLine();
+            return Convert.ToInt32(inputCommand);
+        }
+
+        public int CommandRead(List<string> menuOptions)
+        {
+            var commandsKeys = new StringBuilder();
+            for (int i = 0; i < menuOptions.Count; i++)
+            {
+                commandsKeys.Append(i);
+            }
+            var regPattern = new Regex($"^[{commandsKeys?.ToString()}]{{1}}$");
+
+            StringBuilder menuCommands = new StringBuilder();
+            menuCommands.Append($"\nPlease choose your action: \n");
+            foreach (var item in menuOptions)
+            {
+                menuCommands.Append(item);
+            }
+            var menu = menuCommands.ToString();
+            Console.WriteLine(menu);
+            Console.Write("\nAction: ");
+            string? inputCommand = Console.ReadLine();
+            while (!regPattern.IsMatch(inputCommand ?? string.Empty))
+            {
+                Console.WriteLine("\nERROR: Please input correct command from menu. (press any key to continue..)");
+                var inputKey = Console.ReadKey();
+                MoveToPreviousLine(inputKey, menu.Split("\n").Length + 4);
+                Console.WriteLine(menu);
+                Console.Write("\nAction: ");
+                inputCommand = Console.ReadLine();
+            }
+            Console.WriteLine();
             return Convert.ToInt32(inputCommand);
         }
 
@@ -95,7 +129,7 @@ namespace FastBank.Services
             return validationErrors;
         }
 
-        public string InputEmail(string inquiryMsg = "Please input you email:", string emailTypeToInput = "Email:")
+        public string InputEmail(string inquiryMsg = "Please input you email: ", string emailTypeToInput = "Email: ")
         {
             Console.WriteLine(inquiryMsg);
             Console.Write(emailTypeToInput);
@@ -111,6 +145,12 @@ namespace FastBank.Services
                 return email;
             }
             return email ?? string.Empty;
+        }
+
+        public void OperationCompleteScreen()
+        {
+            Console.WriteLine("\nOperation completed successfully! Press any key to continue...");
+            Console.ReadLine();
         }
     }
 }

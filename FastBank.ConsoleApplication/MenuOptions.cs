@@ -29,7 +29,7 @@ namespace FastBank
 
                 if (ActiveUser == null)
                 {
-                    var menuOptions = "Please choose your action: \n 1: For login. 2: For customer registration. 0: for exit";
+                    var menuOptions = "Please choose your action:\n \n 1: For login \n 2: For customer registration \n 0: Exit";
                     int action = _menuService.CommandRead(3, menuOptions);
 
                     switch (action)
@@ -47,7 +47,10 @@ namespace FastBank
                             }
                         case 0:
                             {
-                                inProgress = false;
+                                Console.WriteLine("Do you want to exit from the system? Press Y to confirm or any key to cancel...");
+                                var confirmKey = Console.ReadKey();
+                                if (confirmKey.KeyChar == 'Y')
+                                    inProgress = false;
                                 break;
                             }
                     }
@@ -58,6 +61,11 @@ namespace FastBank
                     RenderMenuByRole();
                 }
             }
+
+            Console.Clear();
+            Console.WriteLine("You successfully exited the system! Press any key to close program...");
+            Console.ReadKey();
+            Environment.Exit(0);
         }
 
         static public void Login()
@@ -115,7 +123,7 @@ namespace FastBank
                 return;
 
             Console.WriteLine("Please input you Birthday (format: Year.Month.day):");
-            Console.Write("Birthday:");
+            Console.Write("Birthday: ");
             string birthdayInput = Console.ReadLine() ?? string.Empty;
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
@@ -123,12 +131,12 @@ namespace FastBank
                 Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
-                Console.Write("Birthday:");
+                Console.Write("Birthday: ");
                 birthdayInput = Console.ReadLine() ?? string.Empty;
             }
 
             Console.WriteLine("Please input you password:");
-            Console.Write("Password:");
+            Console.Write("Password: ");
             var password = _menuService.PasswordStaredInput();
 
             userService.Add(name, email, birthday, password, role, false);
@@ -174,8 +182,8 @@ namespace FastBank
             }
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                 $"\nPlease choose your action: " +
-                                  $"\n1: Capital Replenishment. 0: for exit";
+                                 $"\nPlease choose your action: \n" +
+                                  $"\n 1: Capital Replenishment \n 0: Exit";
             int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
@@ -193,6 +201,7 @@ namespace FastBank
                 default:
                     break;
             }
+
             Console.Clear();
         }
 
@@ -227,10 +236,10 @@ namespace FastBank
             else
             {
                 var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
-                                  $"\nYou bank amount: {customerBankAccount.Amount:0.00} " +
-                                  $"\nPlease choose your action: " +
-                                  $"\n1: For deposit. 2: For withdraw. 3: Create inquiry. " +
-                                    $"4: Check inquiries. 5: Transfer to friend 0: for exit";
+                                  $"\nYou bank amount: {customerBankAccount.Amount:0.00} \n" +
+                                  $"\nPlease choose your action: \n" +
+                                  $"\n 1: For deposit \n 2: For withdraw \n 3: Create inquiry " +
+                                    $"\n 4: Check inquiries \n 5: Transfer to friend \n 0: Exit";
                 int action = _menuService.CommandRead(6, menuOptions);
                 switch (action)
                 {
@@ -266,6 +275,7 @@ namespace FastBank
                         }
                 }
             }
+
             Console.Clear();
         }
 
@@ -284,9 +294,9 @@ namespace FastBank
                                     .Count();
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"You have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}" +
-                                $"\nPlease choose your action: " +
-                                $"\n1: Manage messages. 0: for exit";
+                                $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
+                                $"\nPlease choose your action: \n" +
+                                $"\n1: Manage messages \n0: Exit";
             int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
@@ -303,6 +313,7 @@ namespace FastBank
                         break;
                     }
             }
+
             Console.Clear();
         }
     }

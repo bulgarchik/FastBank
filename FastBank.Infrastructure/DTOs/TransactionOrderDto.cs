@@ -19,19 +19,24 @@ namespace FastBank.Infrastructure.DTOs
             OrderedByUserId = transactionOrder?.OrderedByUser.Id;
             Amount = transactionOrder?.Amount ?? 0;
         }
+
         [Key]
         public Guid TransactionOrderId { get; private set; }
         public DateTime CreatedDate { get; private set; }
         public TransactionType TransactionType { get; private set; }
+
         public Guid? FromBankAccountId { get; private set; }
         [ForeignKey(nameof(FromBankAccountId))]
         public BankAccountDTO? FromBankAccount { get; private set; }
+        
         public Guid? ToBankAccountId {  get; private set; }
         [ForeignKey(nameof(ToBankAccountId))]
         public BankAccountDTO? ToBankAccount { get; private set; }
+        
         public Guid? BankId { get; private set; }
         [ForeignKey(nameof(BankId))]
         public BankDTO? Bank { get; private set; }
+        
         public Guid? OrderedByUserId { get; private set; }
         [ForeignKey(nameof(OrderedByUserId))]
         public UserDTO OrderedByUser { get; private set; } = null!;

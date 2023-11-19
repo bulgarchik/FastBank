@@ -4,7 +4,8 @@
     {
         public Message(
             Guid messageId,
-            User sender,
+            DateTime createdOn,
+            User? sender,
             User? receiver,
             Role receiverRole,
             string text,
@@ -13,10 +14,10 @@
             MessageStatus messageStatuses,
             MessageType messageType,
             Transaction? transaction = null,
-            TransactionOrder? transactionOrder = null,
-            int index = 0)
+            TransactionOrder? transactionOrder = null)
         {
             MessageId = messageId;
+            CreatedOn = createdOn;
             Sender = sender;
             Receiver = receiver;
             ReceiverRole = receiverRole;
@@ -27,20 +28,22 @@
             MessageType = messageType;
             Transaction = transaction;
             TransactionOrder = transactionOrder;
-            Index = index;
         }
         public Guid MessageId { get; private set; }
-        public User Sender { get; private set; }
+        public DateTime CreatedOn { get; private set; }
+        public User? Sender { get; private set; }
         public User? Receiver { get; private set; }
         public Role ReceiverRole { get; private set; }
         public string Text { get; private set; } = string.Empty;
         public string Subject { get; private set; } = string.Empty;
         public Message? BasedOnMessage { get; private set; }
+        public string MessageOrderId { get; set; }
+        public int MessageLevel { get; set; }
         public MessageStatus MessageStatus { get; private set; }
         public MessageType MessageType { get; private set; }
         public Transaction? Transaction { get; private set; }
         public TransactionOrder? TransactionOrder { get; private set; }
-        public int Index { get; private set; }
+        public int Index { get; set; } = 0;
 
         public void UpdateMessageStatus(MessageStatus messageStatuses)
         {
@@ -61,6 +64,5 @@
         Inquery,
         InqueryForOrderTransfer,
         CapitalReplenishment
-
     }
 }

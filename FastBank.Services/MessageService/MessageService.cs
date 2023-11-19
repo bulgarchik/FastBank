@@ -1,6 +1,9 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using System.ComponentModel.Design;
+using System.Linq;
+using System.Text;
 
 namespace FastBank.Services
 {
@@ -34,8 +37,30 @@ namespace FastBank.Services
             {
                 messages = _messageRepo.GetCustomerMessages(user);
             }
-            
-            return messages;
+
+            foreach (var m in messages)
+            {
+                if (m.BasedOnMessage == null)
+                {
+                    m.MessageOrderId = m.MessageId.ToString() ?? string.Empty;
+                    m.MessageLevel = 0;
+                }
+                else
+                {
+                    var baseMsg = messages.FirstOrDefault(bm => bm.MessageId == m.BasedOnMessage.MessageId);
+                    m.MessageOrderId = string.Empty + baseMsg?.MessageOrderId.ToString() + m.MessageId.ToString();
+                    m.MessageLevel = (baseMsg?.MessageLevel ?? 0) + 1;
+                }
+            }
+
+            messages = messages.OrderBy(m => m.MessageOrderId).ThenBy(m => m.CreatedOn).ToList();
+
+            var indexedMessages = messages.Select((m, c) =>
+                                                    {
+                                                        m.Index = (c + 1);
+                                                        return m ?? null;
+                                                    }).ToList();
+            return indexedMessages;
         }
 
         public void AddMessage(
@@ -50,7 +75,7 @@ namespace FastBank.Services
             Transaction? transaction = null,
             TransactionOrder? transactionOrder = null)
         {
-            Message message = new Message(Guid.NewGuid(), sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
+            Message message = new Message(Guid.NewGuid(), DateTime.UtcNow, sender, receiver, receiverRole, text, subject, basedOnMessage, status, type, transaction, transactionOrder);
             _messageRepo.Add(message);
         }
 
@@ -58,27 +83,28 @@ namespace FastBank.Services
         {
             Console.WriteLine("Please input message subject:");
             Console.Write("Subject: ");
-            var subject = Console.ReadLine() ?? string.Empty;
+            var subject = ReadInputedText(100);
 
-            Console.WriteLine("Please text message");
-            Console.Write("Text: ");
-            var text = Console.ReadLine() ?? string.Empty;
+            Console.WriteLine("Please input text message: ");
+            var text = ReadInputedText(400);
 
-            var message = new Message(Guid.NewGuid(), user, null, Role.CustomerService,
+            var message = new Message(Guid.NewGuid(), DateTime.UtcNow, user, null, Role.CustomerService,
                                       text, subject, null, MessageStatus.Sent, MessageType.Inquery);
-
             _messageRepo.Add(message);
+            _menuService.OperationCompleteScreen();
+
             return message;
         }
 
         public Message ReplyToMessage(User user, Message message)
         {
-            Console.WriteLine("Please intput replay to text message");
+            Console.WriteLine("Please enter reply to message:");
             Console.Write("Reply text: ");
-            var text = Console.ReadLine() ?? string.Empty;
+            var text = ReadInputedText(400);
 
-            var replayMessage = new Message(
+            var replyMessage = new Message(
                                         Guid.NewGuid(),
+                                        DateTime.UtcNow,
                                         user,
                                         message.Sender,
                                         Role.Customer,
@@ -88,10 +114,12 @@ namespace FastBank.Services
                                         MessageStatus.Sent,
                                         MessageType.Inquery);
 
-            _messageRepo.Add(replayMessage);
+            _messageRepo.Add(replyMessage);
             _messageRepo.UpdateStatus(message, MessageStatus.Replied);
 
-            return replayMessage;
+            _menuService.OperationCompleteScreen();
+
+            return replyMessage;
         }
 
         public void ShowMessagesMenu(User user, List<Message?>? messages = null)
@@ -102,10 +130,10 @@ namespace FastBank.Services
             {
                 messages = GetMessages(user);
             }
-            ShowMessages(messages);
+            ShowMessages(messages, user, false);
 
-            var menuOptions = $"\nPlease choose your action: " +
-                              $"\n1: Open message;  0: for exit";
+            var menuOptions = $"\nPlease choose your action: \n" +
+                              $"\n 1: Open message  \n 0: Exit";
             int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
@@ -118,7 +146,7 @@ namespace FastBank.Services
                             var msg = SelectMessageByInputId(messages);
                             if (msg != null)
                             {
-                                ShowMessageMenu(user, msg);
+                                ShowMessageMenu(user, msg, messages);
                             }
                         }
                         else
@@ -144,7 +172,7 @@ namespace FastBank.Services
             do
             {
                 Console.WriteLine($"To open please input message ID from the list (type 'q' for exit):");
-                Console.Write("Message ID:");
+                Console.Write("Message ID: ");
                 var inputMsgId = Console.ReadLine();
                 if (inputMsgId == "q")
                     return null;
@@ -161,7 +189,7 @@ namespace FastBank.Services
             return messages.FirstOrDefault(m => m?.Index == msgId);
         }
 
-        public void ShowMessageMenu(User user, Message message)
+        public void ShowMessageMenu(User user, Message message, List<Message> messages)
         {
             if (message == null)
             {
@@ -171,12 +199,19 @@ namespace FastBank.Services
             Console.Clear();
             _menuService.ShowLogo();
 
-            ShowMessageDetails(user, message);
+            var hasRelatedMessages = ShowMessageDetails(user, message, messages);
 
-            var menuOptions = $"\nPlease choose your action: " +
-                             $"\n1: Reply to message." +
-                             $"{(message.TransactionOrder != null ? " 2: Confirm transfer order. " : string.Empty)} 0: for exit.";
-            int action = _menuService.CommandRead((message.TransactionOrder != null ? 3 : 2), menuOptions);
+            var commandList = new List<string>();
+
+            commandList.Add($"\n 1: Reply to message");
+            commandList.Add($"\n 2: Open message");
+            if (user.Role == Role.CustomerService)
+            {
+                commandList.Add($"\n 3: Confirm transfer order");
+            }
+            commandList.Add($"\n 0: Exit");
+            
+            int action = _menuService.CommandRead(commandList);
 
             switch (action)
             {
@@ -188,7 +223,24 @@ namespace FastBank.Services
                     }
                 case 2:
                     {
-                        if (message.TransactionOrder != null)
+                        if (hasRelatedMessages)
+                        {
+                            var msg = SelectMessageByInputId(messages);
+                            if (msg != null)
+                            {
+                                ShowMessageMenu(user, msg, messages);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Current message has not related messages. Press any key to continue..");
+                            Console.ReadKey();
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        if (message.TransactionOrder != null && user.Role == Role.CustomerService)
                         {
                             Console.WriteLine($"Please confirm with Y execution of order transfer for {message.TransactionOrder.Amount} " +
                                 $"from {message.TransactionOrder?.FromBankAccount?.Customer.Name} " +
@@ -198,14 +250,21 @@ namespace FastBank.Services
                             {
                                 _bankAccountService?.ConfirmTransactionOrder(message.TransactionOrder);
                                 message.UpdateMessageStatus(MessageStatus.Accepted);
+
+                                _menuService.OperationCompleteScreen();
                             }
+                        }
+                        else
+                        {
+                            Console.WriteLine("This message is not transfer order. Press any key to continue...");
+                            Console.ReadKey();
                         }
                         break;
                     }
             }
         }
 
-        public void ShowMessages(List<Message?> messages)
+        public void ShowMessages(List<Message?> messages, User user, bool hierarchy)
         {
             if (messages.Count > 0)
             {
@@ -215,29 +274,113 @@ namespace FastBank.Services
 
             foreach (var message in messages)
             {
-                Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine($"Message ID: {message?.Index}; " +
+                if (message?.BasedOnMessage == null)
+                {
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                }
+                else
+                {
+                    if (!hierarchy)
+                        continue;
+                }
+
+                var hierarchyTab = string.Concat(Enumerable.Repeat("\t", message.MessageLevel));
+
+                var countInHierarchy = messages.Where(m => m.MessageOrderId.Contains(message.MessageId.ToString()) && (m.MessageId != message.MessageId)).Count();
+                var countOfNewInHierarchy = messages.Where(m => m.MessageOrderId.Contains(message.MessageId.ToString()) && (m.MessageId != message.MessageId) && (m.ReceiverRole == user.Role || m.Receiver == user)).Count();
+
+                Console.WriteLine($"{hierarchyTab}Message ID: {message?.Index}; " +
                                   $"Status: {message?.MessageStatus}; " +
                                   $"Subject: {message?.Subject}; " +
-                                  $"{(message?.BasedOnMessage != null ? $"Based on message ID:{message?.BasedOnMessage.Index}" : string.Empty)}");
-                Console.WriteLine($"Text: {message?.Text}");
-                Console.WriteLine(new string('*', Console.WindowWidth));
-                Console.WriteLine(new string(' ', Console.WindowWidth));
+                                  $"From: {message?.Sender?.Name}; " +
+                                  $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; " +
+                                  $"new messages {countOfNewInHierarchy}"
+                                  );
+                Console.WriteLine(new string('-', Console.WindowWidth));
             }
         }
 
-        public void ShowMessageDetails(User user, Message message)
+        public bool ShowMessageDetails(User user, Message message, List<Message> messages)
         {
-            if (message.MessageStatus == MessageStatus.Sent && message.Sender != user)
+            if (message.MessageStatus == MessageStatus.Sent
+                && message.Sender != null
+                && message.Sender.Id != user.Id
+                && message.ReceiverRole == user.Role)
             {
                 _messageRepo.UpdateStatus(message, MessageStatus.Delivered);
             }
 
             Console.WriteLine(new string('*', Console.WindowWidth));
-            Console.WriteLine($"Status: {message?.MessageStatus};\nSubject: {message?.Subject};");
-            Console.WriteLine($"Text: {message?.Text}");
+            Console.WriteLine($" Status: {message?.MessageStatus};");
+            Console.WriteLine($"   From: {message?.Sender?.Name};");
+            Console.WriteLine($"     To: {message?.ReceiverRole} {message?.Receiver?.Name ?? $"\b"};");
+            Console.WriteLine($"Subject: {message?.Subject};");
+            Console.WriteLine(new string('-', Console.WindowWidth));
+            Console.WriteLine($"\nText:\n{message?.Text}");
+            Console.WriteLine();
             Console.WriteLine(new string('*', Console.WindowWidth));
+            var showedRelatedMessage = false;
+            foreach (var messageInHierarchy in messages)
+            {
+                if (messageInHierarchy.MessageOrderId.Contains(message.MessageId.ToString()) && messageInHierarchy.MessageId != message.MessageId)
+                {
+                    if (showedRelatedMessage == false)
+                    {
+                        Console.WriteLine(new string(' ', Console.WindowWidth));
+                        Console.WriteLine("Replies:");
+                        showedRelatedMessage = true;
+                    }
+                    var hierarchyTab = string.Concat(Enumerable.Repeat("\t", messageInHierarchy.MessageLevel));
+
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                    Console.WriteLine($"{hierarchyTab}Message ID: {messageInHierarchy?.Index}; " +
+                                  $"Status: {messageInHierarchy?.MessageStatus}; " +
+                                  $"Subject: {messageInHierarchy?.Subject}; " +
+                                  $"From: {messageInHierarchy?.Sender?.Name}; " +
+                                  $"To:{messageInHierarchy?.ReceiverRole} {messageInHierarchy?.Receiver?.Name ?? string.Empty}; "
+                                  );
+                    Console.WriteLine(new string('-', Console.WindowWidth));
+                }
+            }
             Console.WriteLine(new string(' ', Console.WindowWidth));
+
+            return showedRelatedMessage;
         }
+
+        public string ReadInputedText(int maxLength)
+        {
+            Console.WriteLine($"Enter text (less than {maxLength} characters, press Escape to finish):");
+
+            StringBuilder inputText = new StringBuilder();
+
+            ConsoleKeyInfo key;
+
+            while (true)
+            {
+                key = Console.ReadKey(intercept: true);
+
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+
+                if (key.Key == ConsoleKey.Backspace && inputText.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    inputText.Length--;
+                }
+                else if (key.Key == ConsoleKey.Enter && inputText.Length < maxLength)
+                {
+                    Console.Write("\n");
+                    inputText.Append("\n");
+                }
+                else if (key.Key != ConsoleKey.Enter && inputText.Length < maxLength)
+                {
+                    Console.Write(key.KeyChar);
+                    inputText.Append(key.KeyChar);
+                }
+            }
+            return inputText.ToString();
+        } 
     }
 }

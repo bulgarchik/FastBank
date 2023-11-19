@@ -12,6 +12,7 @@ namespace FastBank.Infrastructure.DTOs
         public MessageDTO(Message message)
         {
             MessageId = message.MessageId;
+            CreatedOn = message.CreatedOn;
             SenderId = message.Sender.Id;
             ReceiverId = message.Receiver?.Id;
             ReceiverRole = message.ReceiverRole;
@@ -26,6 +27,7 @@ namespace FastBank.Infrastructure.DTOs
 
         [Key]
         public Guid MessageId { get; private set; }
+        public DateTime CreatedOn { get; private set; }
         public Guid SenderId { get; private set; }
         [ForeignKey(nameof(SenderId))]
         public UserDTO Sender { get; private set; }
@@ -51,21 +53,22 @@ namespace FastBank.Infrastructure.DTOs
         {
             this.MessageStatus = messageStatuses;
         }
-        public Message? ToDomainObj(int index)  
+        public Message? ToDomainObj()  
         {
             return new Message(
                 MessageId,
-                Sender.ToDomainObj(),
+                CreatedOn,
+                Sender?.ToDomainObj(),
                 Receiver?.ToDomainObj(),
                 ReceiverRole,
                 Text,
                 Subject,
-                BasedOnMessage?.ToDomainObj(index),
+                BasedOnMessage?.ToDomainObj(),
                 MessageStatus,
                 Type,
                 Transaction?.ToDomainObj(),
-                TransactionOrder?.ToDomainObj(),
-                index);
+                TransactionOrder?.ToDomainObj()
+                );
         }
     }
 }

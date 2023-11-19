@@ -7,7 +7,7 @@ namespace FastBank.Services
         public List<Message?> GetMessages(User user);
 
         public void AddMessage(
-            string Subject,
+            string subject,
             string text,
             MessageStatus status,
             MessageType type,
@@ -26,10 +26,12 @@ namespace FastBank.Services
 
         public void ShowMessagesMenu(User user, List<Message?>? messages = null);
 
-        public void ShowMessageMenu(User user, Message message);
+        public void ShowMessageMenu(User user, Message message, List<Message> messages);
 
-        public void ShowMessages(List<Message?> messages);
+        public void ShowMessages(List<Message?> messages, User user, bool hierarchy);
 
-        public void ShowMessageDetails(User user, Message message);
+        public bool ShowMessageDetails(User user, Message message, List<Message> messages);
+
+        public string ReadInputedText(int maxLength);
     }
 }

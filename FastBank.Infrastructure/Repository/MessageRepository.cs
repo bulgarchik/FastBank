@@ -39,23 +39,28 @@ namespace FastBank.Infrastructure.Repository
                     .Include(m => m.Sender)
                     .Include(m => m.Receiver)
                     .Include(m => m.BasedOnMessage)
+                    .OrderBy(m => m.CreatedOn)
                     .ToList();
-            var messages = dbMessages.Select((m, c) => m.ToDomainObj(c + 1)).ToList();
+            var messages = dbMessages.Select(m => m.ToDomainObj()).ToList();
+            
             return messages;
         }
+
         public List<Message?> GetCustomerServiceMessages(User user)
         {
             var dbMessages = _repo.SetNoTracking<MessageDTO>()
                     .Where(m => m.SenderId == user.Id || m.ReceiverId == user.Id || m.ReceiverRole == Role.CustomerService)
                     .Include(m => m.Sender)
                     .Include(m => m.Receiver)
+                    .Include(m => m.BasedOnMessage)
                     .Include(m => m.TransactionOrder.FromBankAccount.User)
                     .Include(m => m.TransactionOrder.ToBankAccount.User)
                     .Include(m => m.TransactionOrder.Bank)
                     .Include(m => m.TransactionOrder.OrderedByUser)
+                    .OrderBy(m => m.CreatedOn)
                     .ToList();
 
-            var messages = dbMessages.Select((m, c) => m.ToDomainObj(c + 1)).ToList();
+            var messages = dbMessages.Select(m => m.ToDomainObj()).ToList();
             return messages;
         }
     }

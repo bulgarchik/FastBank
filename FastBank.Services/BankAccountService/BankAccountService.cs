@@ -9,7 +9,7 @@ namespace FastBank.Services
         private readonly IBankAccountRepository bankAccountRepository;
         private readonly IMenuService _menuService;
         private readonly IUserService _userService;
-        private readonly ITransactionService _transactionService;
+        private readonly ITransactionRepository _transactionRepo;
         private readonly IMessageService _messageService;
 
         public BankAccountService()
@@ -17,7 +17,7 @@ namespace FastBank.Services
             bankAccountRepository = new BankAccountRepository();
             _menuService = new MenuService();
             _userService = new UserService();
-            _transactionService = new TransactionService();
+            _transactionRepo = new TransactionRepository();
             _messageService = new MessageService(this);
         }
 
@@ -72,6 +72,8 @@ namespace FastBank.Services
         public void Update(BankAccount bankAccount)
         {
             bankAccountRepository.Update(bankAccount);
+
+            _menuService.OperationCompleteScreen();
         }
 
         public void WithdrawAmount(BankAccount customerBankAccount)
@@ -112,7 +114,7 @@ namespace FastBank.Services
         public void TransferMoneyToFriend(BankAccount customerBankAccount, Dictionary<int, User> friends, bool transferOrder = false)
         {
             var inquiryMsg = $"Please enter your friend's email for the money transfer{(transferOrder ? " order" : string.Empty)}. (type \"quit\" for exit):";
-            var emailTypeToInput = "Friend email:";
+            var emailTypeToInput = "Friend email: ";
             var emailFriend = _menuService.InputEmail(inquiryMsg, emailTypeToInput);
 
             if (emailFriend == "quit")
@@ -177,13 +179,13 @@ namespace FastBank.Services
                                                                     customerBankAccount.Customer,
                                                                     amountToTransfer);
 
-                                _transactionService.AddTransactionOrder(transactionOrder);
+                                _transactionRepo.AddTransactionOrder(transactionOrder);
 
-                                _messageService.AddMessage(Subject: "Transfer order",
+                                _messageService.AddMessage(subject: "Transfer order",
                                                            text: $"Please execute transfer from {transactionOrder?.FromBankAccount?.Customer.Name}" +
                                                            $"(email: {transactionOrder?.FromBankAccount?.Customer.Email}) to " +
                                                            $"{transactionOrder?.ToBankAccount?.Customer.Name}" +
-                                                           $"(email: {transactionOrder?.FromBankAccount?.Customer.Email}) for " +
+                                                           $"(email: {transactionOrder?.ToBankAccount?.Customer.Email}) for " +
                                                            $"amount {transactionOrder?.Amount}",
                                                            MessageStatus.Sent,
                                                            MessageType.InqueryForOrderTransfer,
@@ -202,6 +204,7 @@ namespace FastBank.Services
                                 Update(customerBankAccount);
                             }
                         }
+                        _menuService.OperationCompleteScreen();
                     }
                 }
             }
@@ -222,12 +225,14 @@ namespace FastBank.Services
                 foreach (var friend in friendsList)
                 {
                     friends.Add(++friendIndex, friend);
-                    Console.WriteLine($"{friendIndex}. Name: {friend.Name}; email: {friend.Email}");
+                    Console.WriteLine($"{friendIndex}. Name: {friend.Name}; Email: {friend.Email}");
                 }
             }
 
-            var menuOptions = $"\nPlease choose your action: " +
-                             $"\n1:Add friend. 2:Remove friend. 3:Transfer money to friend 4:Request money transfer.  0:For exit";
+            Console.WriteLine($"\nYou bank amount: {customerBankAccount.Amount:0.00} ");
+
+            var menuOptions = $"\nPlease choose your action: \n" +
+                             $"\n 1: Add friend \n 2: Remove friend \n 3: Transfer money to friend \n 4: Request money transfer  \n 0: Exit";
             int action = _menuService.CommandRead(5, menuOptions);
 
             switch (action)
