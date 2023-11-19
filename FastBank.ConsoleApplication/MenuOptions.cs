@@ -187,7 +187,8 @@ namespace FastBank
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                                 $"\nPlease choose your action: \n" +
                                 $"\n 1: Customer transactions report" +
-                                $"\n 2: Empoyees" +
+                                $"\n 2: Replanishment transactions report" +
+                                $"\n 3: Empoyees" +
                                 $"\n 0: Exit";
             var commandsCount = 3;
             int action = _menuService.CommandRead(commandsCount, menuOptions);
