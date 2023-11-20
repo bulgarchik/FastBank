@@ -1,7 +1,5 @@
-﻿using FastBank.Domain;
-using FastBank.Domain.RepositoryInterfaces;
+﻿using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace FastBank.Services
 {
