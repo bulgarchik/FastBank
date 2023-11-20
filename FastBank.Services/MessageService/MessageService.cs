@@ -56,10 +56,10 @@ namespace FastBank.Services
             messages = messages.OrderBy(m => m.MessageOrderId).ThenBy(m => m.CreatedOn).ToList();
 
             var indexedMessages = messages.Select((m, c) =>
-                                                    {
-                                                        m.Index = (c + 1);
-                                                        return m ?? null;
-                                                    }).ToList();
+            {
+                m.Index = (c + 1);
+                return m ?? null;
+            }).ToList();
             return indexedMessages;
         }
 
