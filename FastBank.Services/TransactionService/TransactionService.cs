@@ -16,11 +16,6 @@ namespace FastBank.Services
 
         public void TransactionReport(User user)
         {
-            if (user == null || user.Role != Role.Manager)
-            {
-                return;
-            }
-
             var transactionsCount = _transactionRepo.GetCustomersTransactionsCount();
 
             int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TransactionPerPage);
