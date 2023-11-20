@@ -7,14 +7,14 @@ namespace FastBank.Services.BankService
     public class BankService : IBankService
     {
         private readonly IBankRepository _repoBank;
-        private readonly ITransactionRepository _transactionRepo;
+        private readonly ITransactionService _transactionService;
         private readonly IMessageService _messageService;
         private readonly IMenuService _menuService;
 
         public BankService()
         {
             _repoBank = new BankRepository();
-            _transactionRepo = new TransactionRepository();
+            _transactionService = new TransactionService();
             _messageService = new MessageService(_bankAccountService: null);
             _menuService = new MenuService();
         }
@@ -69,8 +69,7 @@ namespace FastBank.Services.BankService
             if (confirmKey.KeyChar == 'Y' && bank != null)
             {
                 _repoBank.ReplenishCapital(user, bank, capitalAmountToReplenish);
-                var transaction = new Transaction(user, capitalAmountToReplenish, bank, null, TransactionType.BankTransaction);
-                _transactionRepo.AddTransaction(transaction);
+                var transaction = _transactionService.AddTranscation(user, capitalAmountToReplenish, bank, null, TransactionType.BankTransaction);
                 var subjectMessage = $"Capital replenishment.";
                 var textMessage = $"Transaction date: {transaction.CreatedDate}" +
                                   $"\nResponsible for replenishment: {transaction.CreatedByUser.Name} ({transaction.UserNameInitial})" +

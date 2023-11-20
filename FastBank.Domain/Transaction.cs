@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace FastBank.Domain
+﻿namespace FastBank.Domain
 {
     public class Transaction
     {
@@ -24,23 +22,6 @@ namespace FastBank.Domain
             TransactionType = transactionType;
         }
 
-        public Transaction(
-            User createdByUser,
-            decimal amount,
-            Bank? bank,
-            BankAccount? bankAccount,
-            TransactionType transactionType)
-        {
-            TransactionId = Guid.NewGuid();
-            CreatedDate = DateTime.UtcNow;
-            CreatedByUser = createdByUser;
-            Amount = amount;
-            UserNameInitial = createdByUser.Name.Trim().Substring(0, 2).ToUpper();
-            Bank = bank;
-            BankAccount = bankAccount;
-            TransactionType = transactionType;
-        }
-
         public Guid TransactionId { get; private set; }
         public DateTime CreatedDate { get; private set; } = DateTime.UtcNow;
         public User CreatedByUser { get; private set; }
@@ -54,27 +35,7 @@ namespace FastBank.Domain
 
 public enum TransactionType
 {
-    [Display(Name = "Bank Transaction")]
     BankTransaction,
-
-    [Display(Name = "Bank Account Transaction")]
     BankAccountTransaction,
-
-    [Display(Name = "Internal Transfer")]
     InternalTransfer,
-}
-
-public static class TransactionTypeExtensions
-{
-    public static string GetDisplayName(this TransactionType transactionType)
-    {
-        var displayAttribute = GetDisplayAttribute(transactionType);
-        return displayAttribute?.Name ?? transactionType.ToString();
-    }
-
-    private static DisplayAttribute GetDisplayAttribute(TransactionType transactionType)
-    {
-        var field = transactionType.GetType().GetField(transactionType.ToString());
-        return (DisplayAttribute)Attribute.GetCustomAttribute(field, typeof(DisplayAttribute));
-    }
 }
