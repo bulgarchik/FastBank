@@ -37,6 +37,10 @@ namespace FastBank.Services
             {
                 messages = _messageRepo.GetCustomerMessages(user);
             }
+            else if (user.Role == Role.Manager) 
+            {
+                messages = _messageRepo.GetManagerMessages(user);
+            }
 
             foreach (var m in messages)
             {

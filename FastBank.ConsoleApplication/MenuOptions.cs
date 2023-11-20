@@ -184,12 +184,21 @@ namespace FastBank
                 return;
             }
 
+            var messages = _messageService.GetMessages(ActiveUser);
+
+            var messagesCount = messages
+                                    .Where(m => m?.MessageStatus == Domain.MessageStatus.Sent
+                                                && m.ReceiverRole == Role.Manager)
+                                    .Count();
+
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"\nPlease choose your action: \n" +
-                                $"\n 1: Customer transactions report" +
-                                $"\n 2: Replanishment transactions report" +
-                                $"\n 3: Empoyees" +
-                                $"\n 0: Exit";
+                              $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
+                              $"\nPlease choose your action: \n" +
+                              $"\n 1: Customer transactions report" +
+                              $"\n 2: Manage messages" +
+                              $"\n 3: Empoyees" +
+                              $"\n 0: Exit";
+
             var commandsCount = 3;
             int action = _menuService.CommandRead(commandsCount, menuOptions);
 
@@ -201,6 +210,11 @@ namespace FastBank
                         break;
                     }
                 case 2:
+                    {
+                        _messageService.ShowMessagesMenu(ActiveUser, messages);
+                        break;
+                    }
+                case 3:
                     {
                         _employeeService.ShowEmployeesMenu();
                         break;
