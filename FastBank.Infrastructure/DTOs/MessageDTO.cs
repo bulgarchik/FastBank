@@ -47,7 +47,7 @@ namespace FastBank.Infrastructure.DTOs
         public TransactionDTO? Transaction { get; private set; }
         public Guid? TransactionOrderId { get; private set; }
         [ForeignKey(nameof(TransactionOrderId))]
-        public TransactionOrderDto? TransactionOrder { get; private set; }
+        public TransactionOrderDTO? TransactionOrder { get; private set; }
 
         public void UpdateMessageStatus(MessageStatus messageStatuses)
         {
