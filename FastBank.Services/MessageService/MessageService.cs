@@ -134,8 +134,7 @@ namespace FastBank.Services
 
             var menuOptions = $"\nPlease choose your action: \n" +
                               $"\n 1: Open message  \n 0: Exit";
-            var commandsCount = 2;
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
+            int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
             {
@@ -202,7 +201,11 @@ namespace FastBank.Services
 
             var hasRelatedMessages = ShowMessageDetails(user, message, messages);
 
-            var commandList = new List<string>();
+            var menuOptions = $"\nPlease choose your action: \n" +
+                             $"\n 1: Reply to message" +
+                             $"{(message.TransactionOrder != null ? " \n 2: Confirm transfer order " : string.Empty)} \n 0: Exit";
+            var commandsCount = (message.TransactionOrder != null ? 3 : 2);
+            int action = _menuService.CommandRead(commandsCount, menuOptions);
 
             commandList.Add($"\n 1: Reply to message");
             commandList.Add($"\n 2: Open message");
@@ -211,18 +214,8 @@ namespace FastBank.Services
                 commandList.Add($"\n 3: Confirm transfer order");
             }
             commandList.Add($"\n 0: Exit");
-            StringBuilder menuOptions = new StringBuilder();
-            menuOptions.Append($"\nPlease choose your action: \n");
-            foreach (var item in commandList)
-            {
-                menuOptions.Append(item);
-            }
-
-            var menuOptions = $"\nPlease choose your action: \n" +
-                             $"\n 1: Reply to message" +
-                             $"{(message.TransactionOrder != null ? " \n 2: Confirm transfer order " : string.Empty)} \n 0: Exit";
-            var commandsCount = (message.TransactionOrder != null ? 3 : 2);
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
+            
+            int action = _menuService.CommandRead(commandList);
 
             switch (action)
             {
@@ -275,7 +268,7 @@ namespace FastBank.Services
             }
         }
 
-        public void ShowMessages(List<Message?> messages, User user, bool heirarchy)
+        public void ShowMessages(List<Message?> messages, User user, bool hierarchy)
         {
             if (messages.Count > 0)
             {

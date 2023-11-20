@@ -17,8 +17,6 @@ namespace FastBank
 
         static readonly MessageService _messageService = new MessageService(bankAccountService);
 
-        static readonly TransactionService _transactionService = new TransactionService();
-
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
@@ -32,8 +30,7 @@ namespace FastBank
                 if (ActiveUser == null)
                 {
                     var menuOptions = "Please choose your action:\n \n 1: For login \n 2: For customer registration \n 0: Exit";
-                    var commandsCount = 3;
-                    int action = _menuService.CommandRead(commandsCount, menuOptions);
+                    int action = _menuService.CommandRead(3, menuOptions);
 
                     switch (action)
                     {
@@ -158,7 +155,7 @@ namespace FastBank
                     OpenCustomerMenu();
                     break;
                 case Role.Manager:
-                    OpenManagerMenu();
+                    OpenCustomerMenu();
                     break;
                 case Role.Customer:
                     OpenCustomerMenu();
@@ -175,38 +172,6 @@ namespace FastBank
             }
         }
 
-        public static void OpenManagerMenu()
-        {
-            if (ActiveUser == null || ActiveUser.Role != Role.Manager)
-            {
-                return;
-            }
-
-            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"\nPlease choose your action: \n" +
-                                $"\n 1: Customer transactions report" + 
-                                 $"\n 0: Exit";
-            var commandsCount = 2;
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
-
-            switch (action)
-            {
-                case 1:
-                    {
-                        _transactionService.TransactionReport(ActiveUser);
-                        break;
-                    }
-                case 0:
-                    {
-                        ActiveUser = null;
-                        break;
-                    }
-                default:
-                    break;
-            }
-            Console.Clear();
-        }
-
         static public void OpenBankerMenu()
         {
             var bankService = new BankService();
@@ -219,8 +184,7 @@ namespace FastBank
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                                  $"\nPlease choose your action: \n" +
                                   $"\n 1: Capital Replenishment \n 0: Exit";
-            var commandsCount = 2;
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
+            int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
             {
@@ -276,8 +240,7 @@ namespace FastBank
                                   $"\nPlease choose your action: \n" +
                                   $"\n 1: For deposit \n 2: For withdraw \n 3: Create inquiry " +
                                     $"\n 4: Check inquiries \n 5: Transfer to friend \n 0: Exit";
-                var commandsCount = 6;
-                int action = _menuService.CommandRead(commandsCount, menuOptions);
+                int action = _menuService.CommandRead(6, menuOptions);
                 switch (action)
                 {
                     case 1:
@@ -334,8 +297,7 @@ namespace FastBank
                                 $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
                                 $"\nPlease choose your action: \n" +
                                 $"\n1: Manage messages \n0: Exit";
-            var commandsCount = 2;
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
+            int action = _menuService.CommandRead(2, menuOptions);
 
             switch (action)
             {

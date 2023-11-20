@@ -70,7 +70,7 @@ namespace FastBank.Services.BankService
             {
                 _repoBank.ReplenishCapital(user, bank, capitalAmountToReplenish);
                 var transaction = new Transaction(user, capitalAmountToReplenish, bank, null, TransactionType.BankTransaction);
-                    _transactionRepo.AddTransaction(transaction);
+                _transactionRepo.AddTransaction(transaction);
                 var subjectMessage = $"Capital replenishment.";
                 var textMessage = $"Transaction date: {transaction.CreatedDate}" +
                                   $"\nResponsible for replenishment: {transaction.CreatedByUser.Name} ({transaction.UserNameInitial})" +

@@ -67,8 +67,6 @@ namespace FastBank.Services
                 customerBankAccount.DepositAmount(depositAmount);
                 Update(customerBankAccount);
             }
-            var transaction = new Transaction(customer, depositAmount, null, customerBankAccount, TransactionType.BankAccountTransaction);
-            _transactionRepo.AddTransaction(transaction);
         }
 
         public void Update(BankAccount bankAccount)
@@ -109,8 +107,6 @@ namespace FastBank.Services
                 {
                     customerBankAccount.WithdrawAmount(withdrawAmount);
                     Update(customerBankAccount);
-                    var transaction = new Transaction(customerBankAccount.Customer, withdrawAmount * (-1), null, customerBankAccount, TransactionType.BankAccountTransaction);
-                    _transactionRepo.AddTransaction(transaction);
                 }
             }
         }
@@ -204,13 +200,8 @@ namespace FastBank.Services
                             {
                                 friendAccount.DepositAmount(amountToTransfer);
                                 Update(friendAccount);
-                                var transactionDeposit = new Transaction(friendAccount.Customer, amountToTransfer, null, friendAccount, TransactionType.BankAccountTransaction);
-                                _transactionRepo.AddTransaction(transactionDeposit);
-                                
                                 customerBankAccount.WithdrawAmount(amountToTransfer);
                                 Update(customerBankAccount);
-                                var transactionWithdraw = new Transaction(customerBankAccount.Customer, amountToTransfer * (-1), null, customerBankAccount, TransactionType.BankAccountTransaction);
-                                _transactionRepo.AddTransaction(transactionWithdraw);
                             }
                         }
                         _menuService.OperationCompleteScreen();
@@ -242,8 +233,7 @@ namespace FastBank.Services
 
             var menuOptions = $"\nPlease choose your action: \n" +
                              $"\n 1: Add friend \n 2: Remove friend \n 3: Transfer money to friend \n 4: Request money transfer  \n 0: Exit";
-            var commandsCount = 5;
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
+            int action = _menuService.CommandRead(5, menuOptions);
 
             switch (action)
             {
@@ -278,24 +268,8 @@ namespace FastBank.Services
         {
             transactionOrder?.FromBankAccount?.WithdrawAmount(transactionOrder.Amount);
             Update(transactionOrder.FromBankAccount);
-
-            _transactionRepo.AddTransaction(new Transaction(
-                                                transactionOrder.FromBankAccount.Customer,
-                                                transactionOrder.Amount * (-1),
-                                                null,
-                                                transactionOrder.FromBankAccount,
-                                                TransactionType.BankAccountTransaction));
-            
-
             transactionOrder.ToBankAccount.DepositAmount(transactionOrder.Amount);
             Update(transactionOrder.ToBankAccount);
-            
-            _transactionRepo.AddTransaction(new Transaction(
-                                                transactionOrder.ToBankAccount.Customer,
-                                                transactionOrder.Amount,
-                                                null,
-                                                transactionOrder.ToBankAccount,
-                                                TransactionType.BankAccountTransaction));
         }
     }
 }
