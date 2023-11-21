@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FastBank.Infrastructure.DTOs
 {
-    [Table("Emoyees")]
+    [Table("Employees")]
     public class EmployeeDTO
     {
         private EmployeeDTO() { }

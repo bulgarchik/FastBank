@@ -24,7 +24,7 @@ namespace FastBank.Services.EmployeeService
 
             var employeesCount = _employeeRepository.GetEmployeeCount();
 
-            int totalPages = (int)Math.Ceiling((double)employeesCount / EmployeeRepository.EmployeesPerPage);
+            int totalPages = (int)Math.Ceiling((double)employeesCount / EmployeeRepository.EMPLOYEES_PER_PAGE);
 
             do
             {
@@ -87,7 +87,7 @@ namespace FastBank.Services.EmployeeService
                             if (employee != null)
                             {
                                 employeesCount = _employeeRepository.GetEmployeeCount();
-                                totalPages = (int)Math.Ceiling((double)employeesCount / EmployeeRepository.EmployeesPerPage);
+                                totalPages = (int)Math.Ceiling((double)employeesCount / EmployeeRepository.EMPLOYEES_PER_PAGE);
                             }
                             break;
                         }
@@ -98,7 +98,7 @@ namespace FastBank.Services.EmployeeService
                                 if (TerminateEmployee(employees))
                                 {
                                     employeesCount = _employeeRepository.GetEmployeeCount();
-                                    totalPages = (int)Math.Ceiling((double)employeesCount / EmployeeRepository.EmployeesPerPage);
+                                    totalPages = (int)Math.Ceiling((double)employeesCount / EmployeeRepository.EMPLOYEES_PER_PAGE);
                                 }
                             }
                             break;
