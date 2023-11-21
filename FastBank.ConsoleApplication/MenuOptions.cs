@@ -230,9 +230,10 @@ namespace FastBank
                               $"\n 1: Customer transactions report" +
                               $"\n 2: Manage messages" +
                               $"\n 3: Empoyees" +
+                              $"\n 4: Accountant transactions reports" +
                               $"\n 0: Exit";
 
-            var commandsCount = 3;
+            var commandsCount = 5;
             int action = _menuService.CommandRead(commandsCount, menuOptions);
 
             switch (action)
@@ -250,6 +251,11 @@ namespace FastBank
                 case 3:
                     {
                         _employeeService.ShowEmployeesMenu();
+                        break;
+                    }
+                case 4:
+                    {
+                        _transactionService.ManageTransactionsReport();
                         break;
                     }
                 case 0:

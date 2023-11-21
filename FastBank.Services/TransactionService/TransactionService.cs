@@ -1,6 +1,7 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using System.Diagnostics;
 
 namespace FastBank.Services
 {
@@ -13,6 +14,119 @@ namespace FastBank.Services
         {
             _transactionRepo = new TransactionRepository();
             _menuService = new MenuService();
+        }
+
+        public void ManageTransactionsReport()
+        {
+            int currentPage = 1;
+
+            List<TransactionsReport> transactionsReports;
+
+            var transactionsReportsCount = _transactionRepo.GetTransactionsReportsCount();
+
+            int totalPages = (int)Math.Ceiling((double)transactionsReportsCount / TransactionRepository.TRANSACTION_PER_PAGE);
+
+            do
+            {
+                Console.Clear();
+                _menuService.ShowLogo();
+
+                transactionsReports = _transactionRepo.GetTransactionsReports(currentPage);
+
+                if (transactionsReports != null && transactionsReports.Count() > 0)
+                {
+                    Console.WriteLine("Transactions reports:");
+
+                    Console.WriteLine("{0,-4} {1,-40} {2,-30}",
+                       "| ID",
+                       "| Created by",
+                       "| Created on");
+                    Console.WriteLine(new string('-', 85));
+
+                    foreach (var transactionsReport in transactionsReports)
+                    {
+                        Console.WriteLine("{0,-4} {1,-40} {2,-30}",
+                            $"| {transactionsReport.Index}",
+                            $"| {transactionsReport.CreatedBy.Name}",
+                            $"| {transactionsReport.CreatedOn.ToShortTimeString()}");
+                    }
+
+                    Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
+                }
+
+                var menuOptions = $"\nPlease choose your action: \n" +
+                               $"\n 1: For next page" +
+                               $"\n 2: For previous page" +
+                               $"\n 3: Open transactions report" +
+                               $"\n 0: Exit";
+                var commandsCount = 4;
+                int action = _menuService.CommandRead(commandsCount, menuOptions);
+
+                switch (action)
+                {
+                    case 1:
+                        {
+                            if (currentPage < totalPages)
+                            {
+                                currentPage++;
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (currentPage > 1)
+                            {
+                                currentPage--;
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            if (transactionsReports != null && transactionsReports.Count>0)
+                            {
+                                OpenTransactionsReport(transactionsReports);
+                                
+                            }
+                            break;
+                        }
+                    case 0:
+                        {
+                            return;
+                        }
+                }
+            }
+            while (true);
+
+        }
+
+        public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports)
+        {
+            Console.WriteLine("\nOpening transactions process started...\n");
+
+            int transactionsReportId;
+            do
+            {
+                Console.WriteLine("Please enter transactions report ID (type 'q' for exit):");
+                Console.Write("Transactions report ID: ");
+                var inputtransactionsReportId = Console.ReadLine() ?? null;
+
+                if (inputtransactionsReportId == "q")
+                    return false;
+
+                if (!int.TryParse(inputtransactionsReportId, out transactionsReportId) || transactionsReportId < transactionsReports.First()?.Index || transactionsReportId > transactionsReports.Last().Index)
+                {
+                    Console.WriteLine("Please input correct transactions report ID (press any key to continue...)");
+                    var keyIsEnter = Console.ReadKey();
+                    new MenuService().MoveToPreviousLine(keyIsEnter, 3);
+                }
+            } while (transactionsReportId < transactionsReports?.First()?.Index || transactionsReportId > transactionsReports?.Last().Index);
+
+            var transactionsReport = transactionsReports.Where(x => x.Index == transactionsReportId).FirstOrDefault();
+            if (transactionsReport != null)
+            {
+                //Process.Start(transactionsReport.PathToFile);
+            }
+            return false;
         }
 
         public void AddTransactionsReport(List<Transaction> transactions, User createdBy)
@@ -50,15 +164,13 @@ namespace FastBank.Services
                     Guid.NewGuid(),
                     DateTime.UtcNow,
                     filePath, createdBy));
-
-
         }
 
         public void TransactionReport(User user)
         {
             var transactionsCount = _transactionRepo.GetCustomersTransactionsCount();
 
-            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TransactionPerPage);
+            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TRANSACTION_PER_PAGE);
 
             int currentPage = 1;
 

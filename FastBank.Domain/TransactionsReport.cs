@@ -13,5 +13,6 @@
         public DateTime CreatedOn { get; private set; }
         public string PathToFile { get; private set; }
         public User CreatedBy { get; private set; }
+        public int Index { get; set; }
     }
 }

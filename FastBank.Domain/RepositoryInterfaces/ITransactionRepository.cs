@@ -11,5 +11,9 @@
         public void AddTransactionOrder(TransactionOrder transactionOrder);
 
         public void AddTransactionsReport(TransactionsReport transactionsReport);
+
+        public List<TransactionsReport> GetTransactionsReports(int currentPage = 1);
+
+        public int GetTransactionsReportsCount();
     }
 }

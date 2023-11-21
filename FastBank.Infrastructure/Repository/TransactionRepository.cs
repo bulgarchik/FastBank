@@ -9,7 +9,7 @@ namespace FastBank.Infrastructure.Repository
     {
         private readonly IRepository _repository;
 
-        public const int TransactionPerPage = 10;
+        public const int TRANSACTION_PER_PAGE = 3;
 
         public TransactionRepository()
         {
@@ -22,8 +22,8 @@ namespace FastBank.Infrastructure.Repository
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.CreatedByUser.Role == Role.Customer.ToString())
                 .OrderBy(t => t.CreatedDate)
-                .Skip((currentPage - 1) * TransactionPerPage)
-                .Take(TransactionPerPage)
+                .Skip((currentPage - 1) * TRANSACTION_PER_PAGE)
+                .Take(TRANSACTION_PER_PAGE)
                 .Select(t => t.ToDomainObj())
                 .ToList();
 
@@ -55,6 +55,33 @@ namespace FastBank.Infrastructure.Repository
         public void AddTransactionsReport(TransactionsReport transactionsReport)
         {
             _repository.Add<TransactionsReportDTO>(new TransactionsReportDTO(transactionsReport));
+        }
+
+        public List<TransactionsReport> GetTransactionsReports(int currentPage = 1)
+        {
+            var currentPageTransactionsReportsIndex = (currentPage - 1) * TRANSACTION_PER_PAGE + 1;
+
+            var transactionsReports =  _repository.Set<TransactionsReportDTO>()
+                        .Include(tr => tr.CreatedBy)
+                        .OrderBy(tr => tr.CreatedOn)
+                        .Skip((currentPage - 1) * TRANSACTION_PER_PAGE)
+                        .Take(TRANSACTION_PER_PAGE)
+                        .Select(tr => tr.ToDomainObj())
+                        .ToList();
+
+            foreach (var item in transactionsReports)
+            {
+                item.Index = currentPageTransactionsReportsIndex++;
+            }
+
+            return transactionsReports;
+        }
+
+        public int GetTransactionsReportsCount()
+        {
+            return _repository.Set<TransactionsReportDTO>()
+                        .Include(tr => tr.CreatedBy)
+                        .Count();
         }
     }
 }
