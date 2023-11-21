@@ -9,5 +9,7 @@
         public void AddTransaction(Transaction transaction);
 
         public void AddTransactionOrder(TransactionOrder transactionOrder);
+
+        public void AddTransactionsReport(TransactionsReport transactionsReport);
     }
 }

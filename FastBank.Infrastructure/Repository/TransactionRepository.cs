@@ -49,7 +49,12 @@ namespace FastBank.Infrastructure.Repository
 
         public void AddTransactionOrder(TransactionOrder transactionOrder)
         {
-            _repository.Add<TransactionOrderDto>(new TransactionOrderDto(transactionOrder));
+            _repository.Add<TransactionOrderDTO>(new TransactionOrderDTO(transactionOrder));
+        }
+    
+        public void AddTransactionsReport(TransactionsReport transactionsReport)
+        {
+            _repository.Add<TransactionsReportDTO>(new TransactionsReportDTO(transactionsReport));
         }
     }
 }

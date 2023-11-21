@@ -3,6 +3,7 @@ using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Text;
 
 namespace FastBank.Services
 {
@@ -55,10 +56,10 @@ namespace FastBank.Services
             messages = messages.OrderBy(m => m.MessageOrderId).ThenBy(m => m.CreatedOn).ToList();
 
             var indexedMessages = messages.Select((m, c) =>
-                                                    {
-                                                        m.Index = (c + 1);
-                                                        return m ?? null;
-                                                    }).ToList();
+            {
+                m.Index = (c + 1);
+                return m ?? null;
+            }).ToList();
             return indexedMessages;
         }
 
@@ -82,17 +83,14 @@ namespace FastBank.Services
         {
             Console.WriteLine("Please input message subject:");
             Console.Write("Subject: ");
-            var subject = Console.ReadLine() ?? string.Empty;
+            var subject = ReadInputedText(100);
 
-            Console.WriteLine("Please text message");
-            Console.Write("Text: ");
-            var text = Console.ReadLine() ?? string.Empty;
+            Console.WriteLine("Please input text message: ");
+            var text = ReadInputedText(400);
 
             var message = new Message(Guid.NewGuid(), DateTime.UtcNow, user, null, Role.CustomerService,
                                       text, subject, null, MessageStatus.Sent, MessageType.Inquery);
-
             _messageRepo.Add(message);
-
             _menuService.OperationCompleteScreen();
 
             return message;
@@ -102,7 +100,7 @@ namespace FastBank.Services
         {
             Console.WriteLine("Please enter reply to message:");
             Console.Write("Reply text: ");
-            var text = Console.ReadLine() ?? string.Empty;
+            var text = ReadInputedText(400);
 
             var replyMessage = new Message(
                                         Guid.NewGuid(),
@@ -202,13 +200,19 @@ namespace FastBank.Services
             Console.Clear();
             _menuService.ShowLogo();
 
-            ShowMessageDetails(user, message, messages);
+            var hasRelatedMessages = ShowMessageDetails(user, message, messages);
 
-            var menuOptions = $"\nPlease choose your action: \n" +
-                             $"\n 1: Reply to message" +
-                             $"{(message.TransactionOrder != null ? " \n 2: Confirm transfer order " : string.Empty)} \n 0: Exit";
-            var commandsCount = (message.TransactionOrder != null ? 3 : 2);
-            int action = _menuService.CommandRead(commandsCount, menuOptions);
+            var commandList = new List<string>();
+
+            commandList.Add($"\n 1: Reply to message");
+            commandList.Add($"\n 2: Open message");
+            if (user.Role == Role.CustomerService)
+            {
+                commandList.Add($"\n 3: Confirm transfer order");
+            }
+            commandList.Add($"\n 0: Exit");
+
+            int action = _menuService.CommandRead(commandList);
 
             switch (action)
             {
@@ -220,7 +224,24 @@ namespace FastBank.Services
                     }
                 case 2:
                     {
-                        if (message.TransactionOrder != null)
+                        if (hasRelatedMessages)
+                        {
+                            var msg = SelectMessageByInputId(messages);
+                            if (msg != null)
+                            {
+                                ShowMessageMenu(user, msg, messages);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Current message has not related messages. Press any key to continue..");
+                            Console.ReadKey();
+                        }
+                        break;
+                    }
+                case 3:
+                    {
+                        if (message.TransactionOrder != null && user.Role == Role.CustomerService)
                         {
                             Console.WriteLine($"Please confirm with Y execution of order transfer for {message.TransactionOrder.Amount} " +
                                 $"from {message.TransactionOrder?.FromBankAccount?.Customer.Name} " +
@@ -234,12 +255,17 @@ namespace FastBank.Services
                                 _menuService.OperationCompleteScreen();
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine("This message is not transfer order. Press any key to continue...");
+                            Console.ReadKey();
+                        }
                         break;
                     }
             }
         }
 
-        public void ShowMessages(List<Message?> messages, User user, bool heirarchy)
+        public void ShowMessages(List<Message?> messages, User user, bool hierarchy)
         {
             if (messages.Count > 0)
             {
@@ -255,7 +281,7 @@ namespace FastBank.Services
                 }
                 else
                 {
-                    if (!heirarchy)
+                    if (!hierarchy)
                         continue;
                 }
 
@@ -269,13 +295,13 @@ namespace FastBank.Services
                                   $"Subject: {message?.Subject}; " +
                                   $"From: {message?.Sender?.Name}; " +
                                   $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; " +
-                                  $"new messages {countOfNewInHierarchy} from {countInHierarchy} in hierarchy "
+                                  $"new messages {countOfNewInHierarchy}"
                                   );
                 Console.WriteLine(new string('-', Console.WindowWidth));
             }
         }
 
-        public void ShowMessageDetails(User user, Message message, List<Message> messages)
+        public bool ShowMessageDetails(User user, Message message, List<Message> messages)
         {
             if (message.MessageStatus == MessageStatus.Sent
                 && message.Sender != null
@@ -286,23 +312,24 @@ namespace FastBank.Services
             }
 
             Console.WriteLine(new string('*', Console.WindowWidth));
-            Console.WriteLine($"Status: {message?.MessageStatus};");
-            Console.WriteLine($"From: {message?.Sender?.Name}; " +
-                              $"To:{message?.ReceiverRole} {message?.Receiver?.Name ?? string.Empty}; ");
+            Console.WriteLine($" Status: {message?.MessageStatus};");
+            Console.WriteLine($"   From: {message?.Sender?.Name};");
+            Console.WriteLine($"     To: {message?.ReceiverRole} {message?.Receiver?.Name ?? $"\b"};");
             Console.WriteLine($"Subject: {message?.Subject};");
             Console.WriteLine(new string('-', Console.WindowWidth));
-            Console.WriteLine($"Text: {message?.Text}");
+            Console.WriteLine($"\nText:\n{message?.Text}");
+            Console.WriteLine();
             Console.WriteLine(new string('*', Console.WindowWidth));
-            var showRelatedMessage = true;
+            var showedRelatedMessage = false;
             foreach (var messageInHierarchy in messages)
             {
                 if (messageInHierarchy.MessageOrderId.Contains(message.MessageId.ToString()) && messageInHierarchy.MessageId != message.MessageId)
                 {
-                    if (showRelatedMessage)
+                    if (showedRelatedMessage == false)
                     {
                         Console.WriteLine(new string(' ', Console.WindowWidth));
-                        Console.WriteLine("Related messages:");
-                        showRelatedMessage = false;
+                        Console.WriteLine("Replies:");
+                        showedRelatedMessage = true;
                     }
                     var hierarchyTab = string.Concat(Enumerable.Repeat("\t", messageInHierarchy.MessageLevel));
 
@@ -317,6 +344,44 @@ namespace FastBank.Services
                 }
             }
             Console.WriteLine(new string(' ', Console.WindowWidth));
+
+            return showedRelatedMessage;
+        }
+
+        public string ReadInputedText(int maxLength)
+        {
+            Console.WriteLine($"Enter text (less than {maxLength} characters, press Escape to finish):");
+
+            StringBuilder inputText = new StringBuilder();
+
+            ConsoleKeyInfo key;
+
+            while (true)
+            {
+                key = Console.ReadKey(intercept: true);
+
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+
+                if (key.Key == ConsoleKey.Backspace && inputText.Length > 0)
+                {
+                    Console.Write("\b \b");
+                    inputText.Length--;
+                }
+                else if (key.Key == ConsoleKey.Enter && inputText.Length < maxLength)
+                {
+                    Console.Write("\n");
+                    inputText.Append("\n");
+                }
+                else if (key.Key != ConsoleKey.Enter && inputText.Length < maxLength)
+                {
+                    Console.Write(key.KeyChar);
+                    inputText.Append(key.KeyChar);
+                }
+            }
+            return inputText.ToString();
         }
     }
 }

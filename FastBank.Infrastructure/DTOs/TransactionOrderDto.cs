@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FastBank.Infrastructure.DTOs
 {
     [Table("TransactionOrders")]
-    public class TransactionOrderDto
+    public class TransactionOrderDTO
     {
-        private TransactionOrderDto() { }
-        public TransactionOrderDto(TransactionOrder transactionOrder)
+        private TransactionOrderDTO() { }
+        public TransactionOrderDTO(TransactionOrder transactionOrder)
         {
             TransactionOrderId = transactionOrder.TransactionOrderId;
             CreatedDate = transactionOrder.CreatedDate;

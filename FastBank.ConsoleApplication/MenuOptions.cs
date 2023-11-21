@@ -66,7 +66,7 @@ namespace FastBank
             }
 
             Console.Clear();
-            Console.WriteLine("You successfully exited the system! Pres any key to close programm...");
+            Console.WriteLine("You successfully exited the system! Press any key to close program...");
             Console.ReadKey();
             Environment.Exit(0);
         }
@@ -155,7 +155,7 @@ namespace FastBank
             switch (ActiveUser.Role)
             {
                 case Role.Accountant:
-                    OpenCustomerMenu();
+                    OpenAccountantMenu();
                     break;
                 case Role.Manager:
                     OpenManagerMenu();
@@ -173,6 +173,38 @@ namespace FastBank
                     ShowMainMenu();
                     break;
             }
+        }
+
+        public static void OpenAccountantMenu()
+        {
+            if (ActiveUser == null || ActiveUser.Role != Role.Accountant)
+            {
+                return;
+            }
+
+            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+                                $"\nPlease choose your action: \n" +
+                                $"\n 1: Transactions report" +
+                                 $"\n 0: Exit";
+            var commandsCount = 2;
+            int action = _menuService.CommandRead(commandsCount, menuOptions);
+
+            switch (action)
+            {
+                case 1:
+                    {
+                        _transactionService.TransactionReport(ActiveUser);
+                        break;
+                    }
+                case 0:
+                    {
+                        ActiveUser = null;
+                        break;
+                    }
+                default:
+                    break;
+            }
+            Console.Clear();
         }
 
         public static void OpenManagerMenu()

@@ -5,5 +5,6 @@ namespace FastBank.Services
     public interface ITransactionService
     {
         public void TransactionReport(User user);
+        public void AddTransactionsReport(List<Transaction> transactions, User createdBy);
     }
 }
