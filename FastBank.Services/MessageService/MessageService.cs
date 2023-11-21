@@ -37,6 +37,10 @@ namespace FastBank.Services
             {
                 messages = _messageRepo.GetCustomerMessages(user);
             }
+            else if (user.Role == Role.Manager) 
+            {
+                messages = _messageRepo.GetManagerMessages(user);
+            }
 
             foreach (var m in messages)
             {
@@ -211,7 +215,7 @@ namespace FastBank.Services
                 commandList.Add($"\n 3: Confirm transfer order");
             }
             commandList.Add($"\n 0: Exit");
-
+            
             int action = _menuService.CommandRead(commandList);
 
             switch (action)
@@ -382,6 +386,6 @@ namespace FastBank.Services
                 }
             }
             return inputText.ToString();
-        }
+        } 
     }
 }

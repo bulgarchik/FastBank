@@ -9,5 +9,7 @@
         public List<Message?> GetCustomerMessages(User user);
 
         public List<Message?> GetCustomerServiceMessages(User user);
+
+        public List<Message?> GetManagerMessages(User user);
     }
 }

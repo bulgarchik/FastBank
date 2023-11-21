@@ -2,6 +2,7 @@
 using FastBank.Infrastructure.Context;
 using FastBank.Infrastructure.Repository;
 using FastBank.Services.BankService;
+using FastBank.Services.EmployeeService;
 
 namespace FastBank
 {
@@ -18,6 +19,8 @@ namespace FastBank
         static readonly MessageService _messageService = new MessageService(bankAccountService);
 
         static readonly TransactionService _transactionService = new TransactionService();
+
+        static readonly EmployeeService _employeeService = new EmployeeService();
 
         static public void ShowMainMenu()
         {
@@ -214,11 +217,22 @@ namespace FastBank
                 return;
             }
 
+            var messages = _messageService.GetMessages(ActiveUser);
+
+            var messagesCount = messages
+                                    .Where(m => m?.MessageStatus == Domain.MessageStatus.Sent
+                                                && m.ReceiverRole == Role.Manager)
+                                    .Count();
+
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"\nPlease choose your action: \n" +
-                                $"\n 1: Customer transactions report" + 
-                                 $"\n 0: Exit";
-            var commandsCount = 2;
+                              $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
+                              $"\nPlease choose your action: \n" +
+                              $"\n 1: Customer transactions report" +
+                              $"\n 2: Manage messages" +
+                              $"\n 3: Empoyees" +
+                              $"\n 0: Exit";
+
+            var commandsCount = 3;
             int action = _menuService.CommandRead(commandsCount, menuOptions);
 
             switch (action)
@@ -226,6 +240,16 @@ namespace FastBank
                 case 1:
                     {
                         _transactionService.TransactionReport(ActiveUser);
+                        break;
+                    }
+                case 2:
+                    {
+                        _messageService.ShowMessagesMenu(ActiveUser, messages);
+                        break;
+                    }
+                case 3:
+                    {
+                        _employeeService.ShowEmployeesMenu();
                         break;
                     }
                 case 0:
@@ -309,8 +333,7 @@ namespace FastBank
                                   $"\n 1: For deposit \n 2: For withdraw \n 3: Create inquiry " +
                                     $"\n 4: Check inquiries \n 5: Transfer to friend \n 0: Exit";
                 var commandsCount = 6;
-                int action = _menuService.CommandRead(commandsCount, menuOptions);
-                switch (action)
+                int action = _menuService.CommandRead(commandsCount, menuOptions); switch (action)
                 {
                     case 1:
                         {

@@ -94,6 +94,11 @@ namespace FastBank.Infrastructure.Context
             modelBuilder.Entity<TransactionsReportDTO>()
                 .HasOne(to => to.CreatedBy).WithMany().HasForeignKey(to => to.UserId).IsRequired();    
 
+            modelBuilder.Entity<EmployeeDTO>()
+                .HasOne(em => em.User)
+                .WithMany()
+                .HasForeignKey(em => em.UserId);
+
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "achoceo@abv.bg", DateTime.Now, "achkata", Role.Manager, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Анелия Иванова", "ani90@abv.bg", DateTime.Now, "anito1990", Role.Accountant, false));
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Добромир Иванов", "dobaIv@abv.bg", DateTime.Now, "dobbanker", Role.Banker, false));
@@ -228,5 +233,6 @@ namespace FastBank.Infrastructure.Context
         public virtual DbSet<TransactionDTO> Transactions { get; set; }
         public virtual DbSet<TransactionOrderDTO> TransactionsOrder { get; set; }
         public virtual DbSet<TransactionsReportDTO> TransactionsReports { get; set; }
+        public virtual DbSet<EmployeeDTO> Employees { get; set; }
     }
 }
