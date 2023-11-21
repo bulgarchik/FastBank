@@ -9,12 +9,13 @@ namespace FastBank.Infrastructure.Repository
     {
         private readonly IRepository _repo;
 
-        public const int EmployeesPerPage = 3;
+        public const int EMPLOYEES_PER_PAGE = 3;
 
         public EmployeeRepository()
         {
             _repo = new Repository(new FastBankDbContext());
         }
+
         public void AddEmployee(Employee employee)
         {
             _repo.Add(new EmployeeDTO(employee));
@@ -34,12 +35,12 @@ namespace FastBank.Infrastructure.Repository
 
         public List<Employee> GetEmployees(int currentPage = 1)
         {
-            var currentPageEmployeeIndex = (currentPage - 1) * EmployeesPerPage + 1;
+            var currentPageEmployeeIndex = (currentPage - 1) * EMPLOYEES_PER_PAGE + 1;
 
             var employees = _repo.Set<EmployeeDTO>()
                                  .OrderBy(e => e.Name).ThenBy(e => e.EmployeeId)
-                                 .Skip((currentPage - 1) * EmployeesPerPage)
-                                 .Take(EmployeesPerPage)
+                                 .Skip((currentPage - 1) * EMPLOYEES_PER_PAGE)
+                                 .Take(EMPLOYEES_PER_PAGE)
                                  .Select(e => e.ToDomeinObj())
                                  .ToList();
 
