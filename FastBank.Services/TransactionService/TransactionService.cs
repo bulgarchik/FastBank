@@ -1,4 +1,5 @@
-﻿using FastBank.Domain.RepositoryInterfaces;
+﻿using FastBank.Domain;
+using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 
 namespace FastBank.Services
