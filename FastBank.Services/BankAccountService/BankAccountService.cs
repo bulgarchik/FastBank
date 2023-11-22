@@ -230,8 +230,8 @@ namespace FastBank.Services
             var friendsList = _userService.GetUserFriends(customerBankAccount.Customer);
             if (friendsList != null)
             {
-
-                Console.WriteLine($"\nYou have {friendsList.Count} friend{(friendsList.Count > 1 ? 's' : string.Empty)}:\n");
+                var friendListCount = friendsList.Count;
+                Console.WriteLine($"\nYou have {friendsList.Count} friend{(friendListCount > 1 || friendListCount == 0 ? 's' : string.Empty)}:\n");
                 foreach (var friend in friendsList)
                 {
                     friends.Add(++friendIndex, friend);
