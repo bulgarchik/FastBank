@@ -337,7 +337,7 @@ namespace FastBank
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} \n" +
                                   $"\nPlease choose your action: \n" +
                                   $"\n 1: For deposit \n 2: For withdraw \n 3: Create inquiry " +
-                                    $"\n 4: Check inquiries \n 5: Transfer to friend \n 0: Exit";
+                                    $"\n 4: Check inquiries \n 5: My friends \n 0: Exit";
                 var commandsCount = 6;
                 int action = _menuService.CommandRead(commandsCount, menuOptions); switch (action)
                 {
