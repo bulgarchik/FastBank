@@ -143,7 +143,7 @@ namespace FastBank.Infrastructure.Context
                             null,
                             Role.CustomerService,
                             "First message text to Customer Service",
-                            "lv 0 First Message Subject",
+                            "First Message",
                             null,
                             Domain.MessageStatus.Sent,
                             Domain.MessageType.Inquery, null)
@@ -157,7 +157,7 @@ namespace FastBank.Infrastructure.Context
                             null,
                             Role.CustomerService,
                             "Second message text to Customer Service",
-                            "lv 0 Second Message Subject",
+                            "Second Message",
                             null,
                             Domain.MessageStatus.Sent,
                             Domain.MessageType.Inquery, null)
@@ -170,8 +170,8 @@ namespace FastBank.Infrastructure.Context
                            testCustomer.ToDomainObj(),
                            null,
                            Role.CustomerService,
-                           "Reply to first message text to Customer Service",
-                           "lv 1 msg 3 Reply to first Message Subject",
+                           "Reply to first message",
+                           "Reply to first Message",
                            msg1.ToDomainObj(),
                            Domain.MessageStatus.Sent,
                            Domain.MessageType.Inquery, null));
@@ -183,8 +183,8 @@ namespace FastBank.Infrastructure.Context
                          testCustomer.ToDomainObj(),
                          null,
                          Role.CustomerService,
-                         "4 message text to Customer Service",
-                         "lv 0 4 Message Subject",
+                         "Another one message text to Customer Service",
+                         "Another message",
                          null,
                          Domain.MessageStatus.Sent,
                          Domain.MessageType.Inquery, null));
@@ -196,8 +196,8 @@ namespace FastBank.Infrastructure.Context
                          testCustomer.ToDomainObj(),
                          null,
                          Role.CustomerService,
-                         "5 message text to Customer Service",
-                         "lv 2 5 Message Subject",
+                         "Question to Customer Service",
+                         "Message",
                          msg3.ToDomainObj(),
                          Domain.MessageStatus.Sent,
                          Domain.MessageType.Inquery, null));
@@ -209,8 +209,8 @@ namespace FastBank.Infrastructure.Context
                          testCustomer.ToDomainObj(),
                          null,
                          Role.CustomerService,
-                         "6 message text to Customer Service",
-                         "lv 1 6 Message Subject",
+                         "Problem with account, please fix the problem",
+                         "Problem with account",
                          msg4.ToDomainObj(),
                          Domain.MessageStatus.Sent,
                          Domain.MessageType.Inquery, null));
