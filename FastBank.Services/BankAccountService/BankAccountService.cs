@@ -74,8 +74,6 @@ namespace FastBank.Services
         public void Update(BankAccount bankAccount)
         {
             bankAccountRepository.Update(bankAccount);
-
-            _menuService.OperationCompleteScreen();
         }
 
         public void WithdrawAmount(BankAccount customerBankAccount)
@@ -199,6 +197,7 @@ namespace FastBank.Services
                                                            null,
                                                            null,
                                                            transactionOrder);
+                                _menuService.OperationCompleteScreen();
                             }
                             else
                             {
@@ -211,9 +210,11 @@ namespace FastBank.Services
                                 Update(customerBankAccount);
                                 var transactionWithdraw = new Transaction(customerBankAccount.Customer, amountToTransfer * (-1), null, customerBankAccount, TransactionType.BankAccountTransaction);
                                 _transactionRepo.AddTransaction(transactionWithdraw);
+                                
+                                _menuService.OperationCompleteScreen();
                             }
                         }
-                        _menuService.OperationCompleteScreen();
+                       
                     }
                 }
             }

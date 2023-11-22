@@ -110,7 +110,7 @@ namespace FastBank.Infrastructure.Context
 
 
             modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Ангел Ангелов", "m@m.mm", DateTime.Now, "m", Role.Manager, false));
-            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Счетоводко Счетоводков", "s@s.ss", DateTime.Now, "s", Role.Accountant, false));
+            modelBuilder.Entity<UserDTO>().HasData(new UserDTO(Guid.NewGuid(), "Стоян Косев", "s@s.ss", DateTime.Now, "s", Role.Accountant, false));
 
 
             var testCustomer = new UserDTO(Guid.NewGuid(), "Александър Георгиев", "1@1.com", DateTime.Now, "1", Role.Customer, false);
@@ -221,8 +221,6 @@ namespace FastBank.Infrastructure.Context
             modelBuilder.Entity<MessageDTO>().HasData(msg4);
             modelBuilder.Entity<MessageDTO>().HasData(msg5);
             modelBuilder.Entity<MessageDTO>().HasData(msg6);
-
-
         }
 
         public virtual DbSet<UserDTO> Users { get; set; }

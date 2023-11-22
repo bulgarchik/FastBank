@@ -124,7 +124,7 @@ namespace FastBank.Services.EmployeeService
             var enums = Enum.GetValues(typeof(Role));
             foreach (var item in enums)
             {
-                menuOptions.Append($"{(int)item}: {item.ToString()}\n");
+                menuOptions.Append($"{(int)item}: {((Role)item).GetDisplayName()}\n");
             }
 
             int chosenRole = _menuService.CommandRead(enums.Length, menuOptions.ToString());
@@ -154,15 +154,15 @@ namespace FastBank.Services.EmployeeService
                 if (inputEmploeyyId == "q")
                     return false;
 
-                if (!int.TryParse(inputEmploeyyId, out employeeId) || employeeId < employees.First()?.Index || employeeId > employees.Last().Index)
+                if (!int.TryParse(inputEmploeyyId, out employeeId) || employeeId < employees?.First()?.Index || employeeId > employees?.Last().Index)
                 {
                     Console.WriteLine("Please input correct employee ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
-            } while (employeeId < employees.First()?.Index || employeeId > employees.Last().Index);
+            } while (employeeId < employees?.First()?.Index || employeeId > employees?.Last().Index);
 
-            var employeeToTerminate = employees.Where(x => x.Index == employeeId).FirstOrDefault();
+            var employeeToTerminate = employees?.Where(x => x.Index == employeeId).FirstOrDefault();
             if (employeeToTerminate != null)
             {
                return _employeeRepository.DeleteEmployee(employeeToTerminate.EmployeeId);

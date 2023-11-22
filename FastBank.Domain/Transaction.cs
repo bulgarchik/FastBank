@@ -64,17 +64,17 @@ public enum TransactionType
     InternalTransfer,
 }
 
-public static class TransactionTypeExtensions
+public static class EnumExtensions
 {
-    public static string GetDisplayName(this TransactionType transactionType)
+    public static string GetDisplayName(this Enum enumType)
     {
-        var displayAttribute = GetDisplayAttribute(transactionType);
-        return displayAttribute?.Name ?? transactionType.ToString();
+        var displayAttribute = GetDisplayAttribute(enumType);
+        return displayAttribute?.Name ?? enumType.ToString();
     }
 
-    private static DisplayAttribute GetDisplayAttribute(TransactionType transactionType)
+    private static DisplayAttribute GetDisplayAttribute(Enum enumType)
     {
-        var field = transactionType.GetType().GetField(transactionType.ToString());
+        var field = enumType.GetType().GetField(enumType.ToString());
         return (DisplayAttribute)Attribute.GetCustomAttribute(field, typeof(DisplayAttribute));
     }
 }

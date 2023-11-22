@@ -106,6 +106,7 @@ namespace FastBank.Services
             int transactionsReportId;
             do
             {
+                var firstIndex = transactionsReports.First()?.Index;
                 Console.WriteLine("Please enter transactions report ID (type 'q' for exit):");
                 Console.Write("Transactions report ID: ");
                 var inputtransactionsReportId = Console.ReadLine() ?? null;
@@ -113,7 +114,7 @@ namespace FastBank.Services
                 if (inputtransactionsReportId == "q")
                     return false;
 
-                if (!int.TryParse(inputtransactionsReportId, out transactionsReportId) || transactionsReportId < transactionsReports.First()?.Index || transactionsReportId > transactionsReports.Last().Index)
+                if (!int.TryParse(inputtransactionsReportId, out transactionsReportId) || transactionsReportId < firstIndex || transactionsReportId > transactionsReports.Last().Index)
                 {
                     Console.WriteLine("Please input correct transactions report ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
@@ -124,7 +125,7 @@ namespace FastBank.Services
             var transactionsReport = transactionsReports.Where(x => x.Index == transactionsReportId).FirstOrDefault();
             if (transactionsReport != null)
             {
-                //Process.Start(transactionsReport.PathToFile);
+                Process.Start("notepad.exe",transactionsReport.PathToFile);
             }
             return false;
         }
