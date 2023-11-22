@@ -227,7 +227,7 @@ namespace FastBank
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                               $"\nYou have {messagesCount} new message{(messagesCount > 1 || messagesCount == 0 ? 's' : string.Empty)}\n" +
                               $"\nPlease choose your action: \n" +
-                              $"\n 1: Customer transactions report" +
+                              $"\n 1: Customer transactions" +
                               $"\n 2: Manage messages" +
                               $"\n 3: Empoyees" +
                               $"\n 4: Accountant transactions reports" +
