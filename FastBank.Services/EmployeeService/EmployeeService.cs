@@ -144,6 +144,9 @@ namespace FastBank.Services.EmployeeService
         {
             Console.WriteLine("\nEmployee termination process is started...\n");
 
+            var firstIndex = employees?.First()?.Index;
+            var lastIndex = employees?.Last().Index;
+
             int employeeId;
             do
             {
@@ -154,13 +157,13 @@ namespace FastBank.Services.EmployeeService
                 if (inputEmploeyyId == "q")
                     return false;
 
-                if (!int.TryParse(inputEmploeyyId, out employeeId) || employeeId < employees?.First()?.Index || employeeId > employees?.Last().Index)
+                if (!int.TryParse(inputEmploeyyId, out employeeId) || employeeId < firstIndex || employeeId > lastIndex)
                 {
                     Console.WriteLine("Please input correct employee ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
-            } while (employeeId < employees?.First()?.Index || employeeId > employees?.Last().Index);
+            } while (employeeId < firstIndex || employeeId > lastIndex);
 
             var employeeToTerminate = employees?.Where(x => x.Index == employeeId).FirstOrDefault();
             if (employeeToTerminate != null)

@@ -82,10 +82,10 @@ namespace FastBank.Services
                         }
                     case 3:
                         {
-                            if (transactionsReports != null && transactionsReports.Count>0)
+                            if (transactionsReports != null && transactionsReports.Count > 0)
                             {
                                 OpenTransactionsReport(transactionsReports);
-                                
+
                             }
                             break;
                         }
@@ -96,17 +96,18 @@ namespace FastBank.Services
                 }
             }
             while (true);
-
         }
 
         public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports)
         {
             Console.WriteLine("\nOpening transactions process started...\n");
 
+            var firstIndex = transactionsReports?.First()?.Index;
+            var lastIndex = transactionsReports?.Last().Index;
+            
             int transactionsReportId;
             do
             {
-                var firstIndex = transactionsReports.First()?.Index;
                 Console.WriteLine("Please enter transactions report ID (type 'q' for exit):");
                 Console.Write("Transactions report ID: ");
                 var inputtransactionsReportId = Console.ReadLine() ?? null;
@@ -120,12 +121,12 @@ namespace FastBank.Services
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
-            } while (transactionsReportId < transactionsReports?.First()?.Index || transactionsReportId > transactionsReports?.Last().Index);
+            } while (transactionsReportId < firstIndex || transactionsReportId > lastIndex);
 
             var transactionsReport = transactionsReports.Where(x => x.Index == transactionsReportId).FirstOrDefault();
             if (transactionsReport != null)
             {
-                Process.Start("notepad.exe",transactionsReport.PathToFile);
+                Process.Start("notepad.exe", transactionsReport.PathToFile);
             }
             return false;
         }
@@ -134,7 +135,7 @@ namespace FastBank.Services
         {
             var createdOn = DateTime.Now;
             string directoryPath = Directory.GetCurrentDirectory() + "\\TransactionsReports";
-            string filePath = Path.Combine(directoryPath, $"TransactionsReport_{createdOn.ToShortDateString()}_{Guid.NewGuid().ToString().Substring(0,8)}.txt");
+            string filePath = Path.Combine(directoryPath, $"TransactionsReport_{createdOn.ToShortDateString()}_{Guid.NewGuid().ToString().Substring(0, 8)}.txt");
 
             if (!Directory.Exists(directoryPath))
             {
@@ -239,7 +240,7 @@ namespace FastBank.Services
 
                                 Console.WriteLine(ex.Message);
                             }
-                            
+
                             break;
                         }
                     case 0:
