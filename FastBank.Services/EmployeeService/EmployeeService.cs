@@ -57,7 +57,7 @@ namespace FastBank.Services.EmployeeService
                 var menuOptions = $"\nPlease choose your action: \n" +
                                $"\n 1: For next page" +
                                $"\n 2: For previous page" +
-                               $"\n 3: Add employes" +
+                               $"\n 3: Add employee" +
                                $"\n 4: Terminate employee" +
                                $"\n 0: Exit";
                 var commandsCount = 5;
