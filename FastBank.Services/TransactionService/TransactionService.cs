@@ -7,6 +7,8 @@ namespace FastBank.Services
 {
     public class TransactionService : ITransactionService
     {
+        private const string DATE_TIME_FORMAT = "yyy-MM-dd HH:mm:ss";
+
         private readonly ITransactionRepository _transactionRepo;
         private readonly IMenuService _menuService;
 
@@ -48,7 +50,7 @@ namespace FastBank.Services
                         Console.WriteLine("{0,-4} {1,-40} {2,-30}",
                             $"| {transactionsReport.Index}",
                             $"| {transactionsReport.CreatedBy.Name}",
-                            $"| {transactionsReport.CreatedOn.ToShortTimeString()}");
+                            $"| {TimeZoneInfo.ConvertTimeFromUtc(transactionsReport.CreatedOn, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}");
                     }
 
                     Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
@@ -154,7 +156,7 @@ namespace FastBank.Services
                 foreach (var transaction in transactions)
                 {
                     sw.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
-                        $"| {transaction.CreatedDate}",
+                        $"| {TimeZoneInfo.ConvertTimeFromUtc(transaction.CreatedDate, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}",
                         $"| {transaction.Amount}",
                         $"| {transaction.TransactionType.GetDisplayName()}",
                         $"| {transaction.CreatedByUser.Email}");
@@ -194,7 +196,7 @@ namespace FastBank.Services
                 foreach (var transaction in transactions)
                 {
                     Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
-                        $"| {transaction.CreatedDate}",
+                        $"| {TimeZoneInfo.ConvertTimeFromUtc(transaction.CreatedDate, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}",
                         $"| {transaction.Amount}",
                         $"| {transaction.TransactionType.GetDisplayName()}",
                         $"| {transaction.CreatedByUser.Email}");
