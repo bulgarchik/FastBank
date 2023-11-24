@@ -1,6 +1,7 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using Microsoft.Extensions.Primitives;
 using System.Text;
 
 namespace FastBank.Services.EmployeeService
@@ -115,16 +116,16 @@ namespace FastBank.Services.EmployeeService
         public Employee? AddEmployee()
         {
             Employee? employee = null;
-            Console.WriteLine("\nNew employee adding process is started...\n");
+            Console.WriteLine("New employee adding process is started...\n");
             Console.WriteLine("Please input employee name:");
             Console.Write("Name: ");
             var name = Console.ReadLine() ?? string.Empty;
 
-            StringBuilder menuOptions = new StringBuilder($"Please select employee role ID from the list: \n");
+            StringBuilder menuOptions = new StringBuilder($"\nPlease select employee role ID from the list: \n");
             var enums = Enum.GetValues(typeof(Role));
             foreach (var item in enums)
             {
-                menuOptions.Append($"{(int)item}: {((Role)item).GetDisplayName()}\n");
+                menuOptions.Append($"\n{(int)item}: {((Role)item).GetDisplayName()}");
             }
 
             int chosenRole = _menuService.CommandRead(enums.Length, menuOptions.ToString());
