@@ -128,9 +128,9 @@ namespace FastBank.Services.EmployeeService
                 menuOptions.Append($"\n{(int)item}: {((Role)item).GetDisplayName()}");
             }
 
-            int chosenRole = _menuService.CommandRead(enums.Length, menuOptions.ToString());
+            int chosenRole = _menuService.CommandRead(enums.Length + 1, menuOptions.ToString(), 1);
 
-            Console.WriteLine($"\n You will Add new Employee with name: {name} and role: {(Role)chosenRole}");
+            Console.WriteLine($"You will аdd new еmployee with name: {name} and role: {(Role)chosenRole}");
             Console.Write("\nPlease confirm with Y key:");
             var confirmKey = Console.ReadKey();
             if (confirmKey.Key == ConsoleKey.Y)
