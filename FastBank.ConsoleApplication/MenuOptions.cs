@@ -227,7 +227,7 @@ namespace FastBank
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
                               $"\nYou have {messagesCount} new message{(messagesCount > 1 || messagesCount == 0 ? 's' : string.Empty)}\n" +
                               $"\nPlease choose your action: \n" +
-                              $"\n 1: Customer transactions" +
+                              $"\n 1: Customers transactions" +
                               $"\n 2: Manage messages" +
                               $"\n 3: Empoyees" +
                               $"\n 4: Accountant transactions reports" +
@@ -336,9 +336,14 @@ namespace FastBank
                 var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} \n" +
                                   $"\nPlease choose your action: \n" +
-                                  $"\n 1: For deposit \n 2: For withdraw \n 3: Create inquiry " +
-                                    $"\n 4: Check inquiries \n 5: My friends \n 0: Exit";
-                var commandsCount = 6;
+                                  $"\n 1: For deposit " +
+                                  $"\n 2: For withdraw " +
+                                  $"\n 3: Create inquiry " +
+                                  $"\n 4: Check inquiries " +
+                                  $"\n 5: My friends " +
+                                  $"\n 6: My transactions " +
+                                  $"\n 0: Exit";
+                var commandsCount = 7;
                 int action = _menuService.CommandRead(commandsCount, menuOptions); switch (action)
                 {
                     case 1:
@@ -364,6 +369,11 @@ namespace FastBank
                     case 5:
                         {
                             bankAccountService.TransferMoneyToFriendMenu(customerBankAccount);
+                            break;
+                        }
+                    case 6:
+                        {
+                            _transactionService.CustomerTransactions(ActiveUser);
                             break;
                         }
                     case 0:

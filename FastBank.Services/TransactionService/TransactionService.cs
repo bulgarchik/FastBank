@@ -170,6 +170,60 @@ namespace FastBank.Services
                     filePath, createdBy));
         }
 
+        public void CustomerTransactions(User user)
+        {
+            var transactionsCount = _transactionRepo.GetCustomerTransactionsCount(user);
+
+            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TRANSACTION_PER_PAGE);
+
+            int currentPage = 1;
+
+            do
+            {
+                var transactions = _transactionRepo.GetCustomerTransactions(user, currentPage);
+
+                Console.Clear();
+
+                _menuService.ShowLogo();
+
+                ShowTransactionList(transactions);
+
+                Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
+
+                var menuOptions = $"\nPlease choose your action: \n" +
+                               $"\n 1: For next page" +
+                               $"\n 2: For previous page" +
+                               $"\n 0: Exit";
+                var commandsCount = 4;
+                int action = _menuService.CommandRead(commandsCount, menuOptions);
+
+                switch (action)
+                {
+                    case 1:
+                        {
+                            if (currentPage < totalPages)
+                            {
+                                currentPage++;
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (currentPage > 1)
+                            {
+                                currentPage--;
+                            }
+                            break;
+                        }
+                    case 0:
+                        {
+                            return;
+                        }
+                }
+
+            } while (true);
+        }
+
         public void TransactionReport(User user)
         {
             var transactionsCount = _transactionRepo.GetCustomersTransactionsCount();
@@ -186,23 +240,11 @@ namespace FastBank.Services
 
                 _menuService.ShowLogo();
 
-                Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
-                "| Date",
-                "| Amount",
-                "| Transaction Type",
-                "| Customer email");
-                Console.WriteLine(new string('-', 85));
-
-                foreach (var transaction in transactions)
-                {
-                    Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
-                        $"| {TimeZoneInfo.ConvertTimeFromUtc(transaction.CreatedDate, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}",
-                        $"| {transaction.Amount}",
-                        $"| {transaction.TransactionType.GetDisplayName()}",
-                        $"| {transaction.CreatedByUser.Email}");
-                }
+                ShowTransactionList(transactions);
 
                 Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
+
+
 
                 var menuOptions = $"\nPlease choose your action: \n" +
                                $"\n 1: For next page" +
@@ -252,6 +294,25 @@ namespace FastBank.Services
                 }
 
             } while (true);
+        }
+
+        public void ShowTransactionList(List<Transaction> transactions)
+        {
+            Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
+                "| Date",
+                "| Amount",
+                "| Transaction Type",
+                "| Customer email");
+            Console.WriteLine(new string('-', 85));
+
+            foreach (var transaction in transactions)
+            {
+                Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
+                    $"| {TimeZoneInfo.ConvertTimeFromUtc(transaction.CreatedDate, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}",
+                    $"| {transaction.Amount}",
+                    $"| {transaction.TransactionType.GetDisplayName()}",
+                    $"| {transaction.CreatedByUser.Email}");
+            }
         }
     }
 }

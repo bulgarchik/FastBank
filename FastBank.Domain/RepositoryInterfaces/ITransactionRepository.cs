@@ -15,5 +15,9 @@
         public List<TransactionsReport> GetTransactionsReports(int currentPage = 1);
 
         public int GetTransactionsReportsCount();
+
+        public int GetCustomerTransactionsCount(User user);
+        public List<Transaction> GetCustomerTransactions(User user, int currentPage = 1);
+
     }
 }

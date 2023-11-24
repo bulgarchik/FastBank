@@ -42,6 +42,32 @@ namespace FastBank.Infrastructure.Repository
             return transactionsCount;
         }
 
+        public int GetCustomerTransactionsCount(User user)
+        {
+            var transactionsCount = _repository.Set<TransactionDTO>()
+                .Include(t => t.CreatedByUser)
+                .Where(t => t.CreatedByUser.Role == Role.Customer.ToString() && t.CreatedByUser.UserId == user.Id)
+                .OrderBy(t => t.CreatedDate)
+                .Select(t => t.ToDomainObj())
+                .Count();
+
+            return transactionsCount;
+        }
+
+        public List<Transaction> GetCustomerTransactions(User user, int currentPage = 1)
+        {
+            var transactions = _repository.Set<TransactionDTO>()
+                .Include(t => t.CreatedByUser)
+                .Where(t => t.CreatedByUser.Role == Role.Customer.ToString() && t.CreatedByUser.UserId == user.Id)
+                .OrderBy(t => t.CreatedDate)
+                .Skip((currentPage - 1) * TRANSACTION_PER_PAGE)
+                .Take(TRANSACTION_PER_PAGE)
+                .Select(t => t.ToDomainObj())
+                .ToList();
+
+            return transactions;
+        }
+
         public void AddTransaction(Transaction transaction)
         {
             _repository.Add<TransactionDTO>(new TransactionDTO(transaction));

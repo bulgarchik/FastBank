@@ -8,5 +8,7 @@ namespace FastBank.Services
         public void AddTransactionsReport(List<Transaction> transactions, User createdBy);
         public void ManageTransactionsReport();
         public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports);
+        public void CustomerTransactions(User user);
+        public void ShowTransactionList(List<Transaction> transactions);
     }
 }
