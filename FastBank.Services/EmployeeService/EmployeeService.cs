@@ -143,6 +143,13 @@ namespace FastBank.Services.EmployeeService
 
         public bool TerminateEmployee(List<Employee> employees)
         {
+            if (employees.Count == 0)
+            {
+                Console.WriteLine("You have no employees for termination. (press any key to continue...) ");
+                Console.ReadKey(false);
+                return false;
+            }
+
             Console.WriteLine("\nEmployee termination process is started...\n");
 
             var firstIndex = employees?.First()?.Index;
