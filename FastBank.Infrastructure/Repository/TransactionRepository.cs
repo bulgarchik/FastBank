@@ -103,6 +103,25 @@ namespace FastBank.Infrastructure.Repository
             return transactionsReports;
         }
 
+        public List<TransactionsReport> GetUserLastTransactionsReports(User user, int count = 3)
+        {
+            var currentPageTransactionsReportsIndex = 1;
+
+            var transactionsReports = _repository.Set<TransactionsReportDTO>()
+                        .Include(tr => tr.CreatedBy)
+                        .OrderByDescending(tr => tr.CreatedOn)
+                        .Take(count)
+                        .Select(tr => tr.ToDomainObj())
+                        .ToList();
+
+            foreach (var item in transactionsReports)
+            {
+                item.Index = currentPageTransactionsReportsIndex++;
+            }
+
+            return transactionsReports;
+        }
+
         public int GetTransactionsReportsCount()
         {
             return _repository.Set<TransactionsReportDTO>()

@@ -10,5 +10,6 @@ namespace FastBank.Services
         public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports);
         public void CustomerTransactions(User user);
         public void ShowTransactionList(List<Transaction> transactions);
+        public List<TransactionsReport> ShowLastTransactionsReports(User user);
     }
 }

@@ -18,6 +18,34 @@ namespace FastBank.Services
             _menuService = new MenuService();
         }
 
+        public List<TransactionsReport> ShowLastTransactionsReports(User user)
+        {
+            List<TransactionsReport> transactionsReports;
+
+            transactionsReports = _transactionRepo.GetUserLastTransactionsReports(user);
+
+            if (transactionsReports != null && transactionsReports.Count() > 0)
+            {
+                Console.WriteLine("Transactions reports:\n");
+
+                Console.WriteLine("{0,-4} {1,-40} {2,-30}",
+                   "| ID",
+                   "| Created by",
+                   "| Created on");
+                Console.WriteLine(new string('-', 85));
+
+                foreach (var transactionsReport in transactionsReports)
+                {
+                    Console.WriteLine("{0,-4} {1,-40} {2,-30}",
+                        $"| {transactionsReport.Index}",
+                        $"| {transactionsReport.CreatedBy.Name}",
+                        $"| {TimeZoneInfo.ConvertTimeFromUtc(transactionsReport.CreatedOn, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}");
+                }
+            }
+
+            return transactionsReports;
+        }
+
         public void ManageTransactionsReport()
         {
             int currentPage = 1;
@@ -244,14 +272,16 @@ namespace FastBank.Services
 
                 Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
 
+                var transactionsReports = ShowLastTransactionsReports(user);
 
 
                 var menuOptions = $"\nPlease choose your action: \n" +
                                $"\n 1: For next page" +
                                $"\n 2: For previous page" +
                                $"\n 3: Save transactions report" +
+                               $"\n 4: Open last transactions report" +
                                $"\n 0: Exit";
-                var commandsCount = 4;
+                var commandsCount = 5;
                 int action = _menuService.CommandRead(commandsCount, menuOptions);
 
                 switch (action)
@@ -287,6 +317,15 @@ namespace FastBank.Services
 
                             break;
                         }
+                    case 4:
+                        {
+                            if (transactionsReports != null && transactionsReports.Count > 0)
+                            {
+                                OpenTransactionsReport(transactionsReports);
+
+                            }
+                            break;
+                        }
                     case 0:
                         {
                             return;
@@ -298,6 +337,10 @@ namespace FastBank.Services
 
         public void ShowTransactionList(List<Transaction> transactions)
         {
+            if (!transactions.Any()) return;
+
+            Console.WriteLine("Transactions:\n");
+
             Console.WriteLine("{0,-25} {1,-10} {2,-30} {3, -40}",
                 "| Date",
                 "| Amount",
