@@ -2,6 +2,7 @@
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
 using Microsoft.Extensions.Primitives;
+using System;
 using System.Text;
 
 namespace FastBank.Services.EmployeeService
@@ -53,6 +54,10 @@ namespace FastBank.Services.EmployeeService
                     }
 
                     Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
+                }
+                else
+                {
+                    Console.WriteLine("The bank has no employees...");
                 }
 
                 var menuOptions = $"\nPlease choose your action: \n" +
