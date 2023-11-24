@@ -36,7 +36,7 @@ namespace FastBank.Services.EmployeeService
 
                 if (employees != null && employees.Count() > 0)
                 {
-                    Console.WriteLine("Employees:");
+                    Console.WriteLine("Employees:\n");
 
                     Console.WriteLine("{0,-4} {1,-40} {2,-30}",
                        "| ID",
