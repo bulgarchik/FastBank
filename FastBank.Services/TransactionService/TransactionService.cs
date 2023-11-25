@@ -88,8 +88,9 @@ namespace FastBank.Services
                                $"\n 1: For next page" +
                                $"\n 2: For previous page" +
                                $"\n 3: Open transactions report" +
+                               $"\n 4: Show transactions report" +
                                $"\n 0: Exit";
-                var commandsCount = 4;
+                var commandsCount = 5;
                 int action = _menuService.CommandRead(commandsCount, menuOptions);
 
                 switch (action)
@@ -114,7 +115,16 @@ namespace FastBank.Services
                         {
                             if (transactionsReports != null && transactionsReports.Count > 0)
                             {
-                                OpenTransactionsReport(transactionsReports);
+                                OpenTransactionsReport(transactionsReports, false);
+
+                            }
+                            break;
+                        }
+                    case 4:
+                        {
+                            if (transactionsReports != null && transactionsReports.Count > 0)
+                            {
+                                OpenTransactionsReport(transactionsReports, true);
 
                             }
                             break;
@@ -128,7 +138,7 @@ namespace FastBank.Services
             while (true);
         }
 
-        public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports)
+        public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports, bool showReport = false)
         {
             Console.WriteLine("\nOpening transactions process started...\n");
 
@@ -154,10 +164,27 @@ namespace FastBank.Services
             } while (transactionsReportId < firstIndex || transactionsReportId > lastIndex);
 
             var transactionsReport = transactionsReports.Where(x => x.Index == transactionsReportId).FirstOrDefault();
-            if (transactionsReport != null)
+            if (transactionsReport != null && showReport == false)
             {
                 Process.Start("notepad.exe", transactionsReport.PathToFile);
             }
+            else if (transactionsReport != null && showReport == true)
+            {
+                try
+                {
+                    using (var sr = new StreamReader(transactionsReport.PathToFile))
+                    {
+                        Console.WriteLine(sr.ReadToEnd());
+                    }
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+            Console.ReadKey(true);
             return false;
         }
 
