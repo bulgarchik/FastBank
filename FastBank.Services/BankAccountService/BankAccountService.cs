@@ -88,7 +88,7 @@ namespace FastBank.Services
                     return;
                 if (!decimal.TryParse(inputWithdrawAmount, out withdrawAmount) || withdrawAmount <= 0)
                 {
-                    Console.WriteLine("Plese input correct ammount to withdraw (press any key to continue...)");
+                    Console.WriteLine("Please input correct amount to withdraw (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
@@ -125,7 +125,7 @@ namespace FastBank.Services
             var friend = friends.Where(f => f.Value.Email == emailFriend).Select(f => f.Value).FirstOrDefault();
             if (friend == null)
             {
-                Console.WriteLine("This email is not in your friendlist");
+                Console.WriteLine("This email is not in your friend list");
                 Console.ReadKey(true);
                 return;
             }
@@ -140,7 +140,7 @@ namespace FastBank.Services
                     return;
                 if (!decimal.TryParse(inputTransferAmount, out amountToTransfer) || amountToTransfer <= 0)
                 {
-                    Console.WriteLine($"Plese enter correct ammount to{(transferOrder ? " order" : string.Empty)} transfer (press any key to continue...)");
+                    Console.WriteLine($"Please enter correct amount to{(transferOrder ? " order" : string.Empty)} transfer (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
@@ -205,16 +205,16 @@ namespace FastBank.Services
                                 Update(friendAccount);
                                 var transactionDeposit = new Transaction(friendAccount.Customer, amountToTransfer, null, friendAccount, TransactionType.BankAccountTransaction);
                                 _transactionRepo.AddTransaction(transactionDeposit);
-                                
+
                                 customerBankAccount.WithdrawAmount(amountToTransfer);
                                 Update(customerBankAccount);
                                 var transactionWithdraw = new Transaction(customerBankAccount.Customer, amountToTransfer * (-1), null, customerBankAccount, TransactionType.BankAccountTransaction);
                                 _transactionRepo.AddTransaction(transactionWithdraw);
-                                
+
                                 _menuService.OperationCompleteScreen();
                             }
                         }
-                       
+
                     }
                 }
             }
@@ -278,25 +278,29 @@ namespace FastBank.Services
         public void ConfirmTransactionOrder(TransactionOrder transactionOrder)
         {
             transactionOrder?.FromBankAccount?.WithdrawAmount(transactionOrder.Amount);
-            Update(transactionOrder.FromBankAccount);
+            if (transactionOrder?.FromBankAccount != null)
+            {
+                Update(transactionOrder.FromBankAccount);
 
-            _transactionRepo.AddTransaction(new Transaction(
-                                                transactionOrder.FromBankAccount.Customer,
-                                                transactionOrder.Amount * (-1),
-                                                null,
-                                                transactionOrder.FromBankAccount,
-                                                TransactionType.BankAccountTransaction));
-            
+                _transactionRepo.AddTransaction(new Transaction(
+                                                    transactionOrder.FromBankAccount.Customer,
+                                                    transactionOrder.Amount * (-1),
+                                                    null,
+                                                    transactionOrder.FromBankAccount,
+                                                    TransactionType.BankAccountTransaction));
+            }
+            if (transactionOrder?.ToBankAccount != null)
+            {
+                transactionOrder.ToBankAccount.DepositAmount(transactionOrder.Amount);
+                Update(transactionOrder.ToBankAccount);
 
-            transactionOrder.ToBankAccount.DepositAmount(transactionOrder.Amount);
-            Update(transactionOrder.ToBankAccount);
-            
-            _transactionRepo.AddTransaction(new Transaction(
-                                                transactionOrder.ToBankAccount.Customer,
-                                                transactionOrder.Amount,
-                                                null,
-                                                transactionOrder.ToBankAccount,
-                                                TransactionType.BankAccountTransaction));
+                _transactionRepo.AddTransaction(new Transaction(
+                                                    transactionOrder.ToBankAccount.Customer,
+                                                    transactionOrder.Amount,
+                                                    null,
+                                                    transactionOrder.ToBankAccount,
+                                                    TransactionType.BankAccountTransaction));
+            }
         }
     }
 }
