@@ -150,12 +150,12 @@ namespace FastBank.Services
             {
                 Console.WriteLine("Please enter transactions report ID (type 'q' for exit):");
                 Console.Write("Transactions report ID: ");
-                var inputtransactionsReportId = Console.ReadLine() ?? null;
+                var inputTransactionsReportId = Console.ReadLine() ?? null;
 
-                if (inputtransactionsReportId == "q")
+                if (inputTransactionsReportId == "q")
                     return false;
 
-                if (!int.TryParse(inputtransactionsReportId, out transactionsReportId) || transactionsReportId < firstIndex || transactionsReportId > transactionsReports.Last().Index)
+                if (!int.TryParse(inputTransactionsReportId, out transactionsReportId) || transactionsReportId < firstIndex || transactionsReportId > transactionsReports.Last().Index)
                 {
                     Console.WriteLine("Please input correct transactions report ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
