@@ -91,7 +91,7 @@ namespace FastBank.Infrastructure.Context
                 .HasForeignKey(to => to.OrderedByUserId)
                 .IsRequired();
 
-            modelBuilder.Entity<TransactionsReportDTO>()
+            modelBuilder.Entity<TransactionsFileReportDTO>()
                 .HasOne(to => to.CreatedBy).WithMany().HasForeignKey(to => to.UserId).IsRequired();    
 
             modelBuilder.Entity<EmployeeDTO>()
@@ -146,7 +146,7 @@ namespace FastBank.Infrastructure.Context
                             "First Message",
                             null,
                             Domain.MessageStatus.Sent,
-                            Domain.MessageType.Inquery, null)
+                            Domain.MessageType.Inquiry, null)
                     );
 
             var msg2 = new MessageDTO(
@@ -160,7 +160,7 @@ namespace FastBank.Infrastructure.Context
                             "Second Message",
                             null,
                             Domain.MessageStatus.Sent,
-                            Domain.MessageType.Inquery, null)
+                            Domain.MessageType.Inquiry, null)
                     );
 
             var msg3 = new MessageDTO(
@@ -174,7 +174,7 @@ namespace FastBank.Infrastructure.Context
                            "Reply to first Message",
                            msg1.ToDomainObj(),
                            Domain.MessageStatus.Sent,
-                           Domain.MessageType.Inquery, null));
+                           Domain.MessageType.Inquiry, null));
 
             var msg4 = new MessageDTO(
                  new Domain.Message(
@@ -187,7 +187,7 @@ namespace FastBank.Infrastructure.Context
                          "Another message",
                          null,
                          Domain.MessageStatus.Sent,
-                         Domain.MessageType.Inquery, null));
+                         Domain.MessageType.Inquiry, null));
 
             var msg5 = new MessageDTO(
                  new Domain.Message(
@@ -200,7 +200,7 @@ namespace FastBank.Infrastructure.Context
                          "Message",
                          msg3.ToDomainObj(),
                          Domain.MessageStatus.Sent,
-                         Domain.MessageType.Inquery, null));
+                         Domain.MessageType.Inquiry, null));
 
             var msg6 = new MessageDTO(
                  new Domain.Message(
@@ -213,7 +213,7 @@ namespace FastBank.Infrastructure.Context
                          "Problem with account",
                          msg4.ToDomainObj(),
                          Domain.MessageStatus.Sent,
-                         Domain.MessageType.Inquery, null));
+                         Domain.MessageType.Inquiry, null));
 
             modelBuilder.Entity<MessageDTO>().HasData(msg1);
             modelBuilder.Entity<MessageDTO>().HasData(msg2);
@@ -230,7 +230,7 @@ namespace FastBank.Infrastructure.Context
         public virtual DbSet<UserFriendDTO> FriendsRelations { get; set; }
         public virtual DbSet<TransactionDTO> Transactions { get; set; }
         public virtual DbSet<TransactionOrderDTO> TransactionsOrder { get; set; }
-        public virtual DbSet<TransactionsReportDTO> TransactionsReports { get; set; }
+        public virtual DbSet<TransactionsFileReportDTO> TransactionsReports { get; set; }
         public virtual DbSet<EmployeeDTO> Employees { get; set; }
     }
 }

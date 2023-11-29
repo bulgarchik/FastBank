@@ -7,17 +7,17 @@ namespace FastBank
     {
         public Customer(Guid id, string name, string email, DateTime birthday, string password, Role role, bool inactive)
                 : base(id, name, email, birthday, password, role, inactive) { }
-        
-        public Customer(User user) : base(
-                                       user.Id,
-                                       user.Name,
-                                       user.Email,
-                                       user.Birthday,
-                                       user.Password,
-                                       user.Role,
-                                       user.Inactive)
-        {
 
+        public Customer(User user) : 
+            base(user.Id,
+                 user.Name,
+                 user.Email,
+                 user.Birthday,
+                 user.Password,
+                 user.Role,
+                 user.Inactive)
+        {
+        
         }
     }
 }

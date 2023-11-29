@@ -61,8 +61,8 @@ namespace FastBank.Services.EmployeeService
                 }
 
                 var menuOptions = $"\nPlease choose your action: \n" +
-                               $"\n 1: For next page" +
-                               $"\n 2: For previous page" +
+                               $"\n 1: Next page" +
+                               $"\n 2: Previous page" +
                                $"\n 3: Add employee" +
                                $"\n 4: Terminate employee" +
                                $"\n 0: Exit";
@@ -127,15 +127,15 @@ namespace FastBank.Services.EmployeeService
             var name = Console.ReadLine() ?? string.Empty;
 
             StringBuilder menuOptions = new StringBuilder($"\nPlease select employee role ID from the list: \n");
-            var enums = Enum.GetValues(typeof(Role));
-            foreach (var item in enums)
+            var roles = Enum.GetValues(typeof(Role));
+            foreach (var item in roles)
             {
                 menuOptions.Append($"\n{(int)item}: {((Role)item).GetDisplayName()}");
             }
 
-            int chosenRole = _menuService.CommandRead(enums.Length + 1, menuOptions.ToString(), 1);
+            int chosenRole = _menuService.CommandRead(roles.Length + 1, menuOptions.ToString(), 1);
 
-            Console.WriteLine($"You will аdd new еmployee with name: {name} and role: {(Role)chosenRole}");
+            Console.WriteLine($"You will аdd new employee with name: {name} and role: {(Role)chosenRole}");
             Console.Write("\nPlease confirm with Y key:");
             var confirmKey = Console.ReadKey();
             if (confirmKey.Key == ConsoleKey.Y)
@@ -165,12 +165,12 @@ namespace FastBank.Services.EmployeeService
             {
                 Console.WriteLine("Please enter employee ID (type 'q' for exit):");
                 Console.Write("Employee ID: ");
-                var inputEmploeyyId = Console.ReadLine() ?? null;
+                var inputEmployeeId = Console.ReadLine() ?? null;
 
-                if (inputEmploeyyId == "q")
+                if (inputEmployeeId == "q")
                     return false;
 
-                if (!int.TryParse(inputEmploeyyId, out employeeId) || employeeId < firstIndex || employeeId > lastIndex)
+                if (!int.TryParse(inputEmployeeId, out employeeId) || employeeId < firstIndex || employeeId > lastIndex)
                 {
                     Console.WriteLine("Please input correct employee ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();

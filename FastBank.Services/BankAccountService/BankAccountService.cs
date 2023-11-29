@@ -190,7 +190,7 @@ namespace FastBank.Services
                                                            $"(email: {transactionOrder?.ToBankAccount?.Customer.Email}) for " +
                                                            $"amount {transactionOrder?.Amount}",
                                                            MessageStatus.Sent,
-                                                           MessageType.InqueryForOrderTransfer,
+                                                           MessageType.InquiryForOrderTransfer,
                                                            customerBankAccount.Customer,
                                                            null,
                                                            Role.CustomerService,

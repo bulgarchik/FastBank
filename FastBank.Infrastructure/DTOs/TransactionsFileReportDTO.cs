@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace FastBank.Infrastructure.DTOs
 {
     [Table("TransactionsReports")]
-    public class TransactionsReportDTO
+    public class TransactionsFileReportDTO
     {
-        private TransactionsReportDTO() { }
-        public TransactionsReportDTO(TransactionsReport transactionsReport)
+        private TransactionsFileReportDTO() { }
+        public TransactionsFileReportDTO(TransactionsFileReport transactionsReport)
         {
             ReportId = transactionsReport.ReportId;
             CreatedOn = transactionsReport.CreatedOn;
@@ -25,9 +25,9 @@ namespace FastBank.Infrastructure.DTOs
         public User CreatedBy { get; private set; }
 
 
-        public TransactionsReport ToDomainObj()
+        public TransactionsFileReport ToDomainObj()
         {
-            return new TransactionsReport(ReportId, CreatedOn, PathToFile, CreatedBy);
+            return new TransactionsFileReport(ReportId, CreatedOn, PathToFile, CreatedBy);
         }
     }
 

@@ -18,15 +18,15 @@ namespace FastBank.Services
             _menuService = new MenuService();
         }
 
-        public List<TransactionsReport> ShowLastTransactionsReports(User user)
+        public List<TransactionsFileReport> ShowLastTransactionsFileReports(User user)
         {
-            List<TransactionsReport> transactionsReports;
+            List<TransactionsFileReport> transactionsFileReports;
 
-            transactionsReports = _transactionRepo.GetUserLastTransactionsReports(user);
+            transactionsFileReports = _transactionRepo.GetUserLastTransactionsFileReports(user);
 
-            if (transactionsReports != null && transactionsReports.Count() > 0)
+            if (transactionsFileReports != null && transactionsFileReports.Count() > 0)
             {
-                Console.WriteLine("Transactions reports:\n");
+                Console.WriteLine("Transactions file reports:\n");
 
                 Console.WriteLine("{0,-4} {1,-40} {2,-30}",
                    "| ID",
@@ -34,38 +34,38 @@ namespace FastBank.Services
                    "| Created on");
                 Console.WriteLine(new string('-', 85));
 
-                foreach (var transactionsReport in transactionsReports)
+                foreach (var transactionsFileReport in transactionsFileReports)
                 {
                     Console.WriteLine("{0,-4} {1,-40} {2,-30}",
-                        $"| {transactionsReport.Index}",
-                        $"| {transactionsReport.CreatedBy.Name}",
-                        $"| {TimeZoneInfo.ConvertTimeFromUtc(transactionsReport.CreatedOn, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}");
+                        $"| {transactionsFileReport.Index}",
+                        $"| {transactionsFileReport.CreatedBy.Name}",
+                        $"| {TimeZoneInfo.ConvertTimeFromUtc(transactionsFileReport.CreatedOn, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}");
                 }
             }
 
-            return transactionsReports;
+            return transactionsFileReports;
         }
 
-        public void ManageTransactionsReport()
+        public void ManageTransactionsFileReport()
         {
             int currentPage = 1;
 
-            List<TransactionsReport> transactionsReports;
+            List<TransactionsFileReport> transactionFileReports;
 
-            var transactionsReportsCount = _transactionRepo.GetTransactionsReportsCount();
+            var transactionsFileReportsCount = _transactionRepo.GetTransactionsFileReportsCount();
 
-            int totalPages = (int)Math.Ceiling((double)transactionsReportsCount / TransactionRepository.TRANSACTION_PER_PAGE);
+            int totalPages = (int)Math.Ceiling((double)transactionsFileReportsCount / TransactionRepository.TRANSACTIONS_PER_PAGE);
 
             do
             {
                 Console.Clear();
                 _menuService.ShowLogo();
 
-                transactionsReports = _transactionRepo.GetTransactionsReports(currentPage);
+                transactionFileReports = _transactionRepo.GetTransactionsFileReports(currentPage);
 
-                if (transactionsReports != null && transactionsReports.Count() > 0)
+                if (transactionFileReports != null && transactionFileReports.Count() > 0)
                 {
-                    Console.WriteLine("Transactions reports:");
+                    Console.WriteLine("Transactions file reports:");
 
                     Console.WriteLine("{0,-4} {1,-40} {2,-30}",
                        "| ID",
@@ -73,22 +73,22 @@ namespace FastBank.Services
                        "| Created on");
                     Console.WriteLine(new string('-', 85));
 
-                    foreach (var transactionsReport in transactionsReports)
+                    foreach (var transactionsFileReport in transactionFileReports)
                     {
                         Console.WriteLine("{0,-4} {1,-40} {2,-30}",
-                            $"| {transactionsReport.Index}",
-                            $"| {transactionsReport.CreatedBy.Name}",
-                            $"| {TimeZoneInfo.ConvertTimeFromUtc(transactionsReport.CreatedOn, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}");
+                            $"| {transactionsFileReport.Index}",
+                            $"| {transactionsFileReport.CreatedBy.Name}",
+                            $"| {TimeZoneInfo.ConvertTimeFromUtc(transactionsFileReport.CreatedOn, TimeZoneInfo.Local).ToString(DATE_TIME_FORMAT)}");
                     }
 
                     Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
                 }
 
                 var menuOptions = $"\nPlease choose your action: \n" +
-                               $"\n 1: For next page" +
-                               $"\n 2: For previous page" +
-                               $"\n 3: Open transactions report" +
-                               $"\n 4: Show transactions report" +
+                               $"\n 1: Next page" +
+                               $"\n 2: Previous page" +
+                               $"\n 3: Open transactions file report" +
+                               $"\n 4: Show transactions file report" +
                                $"\n 0: Exit";
                 var commandsCount = 5;
                 int action = _menuService.CommandRead(commandsCount, menuOptions);
@@ -113,18 +113,18 @@ namespace FastBank.Services
                         }
                     case 3:
                         {
-                            if (transactionsReports != null && transactionsReports.Count > 0)
+                            if (transactionFileReports != null && transactionFileReports.Count > 0)
                             {
-                                OpenTransactionsReport(transactionsReports, false);
+                                OpenTransactionsFileReport(transactionFileReports, false);
 
                             }
                             break;
                         }
                     case 4:
                         {
-                            if (transactionsReports != null && transactionsReports.Count > 0)
+                            if (transactionFileReports != null && transactionFileReports.Count > 0)
                             {
-                                OpenTransactionsReport(transactionsReports, true);
+                                OpenTransactionsFileReport(transactionFileReports, true);
 
                             }
                             break;
@@ -138,48 +138,48 @@ namespace FastBank.Services
             while (true);
         }
 
-        public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports, bool showReport = false)
+        public bool OpenTransactionsFileReport(List<TransactionsFileReport> transactionsFileReports, bool showReport = false)
         {
-            Console.WriteLine("\nOpening transactions process started...\n");
+            Console.WriteLine("\nOpening transactions file report process started...\n");
 
-            var firstIndex = transactionsReports?.First()?.Index;
-            var lastIndex = transactionsReports?.Last().Index;
+            var firstIndex = transactionsFileReports?.First()?.Index;
+            var lastIndex = transactionsFileReports?.Last().Index;
             
-            int transactionsReportId;
+            int transactionsFileReportId;
             do
             {
-                Console.WriteLine("Please enter transactions report ID (type 'q' for exit):");
-                Console.Write("Transactions report ID: ");
-                var inputTransactionsReportId = Console.ReadLine() ?? null;
+                Console.WriteLine("Please enter transactions file report ID (type 'q' for exit):");
+                Console.Write("Transactions file report ID: ");
+                var inputTransactionsFileReportId = Console.ReadLine() ?? null;
 
-                if (inputTransactionsReportId == "q")
+                if (inputTransactionsFileReportId == "q")
                     return false;
 
-                if (!int.TryParse(inputTransactionsReportId, out transactionsReportId) || transactionsReportId < firstIndex || transactionsReportId > transactionsReports.Last().Index)
+                if (!int.TryParse(inputTransactionsFileReportId, out transactionsFileReportId) || transactionsFileReportId < firstIndex || transactionsFileReportId > transactionsFileReports.Last().Index)
                 {
-                    Console.WriteLine("Please input correct transactions report ID (press any key to continue...)");
+                    Console.WriteLine("Please input correct transactions file report ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
-            } while (transactionsReportId < firstIndex || transactionsReportId > lastIndex);
+            } while (transactionsFileReportId < firstIndex || transactionsFileReportId > lastIndex);
 
-            var transactionsReport = transactionsReports.Where(x => x.Index == transactionsReportId).FirstOrDefault();
-            if (transactionsReport != null && showReport == false)
+            var transactionsFileReport = transactionsFileReports?.Where(x => x.Index == transactionsFileReportId).FirstOrDefault();
+            if (transactionsFileReport != null && showReport == false)
             {
-                Process.Start("notepad.exe", transactionsReport.PathToFile);
+                Process.Start("notepad.exe", transactionsFileReport.PathToFile);
             }
-            else if (transactionsReport != null && showReport == true)
+            else if (transactionsFileReport != null && showReport == true)
             {
                 try
                 {
-                    using (var sr = new StreamReader(transactionsReport.PathToFile))
+                    using (var sr = new StreamReader(transactionsFileReport.PathToFile))
                     {
                         Console.WriteLine(sr.ReadToEnd());
                     }
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine("The transactions file report could not be read:");
                     Console.WriteLine(e.Message);
                 }
             }
@@ -188,7 +188,7 @@ namespace FastBank.Services
             return false;
         }
 
-        public void AddTransactionsReport(List<Transaction> transactions, User createdBy)
+        public void AddTransactionsFileReport(List<Transaction> transactions, User createdBy)
         {
             var createdOn = DateTime.Now;
             string directoryPath = Directory.GetCurrentDirectory() + "\\TransactionsReports";
@@ -218,8 +218,8 @@ namespace FastBank.Services
                 }
             }
 
-            _transactionRepo.AddTransactionsReport(
-                new TransactionsReport(
+            _transactionRepo.AddTransactionsFileReport(
+                new TransactionsFileReport(
                     Guid.NewGuid(),
                     DateTime.UtcNow,
                     filePath, createdBy));
@@ -229,7 +229,7 @@ namespace FastBank.Services
         {
             var transactionsCount = _transactionRepo.GetCustomerTransactionsCount(user);
 
-            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TRANSACTION_PER_PAGE);
+            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TRANSACTIONS_PER_PAGE);
 
             int currentPage = 1;
 
@@ -246,8 +246,8 @@ namespace FastBank.Services
                 Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
 
                 var menuOptions = $"\nPlease choose your action: \n" +
-                               $"\n 1: For next page" +
-                               $"\n 2: For previous page" +
+                               $"\n 1: Next page" +
+                               $"\n 2: Previous page" +
                                $"\n 0: Exit";
                 var commandsCount = 4;
                 int action = _menuService.CommandRead(commandsCount, menuOptions);
@@ -281,9 +281,9 @@ namespace FastBank.Services
 
         public void TransactionReport(User user)
         {
-            var transactionsCount = _transactionRepo.GetCustomersTransactionsCount();
+            var transactionsCount = _transactionRepo.GetCustomerTransactionsCount();
 
-            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TRANSACTION_PER_PAGE);
+            int totalPages = (int)Math.Ceiling((double)transactionsCount / TransactionRepository.TRANSACTIONS_PER_PAGE);
 
             int currentPage = 1;
 
@@ -299,14 +299,14 @@ namespace FastBank.Services
 
                 Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
 
-                var transactionsReports = ShowLastTransactionsReports(user);
+                var transactionsFileReports = ShowLastTransactionsFileReports(user);
 
 
                 var menuOptions = $"\nPlease choose your action: \n" +
-                               $"\n 1: For next page" +
-                               $"\n 2: For previous page" +
-                               $"\n 3: Save transactions report" +
-                               $"\n 4: Open last transactions report" +
+                               $"\n 1: Next page" +
+                               $"\n 2: Previous page" +
+                               $"\n 3: Save transactions file report" +
+                               $"\n 4: Open last transactions file report" +
                                $"\n 0: Exit";
                 var commandsCount = 5;
                 int action = _menuService.CommandRead(commandsCount, menuOptions);
@@ -333,7 +333,7 @@ namespace FastBank.Services
                         {
                             try
                             {
-                                AddTransactionsReport(transactions, user);
+                                AddTransactionsFileReport(transactions, user);
                                 _menuService.OperationCompleteScreen();
                             }
                             catch (Exception ex)
@@ -346,9 +346,9 @@ namespace FastBank.Services
                         }
                     case 4:
                         {
-                            if (transactionsReports != null && transactionsReports.Count > 0)
+                            if (transactionsFileReports != null && transactionsFileReports.Count > 0)
                             {
-                                OpenTransactionsReport(transactionsReports);
+                                OpenTransactionsFileReport(transactionsFileReports);
 
                             }
                             break;

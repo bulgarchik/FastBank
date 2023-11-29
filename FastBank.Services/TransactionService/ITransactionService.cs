@@ -5,11 +5,11 @@ namespace FastBank.Services
     public interface ITransactionService
     {
         public void TransactionReport(User user);
-        public void AddTransactionsReport(List<Transaction> transactions, User createdBy);
-        public void ManageTransactionsReport();
-        public bool OpenTransactionsReport(List<TransactionsReport> transactionsReports, bool showReport = false);
+        public void AddTransactionsFileReport(List<Transaction> transactions, User createdBy);
+        public void ManageTransactionsFileReport();
+        public bool OpenTransactionsFileReport(List<TransactionsFileReport> transactionsReports, bool showReport = false);
         public void CustomerTransactions(User user);
         public void ShowTransactionList(List<Transaction> transactions);
-        public List<TransactionsReport> ShowLastTransactionsReports(User user);
+        public List<TransactionsFileReport> ShowLastTransactionsFileReports(User user);
     }
 }

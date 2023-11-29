@@ -9,7 +9,7 @@ namespace FastBank.Infrastructure.Repository
     {
         private readonly IRepository _repository;
 
-        public const int TRANSACTION_PER_PAGE = 3;
+        public const int TRANSACTIONS_PER_PAGE = 3;
 
         public TransactionRepository()
         {
@@ -22,21 +22,19 @@ namespace FastBank.Infrastructure.Repository
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.CreatedByUser.Role == Role.Customer.ToString())
                 .OrderBy(t => t.CreatedDate)
-                .Skip((currentPage - 1) * TRANSACTION_PER_PAGE)
-                .Take(TRANSACTION_PER_PAGE)
+                .Skip((currentPage - 1) * TRANSACTIONS_PER_PAGE)
+                .Take(TRANSACTIONS_PER_PAGE)
                 .Select(t => t.ToDomainObj())
                 .ToList();
 
             return transactions;
         }
 
-        public int GetCustomersTransactionsCount()
+        public int GetCustomerTransactionsCount()
         {
             var transactionsCount = _repository.Set<TransactionDTO>()
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.CreatedByUser.Role == Role.Customer.ToString())
-                .OrderBy(t => t.CreatedDate)
-                .Select(t => t.ToDomainObj())
                 .Count();
 
             return transactionsCount;
@@ -47,8 +45,6 @@ namespace FastBank.Infrastructure.Repository
             var transactionsCount = _repository.Set<TransactionDTO>()
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.CreatedByUser.Role == Role.Customer.ToString() && t.CreatedByUser.UserId == user.Id)
-                .OrderBy(t => t.CreatedDate)
-                .Select(t => t.ToDomainObj())
                 .Count();
 
             return transactionsCount;
@@ -60,8 +56,8 @@ namespace FastBank.Infrastructure.Repository
                 .Include(t => t.CreatedByUser)
                 .Where(t => t.CreatedByUser.Role == Role.Customer.ToString() && t.CreatedByUser.UserId == user.Id)
                 .OrderBy(t => t.CreatedDate)
-                .Skip((currentPage - 1) * TRANSACTION_PER_PAGE)
-                .Take(TRANSACTION_PER_PAGE)
+                .Skip((currentPage - 1) * TRANSACTIONS_PER_PAGE)
+                .Take(TRANSACTIONS_PER_PAGE)
                 .Select(t => t.ToDomainObj())
                 .ToList();
 
@@ -78,53 +74,53 @@ namespace FastBank.Infrastructure.Repository
             _repository.Add<TransactionOrderDTO>(new TransactionOrderDTO(transactionOrder));
         }
     
-        public void AddTransactionsReport(TransactionsReport transactionsReport)
+        public void AddTransactionsFileReport(TransactionsFileReport transactionsFileReport)
         {
-            _repository.Add<TransactionsReportDTO>(new TransactionsReportDTO(transactionsReport));
+            _repository.Add<TransactionsFileReportDTO>(new TransactionsFileReportDTO(transactionsFileReport));
         }
 
-        public List<TransactionsReport> GetTransactionsReports(int currentPage = 1)
+        public List<TransactionsFileReport> GetTransactionsFileReports(int currentPage = 1)
         {
-            var currentPageTransactionsReportsIndex = (currentPage - 1) * TRANSACTION_PER_PAGE + 1;
+            var currentPageTransactionsFileReportsIndex = (currentPage - 1) * TRANSACTIONS_PER_PAGE + 1;
 
-            var transactionsReports =  _repository.Set<TransactionsReportDTO>()
+            var transactionsReports =  _repository.Set<TransactionsFileReportDTO>()
                         .Include(tr => tr.CreatedBy)
                         .OrderBy(tr => tr.CreatedOn)
-                        .Skip((currentPage - 1) * TRANSACTION_PER_PAGE)
-                        .Take(TRANSACTION_PER_PAGE)
+                        .Skip((currentPage - 1) * TRANSACTIONS_PER_PAGE)
+                        .Take(TRANSACTIONS_PER_PAGE)
                         .Select(tr => tr.ToDomainObj())
                         .ToList();
 
             foreach (var item in transactionsReports)
             {
-                item.Index = currentPageTransactionsReportsIndex++;
+                item.SetIndex(currentPageTransactionsFileReportsIndex++);
             }
 
             return transactionsReports;
         }
 
-        public List<TransactionsReport> GetUserLastTransactionsReports(User user, int count = 3)
+        public List<TransactionsFileReport> GetUserLastTransactionsFileReports(User user, int count = 3)
         {
-            var currentPageTransactionsReportsIndex = 1;
+            var currentPageTransactionsFileReportsIndex = 1;
 
-            var transactionsReports = _repository.Set<TransactionsReportDTO>()
+            var transactionsFileReports = _repository.Set<TransactionsFileReportDTO>()
                         .Include(tr => tr.CreatedBy)
                         .OrderByDescending(tr => tr.CreatedOn)
                         .Take(count)
                         .Select(tr => tr.ToDomainObj())
                         .ToList();
 
-            foreach (var item in transactionsReports)
+            foreach (var item in transactionsFileReports)
             {
-                item.Index = currentPageTransactionsReportsIndex++;
+                item.SetIndex(currentPageTransactionsFileReportsIndex++);
             }
 
-            return transactionsReports;
+            return transactionsFileReports;
         }
 
-        public int GetTransactionsReportsCount()
+        public int GetTransactionsFileReportsCount()
         {
-            return _repository.Set<TransactionsReportDTO>()
+            return _repository.Set<TransactionsFileReportDTO>()
                         .Include(tr => tr.CreatedBy)
                         .Count();
         }
