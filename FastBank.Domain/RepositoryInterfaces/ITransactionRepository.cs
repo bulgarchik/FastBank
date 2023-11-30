@@ -10,7 +10,7 @@
 
         public void AddTransactionOrder(TransactionOrder transactionOrder);
 
-        public void AddTransactionsFileReport(TransactionsFileReport transactionsReport);
+        public void AddTransactionsFileReport(TransactionsFileReport transactionsFileReport);
 
         public List<TransactionsFileReport> GetTransactionsFileReports(int currentPage = 1);
 

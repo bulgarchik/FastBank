@@ -8,13 +8,13 @@ namespace FastBank.Infrastructure.DTOs
     public class TransactionsFileReportDTO
     {
         private TransactionsFileReportDTO() { }
-        public TransactionsFileReportDTO(TransactionsFileReport transactionsReport)
+        public TransactionsFileReportDTO(TransactionsFileReport transactionsFileReport)
         {
-            ReportId = transactionsReport.ReportId;
-            CreatedOn = transactionsReport.CreatedOn;
-            PathToFile = transactionsReport.PathToFile;
-            UserId = transactionsReport.CreatedBy.Id;
-            CreatedBy = transactionsReport.CreatedBy;
+            ReportId = transactionsFileReport.ReportId;
+            CreatedOn = transactionsFileReport.CreatedOn;
+            PathToFile = transactionsFileReport.PathToFile;
+            UserId = transactionsFileReport.CreatedBy.Id;
+            CreatedBy = transactionsFileReport.CreatedBy;
         }
         [Key]
         public Guid ReportId { get; private set; }
