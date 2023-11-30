@@ -45,10 +45,11 @@ namespace FastBank.Services
             return pass;
         }
 
-        public int CommandRead(int countOfOptions, string menuOptions)
+        public int CommandRead(int countOfOptions, string menuOptions, int startFromIndex = 0)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < countOfOptions; i++)
+
+            for (int i = startFromIndex; i < countOfOptions; i++)
             {
                 sb.Append(i);
             }

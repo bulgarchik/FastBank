@@ -93,7 +93,7 @@ namespace FastBank.Services
             var text = ReadInputedText(400);
 
             var message = new Message(Guid.NewGuid(), DateTime.UtcNow, user, null, Role.CustomerService,
-                                      text, subject, null, MessageStatus.Sent, MessageType.Inquery);
+                                      text, subject, null, MessageStatus.Sent, MessageType.Inquiry);
             _messageRepo.Add(message);
             _menuService.OperationCompleteScreen();
 
@@ -116,7 +116,7 @@ namespace FastBank.Services
                                         $"Re: {message.Subject}",
                                         message,
                                         MessageStatus.Sent,
-                                        MessageType.Inquery);
+                                        MessageType.Inquiry);
 
             _messageRepo.Add(replyMessage);
             _messageRepo.UpdateStatus(message, MessageStatus.Replied);

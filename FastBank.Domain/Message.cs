@@ -61,8 +61,8 @@
 
     public enum MessageType
     {
-        Inquery,
-        InqueryForOrderTransfer,
+        Inquiry,
+        InquiryForOrderTransfer,
         CapitalReplenishment
     }
 }

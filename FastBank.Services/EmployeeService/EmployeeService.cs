@@ -1,6 +1,8 @@
 ﻿using FastBank.Domain;
 using FastBank.Domain.RepositoryInterfaces;
 using FastBank.Infrastructure.Repository;
+using Microsoft.Extensions.Primitives;
+using System;
 using System.Text;
 
 namespace FastBank.Services.EmployeeService
@@ -35,7 +37,7 @@ namespace FastBank.Services.EmployeeService
 
                 if (employees != null && employees.Count() > 0)
                 {
-                    Console.WriteLine("Employees:");
+                    Console.WriteLine("Employees:\n");
 
                     Console.WriteLine("{0,-4} {1,-40} {2,-30}",
                        "| ID",
@@ -53,11 +55,15 @@ namespace FastBank.Services.EmployeeService
 
                     Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
                 }
+                else
+                {
+                    Console.WriteLine("The bank has no employees...");
+                }
 
                 var menuOptions = $"\nPlease choose your action: \n" +
-                               $"\n 1: For next page" +
-                               $"\n 2: For previous page" +
-                               $"\n 3: Add employes" +
+                               $"\n 1: Next page" +
+                               $"\n 2: Previous page" +
+                               $"\n 3: Add employee" +
                                $"\n 4: Terminate employee" +
                                $"\n 0: Exit";
                 var commandsCount = 5;
@@ -115,21 +121,21 @@ namespace FastBank.Services.EmployeeService
         public Employee? AddEmployee()
         {
             Employee? employee = null;
-            Console.WriteLine("\nNew employee adding process is started...\n");
+            Console.WriteLine("New employee adding process is started...\n");
             Console.WriteLine("Please input employee name:");
             Console.Write("Name: ");
             var name = Console.ReadLine() ?? string.Empty;
 
-            StringBuilder menuOptions = new StringBuilder($"Please select employee role ID from the list: \n");
-            var enums = Enum.GetValues(typeof(Role));
-            foreach (var item in enums)
+            StringBuilder menuOptions = new StringBuilder($"\nPlease select employee role ID from the list: \n");
+            var roles = Enum.GetValues(typeof(Role));
+            foreach (var item in roles)
             {
-                menuOptions.Append($"{(int)item}: {item.ToString()}\n");
+                menuOptions.Append($"\n{(int)item}: {((Role)item).GetDisplayName()}");
             }
 
-            int chosenRole = _menuService.CommandRead(enums.Length, menuOptions.ToString());
+            int chosenRole = _menuService.CommandRead(roles.Length + 1, menuOptions.ToString(), 1);
 
-            Console.WriteLine($"\n You will Add new Employee with name: {name} and role: {(Role)chosenRole}");
+            Console.WriteLine($"You will аdd new employee with name: {name} and role: {(Role)chosenRole}");
             Console.Write("\nPlease confirm with Y key:");
             var confirmKey = Console.ReadKey();
             if (confirmKey.Key == ConsoleKey.Y)
@@ -142,27 +148,37 @@ namespace FastBank.Services.EmployeeService
 
         public bool TerminateEmployee(List<Employee> employees)
         {
+            if (employees.Count == 0)
+            {
+                Console.WriteLine("You have no employees for termination. (press any key to continue...) ");
+                Console.ReadKey(false);
+                return false;
+            }
+
             Console.WriteLine("\nEmployee termination process is started...\n");
+
+            var firstIndex = employees?.First()?.Index;
+            var lastIndex = employees?.Last().Index;
 
             int employeeId;
             do
             {
                 Console.WriteLine("Please enter employee ID (type 'q' for exit):");
                 Console.Write("Employee ID: ");
-                var inputEmploeyyId = Console.ReadLine() ?? null;
+                var inputEmployeeId = Console.ReadLine() ?? null;
 
-                if (inputEmploeyyId == "q")
+                if (inputEmployeeId == "q")
                     return false;
 
-                if (!int.TryParse(inputEmploeyyId, out employeeId) || employeeId < employees.First()?.Index || employeeId > employees.Last().Index)
+                if (!int.TryParse(inputEmployeeId, out employeeId) || employeeId < firstIndex || employeeId > lastIndex)
                 {
                     Console.WriteLine("Please input correct employee ID (press any key to continue...)");
                     var keyIsEnter = Console.ReadKey();
                     new MenuService().MoveToPreviousLine(keyIsEnter, 3);
                 }
-            } while (employeeId < employees.First()?.Index || employeeId > employees.Last().Index);
+            } while (employeeId < firstIndex || employeeId > lastIndex);
 
-            var employeeToTerminate = employees.Where(x => x.Index == employeeId).FirstOrDefault();
+            var employeeToTerminate = employees?.Where(x => x.Index == employeeId).FirstOrDefault();
             if (employeeToTerminate != null)
             {
                return _employeeRepository.DeleteEmployee(employeeToTerminate.EmployeeId);

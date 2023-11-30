@@ -10,9 +10,7 @@
         }
 
         public Guid BankAccountId { get; private set; }
-
         public User Customer { get; private set; }
-
         public decimal Amount { get; private set; }
 
         public void DepositAmount(decimal depositAmount)

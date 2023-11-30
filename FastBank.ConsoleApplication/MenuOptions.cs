@@ -25,7 +25,6 @@ namespace FastBank
         static public void ShowMainMenu()
         {
             FastBankDbContext db = new FastBankDbContext();
-            var repo = new Repository(db);
 
             while (inProgress)
             {
@@ -34,7 +33,7 @@ namespace FastBank
 
                 if (ActiveUser == null)
                 {
-                    var menuOptions = "Please choose your action:\n \n 1: For login \n 2: For customer registration \n 0: Exit";
+                    var menuOptions = "Please choose your action:\n \n 1: Login \n 2: Customer registration \n 0: Exit";
                     var commandsCount = 3;
                     int action = _menuService.CommandRead(commandsCount, menuOptions);
 
@@ -134,7 +133,7 @@ namespace FastBank
             DateTime birthday;
             while (!DateTime.TryParse(birthdayInput, out birthday))
             {
-                Console.WriteLine("You inputed wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
+                Console.WriteLine("You inputted wrong Birthday, please use this format: Year.Month.day. Press any key to try again!");
                 var keyIsEnter = Console.ReadKey();
                 new MenuService().MoveToPreviousLine(keyIsEnter, 2);
                 Console.Write("Birthday: ");
@@ -225,14 +224,15 @@ namespace FastBank
                                     .Count();
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                              $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
+                              $"\nYou have {messagesCount} new message{(messagesCount > 1 || messagesCount == 0 ? 's' : string.Empty)}\n" +
                               $"\nPlease choose your action: \n" +
-                              $"\n 1: Customer transactions report" +
+                              $"\n 1: Customers transactions" +
                               $"\n 2: Manage messages" +
-                              $"\n 3: Empoyees" +
+                              $"\n 3: Employees" +
+                              $"\n 4: Accountant transactions reports" +
                               $"\n 0: Exit";
 
-            var commandsCount = 3;
+            var commandsCount = 5;
             int action = _menuService.CommandRead(commandsCount, menuOptions);
 
             switch (action)
@@ -250,6 +250,11 @@ namespace FastBank
                 case 3:
                     {
                         _employeeService.ShowEmployeesMenu();
+                        break;
+                    }
+                case 4:
+                    {
+                        _transactionService.ManageTransactionsFileReport();
                         break;
                     }
                 case 0:
@@ -317,8 +322,8 @@ namespace FastBank
                 {
                     Console.WriteLine("\nYou can't use your account without funds." +
                                       "\nPlease press \"q\" for exit or any key to continue... ");
-                    var qkey = Console.ReadKey().KeyChar;
-                    if (qkey == 'q')
+                    var qKey = Console.ReadKey().KeyChar;
+                    if (qKey == 'q')
                         ActiveUser = null;
                 }
                 Console.Clear();
@@ -330,9 +335,14 @@ namespace FastBank
                 var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" + 
                                   $"\nYou bank amount: {customerBankAccount.Amount:0.00} \n" +
                                   $"\nPlease choose your action: \n" +
-                                  $"\n 1: For deposit \n 2: For withdraw \n 3: Create inquiry " +
-                                    $"\n 4: Check inquiries \n 5: Transfer to friend \n 0: Exit";
-                var commandsCount = 6;
+                                  $"\n 1: Deposit " +
+                                  $"\n 2: Withdraw " +
+                                  $"\n 3: Create inquiry " +
+                                  $"\n 4: Check inquiries " +
+                                  $"\n 5: My friends " +
+                                  $"\n 6: My transactions " +
+                                  $"\n 0: Exit";
+                var commandsCount = 7;
                 int action = _menuService.CommandRead(commandsCount, menuOptions); switch (action)
                 {
                     case 1:
@@ -358,6 +368,11 @@ namespace FastBank
                     case 5:
                         {
                             bankAccountService.TransferMoneyToFriendMenu(customerBankAccount);
+                            break;
+                        }
+                    case 6:
+                        {
+                            _transactionService.CustomerTransactions(ActiveUser);
                             break;
                         }
                     case 0:
@@ -386,7 +401,7 @@ namespace FastBank
                                     .Count();
 
             var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
-                                $"\nYou have {messagesCount} new message{(messagesCount > 1 ? 's' : string.Empty)}\n" +
+                                $"\nYou have {messagesCount} new message{(messagesCount > 1 || messagesCount == 0 ? 's' : string.Empty)}\n" +
                                 $"\nPlease choose your action: \n" +
                                 $"\n1: Manage messages \n0: Exit";
             var commandsCount = 2;
