@@ -50,7 +50,7 @@ namespace FastBank.Services.EmployeeService
                         Console.WriteLine("{0,-4} {1,-40} {2,-30}",
                             $"| {employee.Index}",
                             $"| {employee.Name}",
-                            $"| {employee.Role}");
+                            $"| {employee.Role.GetDisplayName()}");
                     }
 
                     Console.WriteLine($"\nPage {currentPage}/{totalPages}\n");
@@ -135,7 +135,7 @@ namespace FastBank.Services.EmployeeService
 
             int chosenRole = _menuService.CommandRead(roles.Length + 1, menuOptions.ToString(), 1);
 
-            Console.WriteLine($"You will аdd new employee with name: {name} and role: {(Role)chosenRole}");
+            Console.WriteLine($"You will аdd new employee with name: {name} and role: {((Role)chosenRole).GetDisplayName()}");
             Console.Write("\nPlease confirm with Y key:");
             var confirmKey = Console.ReadKey();
             if (confirmKey.Key == ConsoleKey.Y)

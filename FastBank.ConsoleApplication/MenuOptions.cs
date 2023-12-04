@@ -184,7 +184,7 @@ namespace FastBank
                 return;
             }
 
-            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+            var menuOptions = $"{{{ActiveUser.Role.GetDisplayName()}}} Welcome {ActiveUser.Name}\n" +
                                 $"\nPlease choose your action: \n" +
                                 $"\n 1: Transactions report" +
                                  $"\n 0: Exit";
@@ -223,7 +223,7 @@ namespace FastBank
                                                 && m.ReceiverRole == Role.Manager)
                                     .Count();
 
-            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+            var menuOptions = $"{{{ActiveUser.Role.GetDisplayName()}}} Welcome {ActiveUser.Name}\n" +
                               $"\nYou have {messagesCount} new message{(messagesCount > 1 || messagesCount == 0 ? 's' : string.Empty)}\n" +
                               $"\nPlease choose your action: \n" +
                               $"\n 1: Customers transactions" +
@@ -277,7 +277,7 @@ namespace FastBank
                 return;
             }
 
-            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+            var menuOptions = $"{{{ActiveUser.Role.GetDisplayName()}}} Welcome {ActiveUser.Name}\n" +
                                  $"\nPlease choose your action: \n" +
                                   $"\n 1: Capital Replenishment \n 0: Exit";
             var commandsCount = 2;
@@ -400,7 +400,7 @@ namespace FastBank
                                                 && m.ReceiverRole == Role.CustomerService)
                                     .Count();
 
-            var menuOptions = $"{{{ActiveUser.Role}}} Welcome {ActiveUser.Name}\n" +
+            var menuOptions = $"{{{ActiveUser.Role.GetDisplayName()}}} Welcome {ActiveUser.Name}\n" +
                                 $"\nYou have {messagesCount} new message{(messagesCount > 1 || messagesCount == 0 ? 's' : string.Empty)}\n" +
                                 $"\nPlease choose your action: \n" +
                                 $"\n1: Manage messages \n0: Exit";
